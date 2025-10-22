@@ -1,862 +1,728 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>منصة حصيف — ملف واحد</title>
-<meta name="color-scheme" content="light only">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>منصة حصيف الوطنية للتكامل التنموي — نسخة تجريبية تشغيلية موحّدة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --ink:#0f172a;--muted:#64748b;--border:#e6e9ef;--bg:#ffffff;--brand:#0ea5e9;--brand2:#22c55e
-}
-*{box-sizing:border-box}html,body{height:100%}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Naskh Arabic UI",Tahoma,sans-serif;color:var(--ink);background:#fff}
-
-/* Header */
-header .topbar{display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:78px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:60}
-.brand{display:flex;align-items:center;gap:10px;cursor:pointer;min-width:0}
-.brand .mark svg{display:block}
-.brand .word{font-weight:900;margin-top:2px}
-.brand .sub{font-size:11px;color:var(--muted);margin-top:0}
-.home-btn,.btn{display:inline-flex;align-items:center;gap:6px;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-size:13px;text-decoration:none;cursor:pointer}
-.btn.ghost{background:#fff;border:1px solid var(--border);color:var(--ink)}
-.left-box{margin-inline-start:auto;display:flex;align-items:center;gap:6px}
-.icon{width:18px;height:18px;vertical-align:-3px}
-.bell{position:relative;width:40px;height:40px;border:1px solid var(--border);border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
-.badge-dot{position:absolute;inset:auto auto 2px 2px;width:8px;height:8px;border-radius:99px;background:#ef4444}
-
-/* Layout */
-@media (min-width:980px){
-  .layout{display:grid;grid-template-columns:300px 1fr;gap:16px;padding:16px}
-  .mega-left{position:sticky;top:90px;align-self:start}
-  .mega-left details{border:1px solid var(--border);border-radius:12px;margin:8px 0;background:#fff;overflow:hidden}
-  .mega-left summary{list-style:none;cursor:pointer;padding:10px 12px;font-weight:700}
-  .mega-left summary::-webkit-details-marker{display:none}
-  .mega-left .group-body{padding:8px 10px;display:grid;gap:6px}
-  .mega-left a{padding:8px 10px;border-radius:10px;color:#334155;text-decoration:none;display:flex;align-items:center;gap:8px}
-  .mega-left a:hover{background:#f1f5f9}
-}
-#view{padding:16px}
-.card{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
-.section-title{display:flex;align-items:center;gap:8px;margin:0 0 8px 0}
-
-/* Tabs & chips */
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
-.tab{padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;font-weight:600;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
-.tab[aria-selected="true"]{border-color:#0ea5e9;outline:2px solid rgba(14,165,233,.15)}
-.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.kpi-card{border:1px solid var(--border);border-radius:12px;background:#fff;padding:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
-.kpi-card:hover{box-shadow:0 8px 24px rgba(2,12,27,.08)}
-.kpi-icon{font-size:0;width:36px;height:36px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center}
-.kpi-value{font-weight:800;font-size:18px}
-.kpi-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kpi-meta{display:flex;gap:10px;align-items:center;margin-top:4px;color:var(--muted);font-size:12px}
-.badge{padding:3px 8px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px}
-.badge.ok{color:#065f46;border-color:#bbf7d0;background:#ecfdf5}
-.badge.warn{color:#92400e;border-color:#fde68a;background:#fffbeb}
-.badge.bad{color:#991b1b;border-color:#fecaca;background:#fef2f2}
-.badge.info{color:#075985;border-color:#bae6fd;background:#eff6ff}
-.badge.tgt{color:#0369a1;border-color:#bae6fd;background:#eff6ff}
-.badge.unit{color:#334155;border-color:#e2e8f0;background:#fff}
-.table{width:100%;border-collapse:separate;border-spacing:0 8px}
-.table th{font-size:13px;color:var(--muted);padding:0 10px;cursor:pointer;user-select:none}
-.table td{background:#fff;border:1px solid var(--border);padding:10px}
-.table tr td:first-child{border-radius:12px 0 0 12px}
-.table tr td:last-child{border-radius:0 12px 12px 0}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 12px}
-.input{border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;background:#fff}
-.services-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.service{border:1px solid var(--border);border-radius:12px;background:#fff;padding:12px}
-.service h4{margin:0 0 6px 0}
-.service p{margin:0;color:var(--muted);font-size:13px}
-.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.form-grid .field{display:flex;flex-direction:column;gap:6px}
-.form-grid .field input,.form-grid .field select{border:1px solid var(--border);border-radius:10px;padding:10px;background:#fff}
-.hint{font-size:12px;color:#64748b;margin-top:2px}
-.req:after{content:" *"; color:#ef4444; font-weight:700}
-.input.bad{border-color:#ef4444}
-.role-chip{padding:3px 8px;border:1px dashed #cbd5e1;border-radius:999px;font-size:12px;color:#475569;background:#f8fafc}
-
-/* Mobile */
-@media (max-width:979px){
-  .brand .word{font-size:18px}
-  .layout{display:block;padding:12px}
-  .mega-left{display:none}
-  .tabs,.toolbar{display:block}
-  .tabs>*{display:block;margin:6px 0}
-  .kpi-grid{grid-template-columns:1fr 1fr}
-  .services-grid{grid-template-columns:1fr}
-  .form-grid{grid-template-columns:1fr}
-  .fab-home{position:fixed;right:14px;bottom:14px;z-index:9998;width:52px;height:52px;border-radius:999px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:#0ea5e9;color:#fff;font-size:22px;text-decoration:none;box-shadow:0 10px 30px rgba(2,12,27,.18)}
-}
-
-/* A11y */
-a:focus,button:focus,input:focus,select:focus{outline:2px solid #0ea5e9;outline-offset:2px}
-
-/* Print */
-@media print{
-  header,.mega-left,.fab-home{display:none!important}
-  #view{padding:0}
-  .card{box-shadow:none;border:1px solid #ddd;border-radius:0}
-}
+:root{--royal:#0B3B74;--gold:#D4AF37;--accent:#1e40af;--slate:#0f172a;--muted:#475569;--bg:#F6F7F9;--border:#e2e8f0}
+:root.dark{--bg:#0b1220;--slate:#e5e7eb;--muted:#94a3b8;--border:#334155}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:'Tajawal',system-ui,Arial;background:var(--bg);color:var(--slate)}
+a{color:var(--royal);text-decoration:none}button{cursor:pointer}
+.header{background:var(--royal);color:#fff;border-bottom:4px solid var(--gold)}
+.container{max-width:1240px;margin:0 auto;padding:16px}
+.flex{display:flex;align-items:center;gap:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:900px){.row{grid-template-columns:1fr}}
+.brand{font-weight:900;font-size:18px;display:flex;gap:10px;align-items:center}
+.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;flex:1}
+.nav a{color:#fff;opacity:.92;padding:6px 8px;border-radius:8px}
+.nav a.active{opacity:1;background:rgba(255,255,255,.12)}
+.badge{display:inline-block;border:1px solid var(--gold);color:var(--royal);border-radius:999px;padding:6px 12px;font-size:12px;background:#fff}
+.btn{display:inline-block;background:var(--accent);color:#fff;border:2px solid var(--gold);padding:10px 14px;border-radius:12px;font-weight:700}
+.btn[disabled], .badge[disabled]{opacity:.5;cursor:not-allowed}
+.hero{padding:24px 0}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;margin:12px 0}
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1100px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid-3,.grid-4,.grid-2{grid-template-columns:1fr}}
+.tile{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;gap:12px;align-items:flex-start;transition:.2s}
+.tile:hover{border-color:var(--gold);box-shadow:0 6px 16px rgba(0,0,0,.05)}
+.icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;background:#fff}
+.small{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+.footer{padding:20px 0;border-top:1px solid var(--border);color:var(--muted);font-size:14px}
+.input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border:1px solid var(--border);padding:10px 12px;font-size:14px;text-align:right;vertical-align:top}
+.table th{background:#f8fafc}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal .box{background:#fff;border-radius:16px;border:1px solid var(--border);max-width:900px;width:100%;padding:16px}
+.hidden{display:none!important}
+.logoRow{display:flex;gap:8px;align-items:center}
+.kit{display:none}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.tab{border:1px solid var(--border);border-radius:999px;padding:6px 10px;background:#fff}
+.tab.active{border-color:var(--gold)}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;background:#eef2ff;color:#1e40af;font-size:12px}
+.badge.danger-only{border-color:#ef4444;color:#991b1b}
+html.dark body{background:var(--bg);color:var(--slate)}
+html.dark .header{background:#0a2540}
+html.dark .card{background:#0f172a;border-color:var(--border)}
+/* شعارات SVG داخلية */
+.svg-logo{height:28px}
 </style>
 </head>
 <body>
-<header>
-  <div class="topbar">
-    <div class="brand" onclick="location.hash='#/overview'" role="link" tabindex="0" aria-label="العودة للرئيسية">
-      <div class="mark">
-        <!-- شعار حصيف (SVG أنيق وخفيف) -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 200 200" aria-label="شعار حصيف">
-          <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#22c55e"/>
-          </linearGradient></defs>
-          <rect x="30" y="30" width="140" height="140" rx="28" fill="url(#g1)" opacity=".15"/>
-          <path d="M60 120c20-40 60-40 80 0" fill="none" stroke="#0ea5e9" stroke-width="10" stroke-linecap="round"/>
-          <circle cx="100" cy="80" r="18" fill="#22c55e"/>
-        </svg>
+<header class="header">
+  <div class="container flex" style="justify-content:space-between">
+    <!-- يمين: شعار حصيف (SVG داخلي) -->
+    <a class="brand logoRow" href="#home" title="منصة حصيف">
+      <svg class="svg-logo" viewBox="0 0 120 32" aria-label="Hasseef">
+        <rect x="0" y="2" width="32" height="28" rx="6" fill="#0B3B74" stroke="#D4AF37" stroke-width="2"/>
+        <text x="8" y="23" font-size="18" fill="#fff" font-weight="700">ح</text>
+        <text x="38" y="23" font-size="14" fill="#fff" font-weight="700">منصة حصيف</text>
+      </svg>
+      <span id="brandTitle" class="small" style="color:#fff">المنصة الوطنية للتكامل التنموي</span>
+    </a>
+    <!-- المنتصف: قائمة -->
+    <nav class="nav" id="topNav">
+      <a href="#home" data-i18n="home" class="active">الرئيسية</a>
+      <a href="#about" data-i18n="about">عن المنصة</a>
+      <a href="#login" data-i18n="accounts">الحسابات</a>
+      <a href="#register" data-i18n="register">تسجيل</a>
+      <a href="#map" data-i18n="map">الخرائط</a>
+      <a href="#govvalue" data-i18n="govValue">القيمة الحكومية</a>
+      <a href="#funding" data-i18n="funding">التمويل/الرعايات</a>
+      <a href="#docs" data-i18n="docs">الوثائق</a>
+      <a href="#subscriptions" data-i18n="subscriptions">الاشتراكات</a>
+      <a href="#sponsors" data-i18n="sponsors">الرعاة</a>
+      <a href="#support" data-i18n="support">الدعم</a>
+      <a href="#policies" data-i18n="policies">السياسات</a>
+      <a href="#contact" data-i18n="contact">اتصل بنا</a>
+      <a href="#admin" data-i18n="admin">الإدارة</a>
+    </nav>
+    <!-- يسار: وضع ليلي + لغة + شعاري الرؤية/تلبية (SVG داخلية بروابط رسمية) -->
+    <div class="flex" style="gap:10px;align-items:center">
+      <button class="badge" id="themeBtn" title="تبديل الوضع">☀︎/🌙</button>
+      <div class="lang">
+        <button class="badge" onclick="setLang('ar')">عربي</button>
+        <button class="badge" onclick="setLang('en')">English</button>
       </div>
-      <div>
-        <div class="word">منصة حصيف</div>
-        <div class="sub">منظومة ذكية لإدارة المعرفة والأداء</div>
-      </div>
-    </div>
-    <a class="home-btn" href="#/overview">الرئيسية</a>
-    <button class="btn ghost" id="globalSearchBtn">بحث موحّد</button>
-    <button class="btn ghost" id="desktopLoginBtn">دخول</button>
-    <button class="btn ghost" id="mobileMenuBtn">القائمة ☰</button>
-    <div class="left-box">
-      <button id="bell" class="bell" aria-label="الإشعارات">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5"/>
-          <path d="M10 21a2 2 0 0 0 4 0"/>
-        </svg>
-        <span class="badge-dot"></span>
-      </button>
+      <a href="https://www.vision2030.gov.sa/" target="_blank" class="logoRow" title="Vision 2030">
+        <svg class="svg-logo" viewBox="0 0 120 24" aria-label="Vision2030"><text x="0" y="18" font-size="16" fill="#fff">Vision 2030</text></svg>
+      </a>
+      <a href="https://talbiya.sa" target="_blank" class="logoRow" title="Talbiya R&D">
+        <svg class="svg-logo" viewBox="0 0 120 24" aria-label="Talbiya"><text x="0" y="18" font-size="16" fill="#fff">Talbiya</text></svg>
+      </a>
     </div>
   </div>
 </header>
 
-<!-- أيقونات قابلة لإعادة الاستخدام -->
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-  <symbol id="ico-knowledge" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h8"/></symbol>
-  <symbol id="ico-kpi" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l3-3 2 2 5-5"/></symbol>
-  <symbol id="ico-ops" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></symbol>
-  <symbol id="ico-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/></symbol>
-  <symbol id="ico-integr" viewBox="0 0 24 24"><path d="M3 12h6l3-3 3 6 3-3h3"/><path d="M3 6h6M15 18h6"/></symbol>
-  <symbol id="ico-govern" viewBox="0 0 24 24"><path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10z"/></symbol>
-  <symbol id="ico-module" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
-</svg>
-
-<div class="layout">
-  <aside class="mega-left" aria-label="القائمة الرئيسية">
-    <details open><summary>البدء السريع</summary><div class="group-body">
-      <a href="#/overview"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg> نظرة عامة</a>
-      <a href="#/intro"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-knowledge"/></svg> من نحن</a>
-      <a href="#/library"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-doc"/></svg> مكتبة المعرفة</a>
-    </div></details>
-
-    <details><summary>الوحدات</summary><div class="group-body">
-      <a href="#/mod/insights"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-kpi"/></svg> الذكاء المؤسسي</a>
-      <a href="#/mod/quality"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-govern"/></svg> الجودة والامتثال</a>
-      <a href="#/mod/process"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-ops"/></svg> العمليات والتحسين</a>
-      <a href="#/mod/learning"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-knowledge"/></svg> التعلم المؤسسي</a>
-      <a href="#/mod/partners"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-integr"/></svg> الشراكات والتكامل</a>
-      <a href="#/mod/governance"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-govern"/></svg> الحوكمة والبيانات</a>
-    </div></details>
-
-    <details><summary>التشغيل والتقارير</summary><div class="group-body">
-      <a href="#/ops"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-ops"/></svg> التشغيل</a>
-      <a href="#/kpi"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-kpi"/></svg> مؤشرات KPI</a>
-      <a href="#/reports"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-doc"/></svg> التقارير</a>
-    </div></details>
-
-    <details><summary>التكامل</summary><div class="group-body">
-      <a href="#/integration"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-integr"/></svg> تكامل الشركاء</a>
-    </div></details>
-
-    <details><summary>الدعم والجودة</summary><div class="group-body">
-      <a href="#/support"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-govern"/></svg> الدعم الفني</a>
-      <a href="#/policies"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-doc"/></svg> الأدلة والسياسات</a>
-      <a href="#/contact"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-integr"/></svg> اتصل بنا</a>
-    </div></details>
-  </aside>
-
-  <section id="view" class="content">
-    <div class="card"><h2 class="section-title">مرحبًا بك في منصة حصيف</h2>
-      <p>منصة مرنة لإدارة المعرفة، المؤشرات، العمليات، والتكامل بين الشركاء — في ملف واحد سريع.</p>
-    </div>
-    <div class="kpi-grid" id="kpiHome" style="margin-top:12px"></div>
-  </section>
-</div>
-
-<a class="fab-home" href="#/overview" aria-label="الرئيسية" style="display:none">⌂</a>
-
-<!-- حوار الدخول -->
-<div id="loginBackdrop" style="position:fixed;inset:0;background:rgba(2,12,27,.45);display:none;z-index:10000"></div>
-<div id="loginWrap" style="position:fixed;inset:0;display:none;place-items:center;z-index:10001">
-  <div id="loginCard" role="dialog" aria-modal="true" aria-labelledby="loginTitle" style="width:min(92vw,720px);background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 20px 60px rgba(2,12,27,.25)">
-    <h3 id="loginTitle">تسجيل الدخول</h3>
-    <div class="login-grid">
-      <div class="login-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div><label>اسم المستخدم</label><input id="lg_user" class="input" value="HASSEE F" autocomplete="username"></div>
-        <div><label>كلمة المرور</label><input id="lg_pass" class="input" type="password" value="1234" autocomplete="current-password"></div>
-      </div>
-      <div><label>الوحدة/القسم</label>
-        <select id="lg_mod" class="input">
-          <option value="insights">الذكاء المؤسسي</option>
-          <option value="quality">الجودة والامتثال</option>
-          <option value="process">العمليات والتحسين</option>
-          <option value="learning">التعلم المؤسسي</option>
-          <option value="partners">الشراكات والتكامل</option>
-          <option value="governance">الحوكمة والبيانات</option>
-        </select>
-      </div>
-      <div><label>الدور/الصلاحية</label>
-        <select id="lg_role" class="input">
-          <option value="viewer">عارض</option>
-          <option value="kpi">مشرف مؤشرات</option>
-          <option value="ops">محرر عمليات</option>
-          <option value="report">منسق تقارير</option>
-          <option value="owner">مالك الوحدة</option>
-        </select>
-      </div>
-      <div class="login-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">
-        <button id="lg_cancel" class="btn ghost">إلغاء</button>
-        <button id="lg_ok" class="btn">دخول</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- بحث موحّد -->
-<div id="globalSearchBackdrop" style="position:fixed;inset:0;background:rgba(2,12,27,.45);display:none;z-index:10000"></div>
-<div id="globalSearchWrap" style="position:fixed;inset:0;display:none;place-items:center;z-index:10001">
-  <div style="width:min(92vw,820px);max-height:80vh;overflow:auto;background:#fff;border:1px solid #e6e9ef;border-radius:16px;padding:16px;box-shadow:0 20px 60px rgba(2,12,27,.25)">
-    <h3>بحث موحّد في الخدمات</h3>
-    <div style="display:flex;gap:8px;margin:8px 0 12px">
-      <input id="gs_q" class="input" placeholder="ابحث باسم خدمة/وحدة/مؤشر...">
-      <button class="btn" id="gs_go">بحث</button>
-      <button class="btn ghost" id="gs_close">إغلاق</button>
-    </div>
-    <div id="gs_results" class="services-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div>
-  </div>
-</div>
-
-<script>
-"use strict";
-const $$=(s,root=document)=>Array.from(root.querySelectorAll(s));
-const $=(s,root=document)=>root.querySelector(s);
-const isMobile = ()=> window.matchMedia && matchMedia("(max-width:979px)").matches;
-
-/* ===== KPI schema: units + thresholds (per indicator) ===== */
-const KPI_SCHEMA = {
-  "نسبة": (v)=>({unit:"%", value:v, grade: v>=90?"ok": v>=75?"warn":"bad", target:"≥90%"}),
-  "دقيقة": (v)=>({unit:"د", value:v, grade: v<=10?"ok": v<=20?"warn":"bad", target:"≤10د"}),
-  "مؤشر": (v)=>({unit:"نقطة", value:v, grade: v>=85?"ok": v>=70?"warn":"bad", target:"≥85"})
-};
-function inferKPI(indTitle){
-  if(/انتظار|زمن|د\)/.test(indTitle)) return "دقيقة";
-  if(/رضا|التزام|تغطية|تحقق|جاهزية|حضور|نجاح|شفافية/.test(indTitle)) return "نسبة";
-  return "مؤشر";
-}
-function makeKPIRow(title){
-  const kind = inferKPI(title);
-  const raw = kind==="دقيقة" ? (4 + Math.floor(Math.random()*18)) : (75 + Math.floor(Math.random()*20));
-  const calc = KPI_SCHEMA[kind](raw);
-  const trend = (Math.random()>.5?"+":"-") + (Math.random()*5|0) + "%";
-  return {title, value: calc.value + (calc.unit==="%"?"%":"") + (calc.unit==="د"?"د":""), unit:calc.unit, grade:calc.grade, trend, target: calc.target};
-}
-
-/* OFFICIAL KPIs per module */
-const OFFICIAL_KPIS = {
-  insights: [
-    {title:"تغطية مصادر البيانات", kind:"نسبة", target:"≥90%"},
-    {title:"صلاحية البيانات المستخدمة", kind:"نسبة", target:"≥92%"},
-    {title:"زمن إعداد لوحة أسبوعية", kind:"دقيقة", target:"≤10د"},
-    {title:"رضا صناع القرار", kind:"نسبة", target:"≥88%"}
-  ],
-  quality: [
-    {title:"مؤشرات الامتثال الفصلي", kind:"نسبة", target:"≥90%"},
-    {title:"تكرار أخطاء البيانات", kind:"نسبة", target:"≤10%"},
-    {title:"زمن معالجة الملاحظة", kind:"دقيقة", target:"≤15د"},
-    {title:"نضج الحوكمة", kind:"مؤشر", target:"≥85"}
-  ],
-  process: [
-    {title:"إغلاق التحسينات خلال المدة", kind:"نسبة", target:"≥85%"},
-    {title:"زمن دورة الإجراء", kind:"دقيقة", target:"≤12د"},
-    {title:"تنفيذ الخطط التصحيحية", kind:"نسبة", target:"≥80%"}
-  ],
-  learning: [
-    {title:"إتمام المسارات التدريبية", kind:"نسبة", target:"≥75%"},
-    {title:"رضا المتدربين", kind:"نسبة", target:"≥85%"},
-    {title:"تحسن ما بعد التدريب", kind:"نسبة", target:"≥60%"}
-  ],
-  partners: [
-    {title:"اتفاقيات تكامل نشطة", kind:"نسبة", target:"≥70%"},
-    {title:"تبادل بيانات ناجح", kind:"نسبة", target:"≥90%"},
-    {title:"زمن معالجة الربط", kind:"دقيقة", target:"≤10د"}
-  ],
-  governance: [
-    {title:"امتثال سياسات البيانات", kind:"نسبة", target:"≥95%"},
-    {title:"تحديث السجلات الوصفية", kind:"نسبة", target:"≥90%"},
-    {title:"استجابة طلبات الوصول", kind:"دقيقة", target:"≤8د"}
-  ]
-};
-
-function makeKPIsForModule(key){
-  const list = OFFICIAL_KPIS[key];
-  if (!list) return [];
-  return list.map(item=>{
-    let base;
-    if (item.kind === "نسبة") {
-      const tgt = parseInt(item.target.replace(/\D/g,'')) || 85;
-      // لو الهدف ≤ نسبة (مثل ≤10% للأخطاء) سنعكس التوليد
-      if (/≤/.test(item.target)) base = Math.max(2, Math.floor(tgt - 2 + Math.random()*6)); // قريب من السقف المنخفض
-      else base = Math.max(tgt - 8, 60) + Math.floor(Math.random()*12);
-    } else if (item.kind === "دقيقة") {
-      const lim = parseInt(item.target.replace(/\D/g,'')) || 10;
-      base = Math.max(3, lim - 2) + Math.floor(Math.random()*6);
-    } else {
-      base = 80 + Math.floor(Math.random()*15);
-    }
-    const calc = KPI_SCHEMA[item.kind](base);
-    const trend = (Math.random()>.5?"+":"-") + (Math.random()*4|0) + "%";
-    return {title:item.title, value:calc.value + (calc.unit==="%"?"%":"") + (calc.unit==="د"?"د":""), unit:calc.unit, grade:calc.grade, target:item.target||calc.target, trend};
-  });
-}
-
-/* DATA: خدمات ونماذج */
-const MODULES = {
-  insights: {
-    name:"الذكاء المؤسسي", icon:"#ico-kpi",
-    services:{
-      "لوحات ومؤشرات":["لوحة القيادة التنفيذية","لوحة الأداء الأسبوعية","لوحة الأثر"],
-      "تحليلات متقدمة":["التنبؤ بالطلب","تحليل الاتجاهات","تقسيم الشرائح"],
-      "نماذج وحقول (تجريبية)":[
-        {form:"طلب لوحة جديدة", fields:["اسم اللوحة","القطاع","المستهلك","تاريخ التسليم","ملاحظات"]},
-        {form:"نشر تقرير تحليلي", fields:["العنوان","الدورية","الفئة المستهدفة","ملف مرفق","ملاحظات"]}
-      ]
-    },
-    ops:["مزامنة مصدر جديد","مراجعة جودة القياس","تحسين أداء الاستعلامات"]
-  },
-  quality: {
-    name:"الجودة والامتثال", icon:"#ico-govern",
-    services:{
-      "إدارة الملاحظات":["تسجيل ملاحظة جودة","تحليل السبب الجذري","خطة تصحيح"],
-      "الامتثال والسياسات":["فحوص الامتثال الدورية","مصفوفة التقييم","تقارير الاعتمادية"],
-      "نماذج وحقول (تجريبية)":[
-        {form:"رفع ملاحظة جودة", fields:["الوحدة","النوع","الأولوية","الوصف","المعالجة المتوقعة"]},
-        {form:"اعتماد سياسة", fields:["اسم السياسة","الجهة المعتمدة","تاريخ السريان","مرفق","ملاحظات"]}
-      ]
-    },
-    ops:["جولة امتثال ربع سنوية","تحديث سجل السياسات","معالجة ملاحظات حرجة"]
-  },
-  process: {
-    name:"العمليات والتحسين", icon:"#ico-ops",
-    services:{
-      "إدارة الإجراءات":["خرائط العمليات","مؤقتات SLA","إشعارات التأخير"],
-      "التحسين المستمر":["كايدزن أسبوعي","لوحة عنق الزجاجة","اقتراحات الفريق"],
-      "نماذج وحقول (تجريبية)":[
-        {form:"طلب تحسين عملية", fields:["اسم العملية","المالك","الوصف","الأثر المتوقع","الزمن المستهدف"]},
-        {form:"توثيق إجراء", fields:["العنوان","الإصدار","نطاق التطبيق","مرفقات","ملاحظات"]}
-      ]
-    },
-    ops:["تحسين سير عمل الدعم","تقليل زمن الدورة","أتمتة إشعارات الإنجاز"]
-  },
-  learning: {
-    name:"التعلم المؤسسي", icon:"#ico-knowledge",
-    services:{
-      "أكاديمية داخلية":["مسارات تعلم","محتوى تفاعلي","شهادات رقمية"],
-      "إدارة المعرفة":["قواعد المعرفة","مقالات أفضل الممارسات","جلسات تبادل خبرات"],
-      "نماذج وحقول (تجريبية)":[
-        {form:"دورة جديدة", fields:["العنوان","المدرب","المدّة","المخرجات","المواعيد"]},
-        {form:"مقال معرفة", fields:["العنوان","الكلمات المفتاحية","الملخص","المحتوى","مرفق"]}
-      ]
-    },
-    ops:["نشر مسار تعلم","مراجعة مقالات","فعالية تبادل الخبرات"]
-  },
-  partners: {
-    name:"الشراكات والتكامل", icon:"#ico-integr",
-    services:{
-      "التكامل التقني":["واجهات API","بوابة المطور","بيئات اختبار"],
-      "إدارة الشراكات":["اتفاقيات مستوى الخدمة","متابعة الالتزامات","لوحة المؤشرات المشتركة"],
-      "نماذج وحقول (تجريبية)":[
-        {form:"طلب تكامل", fields:["اسم الشريك","نطاق البيانات","دورية التبادل","نقطة الاتصال","ملاحظات"]},
-        {form:"اتفاقية مستوى خدمة", fields:["الشريك","العقد","SLA %","الفترة","مرفقات"]}
-      ]
-    },
-    ops:["إطلاق ربط جديد","تدقيق أمن المعلومات","مراجعة SLA"]
-  },
-  governance: {
-    name:"الحوكمة والبيانات", icon:"#ico-govern",
-    services:{
-      "حوكمة البيانات":["كتالوج البيانات","معرّفات موحدة","ضوابط الوصول"],
-      "إدارة الهوية والصلاحيات":["أدوار دقيقة","سجلات監 Audit","مراجعات دورية"],
-      "نماذج وحقول (تجريبية)":[
-        {form:"طلب وصول", fields:["اسم المستخدم","الوحدة","مستوى الوصول","مدة الوصول","مبرر"]},
-        {form:"تسجيل أصل بيانات", fields:["الاسم","المالك","التصنيف","الدورية","المصدر"]}
-      ]
-    },
-    ops:["تحديث كتالوج","تدقيق صلاحيات","مراجعة سياسات الخصوصية"]
-  }
-};
-
-/* Util */
-function toast(msg){
-  const t=document.createElement('div'); t.textContent=msg;
-  t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);top:16px;background:#0ea5e9;color:#fff;padding:8px 12px;border-radius:10px;z-index:9999';
-  document.body.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transition='.2s'; setTimeout(()=> t.remove(), 180); }, 1200);
-}
-function clearNode(el){ while(el.firstChild) el.removeChild(el.firstChild); }
-function KPIIcon(){ return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l3-3 2 2 5-5"/></svg>'; }
-
-/* Excel + Print */
-function rowsToXLS(name, rows){
-  const esc = (s)=> String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  const shRows = rows.map(r=> '<Row>'+ r.map(c=> `<Cell><Data ss:Type="String">${esc(c)}</Data></Cell>`).join('') +'</Row>').join('');
-  const xml = `<?xml version="1.0"?>
-  <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
-    xmlns:o="urn:schemas-microsoft-com:office:office"
-    xmlns:x="urn:schemas-microsoft-com:office:excel"
-    xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
-    <Worksheet ss:Name="${esc(name)}"><Table>${shRows}</Table></Worksheet>
-  </Workbook>`;
-  const blob = new Blob([xml], {type:'application/vnd.ms-excel'});
-  const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=name+'.xls';
-  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100);
-}
-function printSection(){ window.print(); }
-
-/* Forms: validation + local save */
-function formKey(mod, title){ return `haseef.form.${mod}.${title}`; }
-function formCollect(card){
-  const inputs = $$('.input', card);
-  const data = {}; let ok = true;
-  inputs.forEach((inp)=>{
-    const label = inp.parentElement.querySelector('label')?.textContent?.replace('*','').trim()||'';
-    const req = inp.dataset.required==='1';
-    if(req && !inp.value.trim()){ ok=false; inp.classList.add('bad'); }
-    else { inp.classList.remove('bad'); }
-    data[label] = inp.value;
-  });
-  return {ok, data};
-}
-function saveFormDraft(btn, mod, title){
-  const card = btn.closest('[data-form-title]');
-  const {data} = formCollect(card);
-  try{ localStorage.setItem(formKey(mod,title), JSON.stringify({data, draft:true, ts:Date.now()})); toast('تم حفظ المسودة'); }catch(_){ toast('تعذر الحفظ'); }
-  return false;
-}
-function saveFormFinal(btn, mod, title){
-  const card = btn.closest('[data-form-title]');
-  const res = formCollect(card);
-  if(!res.ok){ toast('الرجاء تعبئة الحقول الإلزامية'); return false; }
-  try{ localStorage.setItem(formKey(mod,title), JSON.stringify({data:res.data, draft:false, ts:Date.now()})); toast('تم الحفظ'); }catch(_){ toast('تعذر الحفظ'); }
-  return false;
-}
-function loadForm(btn, mod, title){
-  const card = btn.closest('[data-form-title]');
-  const raw = localStorage.getItem(formKey(mod,title)); if(!raw){ toast('لا توجد بيانات'); return false; }
-  try { const {data} = JSON.parse(raw); $$('.input', card).forEach(inp=>{
-    const label = inp.parentElement.querySelector('label')?.textContent?.replace('*','').trim()||'';
-    if(data[label]!=null) inp.value = data[label];
-  }); toast('تم الاسترجاع'); } catch(_){ toast('تعذر الاسترجاع'); }
-  return false;
-}
-function clearForm(btn, mod, title){
-  const card = btn.closest('[data-form-title]');
-  $$('.input', card).forEach(inp=> inp.value='');
-  try{ localStorage.removeItem(formKey(mod,title)); }catch(_){}
-  toast('تم التفريغ');
-  return false;
-}
-function formCard(title, fields, modKey){
-  return `<div class="card" style="margin-top:8px" data-form-title="${title}">
-    <div style="display:flex;align-items:center;gap:8px"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-doc"/></svg><b>${title}</b></div>
-    <div class="form-grid" style="margin-top:8px">
-      ${fields.map((f,i)=>{
-        const isReq = /^(الاسم|العنوان|الجهة|الأولوية|نوع|التاريخ)$/u.test(f) || i<2;
-        return `<div class='field'><label class='${isReq?'req':''}'>${f}</label><input class='input' placeholder='${f}' data-required='${isReq?1:0}'></div>`;
-      }).join('')}
-    </div>
-    <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn ghost" onclick="return saveFormDraft(this,'${modKey||''}','${title||''}')">مسودة</button>
-      <button class="btn" onclick="return saveFormFinal(this,'${modKey||''}','${title||''}')">حفظ</button>
-      <button class="btn ghost" onclick="return loadForm(this,'${modKey||''}','${title||''}')">استرجاع</button>
-      <button class="btn ghost" onclick="return clearForm(this,'${modKey||''}','${title||''}')">تفريغ</button>
-    </div>
-    <div class="hint">الحفظ محليًا على جهازك (تجريبي).</div>
-  </div>`;
-}
-
-/* Roles */
-function getRole(){ try{ return JSON.parse(localStorage.getItem('haseef_auth')||'{}').role || 'viewer'; }catch(_){ return 'viewer'; } }
-function enforceRole(ctx){
-  const role = getRole();
-  const chip = document.getElementById('roleChip'); if(chip){ chip.textContent = {'viewer':'عارض','kpi':'مشرف مؤشرات','ops':'محرر عمليات','report':'منسق تقارير','owner':'مالك الوحدة'}[role]||role; }
-  if(ctx==='services'){ $$('#modContent .btn').forEach(b=>{ if(/حفظ|مسودة|استرجاع|تفريغ/.test(b.textContent)) b.disabled = (role==='viewer'); }); }
-  if(ctx==='ops'){ const canEdit = (role==='ops'||role==='owner'); const addBtn = $('#modContent [id^=addOp_]'); if(addBtn) addBtn.disabled = !canEdit; $$('#modContent .card button').forEach(b=>{ if(b.textContent==='تم') b.disabled = !canEdit; }); }
-}
-
-/* Header actions */
-document.getElementById('bell').onclick = (e)=>{ e.preventDefault(); toast('لا إشعارات جديدة.'); };
-document.getElementById('mobileMenuBtn').onclick = (e)=>{ e.preventDefault(); openMobileMenu(); };
-document.getElementById('desktopLoginBtn').onclick = (e)=>{ e.preventDefault(); showLogin(); };
-
-/* Mobile menu sheet */
-function openMobileMenu(){
-  if (!isMobile()) return;
-  if (document.getElementById('mobileMenuSheet')) return;
-  const sheet = document.createElement('div');
-  sheet.id='mobileMenuSheet';
-  sheet.style.cssText='position:fixed;inset:auto 0 0 0;background:#fff;border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -12px 30px rgba(2,12,27,.15);z-index:9999;max-height:65vh;overflow:auto;padding:12px;transform:translateY(16px);opacity:0;transition:.2s';
-  sheet.innerHTML = document.querySelector('.mega-left').innerHTML;
-  sheet.querySelectorAll('a').forEach(a=> a.addEventListener('click', ev=>{ ev.preventDefault(); location.hash=a.getAttribute('href'); close(); }));
-  document.body.appendChild(sheet);
-  requestAnimationFrame(()=>{ sheet.style.transform='translateY(0)'; sheet.style.opacity='1'; });
-  function close(){ sheet.style.transform='translateY(16px)'; sheet.style.opacity='0'; setTimeout(()=> sheet.remove(), 180); }
-  document.addEventListener('click', (ev)=>{ if(!sheet.contains(ev.target)) close(); }, {once:true});
-}
-
-/* Login dialog */
-const loginBackdrop = document.getElementById('loginBackdrop');
-const loginWrap = document.getElementById('loginWrap');
-function showLogin(pref){
-  if (pref) $('#lg_mod').value = pref;
-  loginBackdrop.style.display='block'; loginWrap.style.display='grid'; setTimeout(()=> $('#lg_user').focus(), 0);
-}
-function hideLogin(){ loginBackdrop.style.display='none'; loginWrap.style.display='none'; }
-$('#lg_cancel').onclick = hideLogin;
-$('#lg_ok').onclick = ()=>{
-  const u = $('#lg_user').value.trim(), p = $('#lg_pass').value.trim(), m = $('#lg_mod').value, r = $('#lg_role').value;
-  if (!u || !p || !m){ toast('اكمل الحقول'); return; }
-  localStorage.setItem('haseef_auth', JSON.stringify({user:u, mod:m, role:r}));
-  hideLogin(); location.hash = `#/mod/${m}?tab=summary`;
-};
-
-/* Routing */
-function parseRoute(){
-  const h = location.hash || "";
-  if (!h || h==="#" || h==="#/") return {type:"overview"};
-  if (h==="#/overview") return {type:"overview"};
-  if (h==="#/intro") return {type:"intro"};
-  if (h==="#/library") return {type:"library"};
-  if (h==="#/ops") return {type:"ops"};
-  if (h==="#/kpi") return {type:"kpi"};
-  if (h==="#/reports") return {type:"reports"};
-  if (h==="#/integration") return {type:"integration"};
-  if (h==="#/support") return {type:"support"};
-  if (h==="#/policies") return {type:"policies"};
-  if (h==="#/contact") return {type:"contact"};
-  const m = h.match(/^#\/mod\/([^?]+)(?:\?tab=([a-z]+))?/);
-  if (m) return {type:"mod", key:m[1], tab:m[2]||"summary"};
-  return {type:"unknown"};
-}
-function applyTitle(){
-  const h = location.hash;
-  const MAP={"#/overview":"نظرة عامة – حصيف","#/intro":"من نحن – حصيف","#/library":"مكتبة المعرفة – حصيف","#/ops":"التشغيل – حصيف","#/kpi":"المؤشرات – حصيف","#/reports":"التقارير – حصيف","#/integration":"التكامل – حصيف","#/support":"الدعم – حصيف","#/policies":"السياسات – حصيف","#/contact":"اتصل بنا – حصيف"};
-  if (MAP[h]) document.title = MAP[h];
-  if (/^#\/mod\//.test(h)) document.title = "وحدة – حصيف";
-}
-function route(){
-  applyTitle();
-  const r = parseRoute();
-  if (r.type==="overview") return renderOverview();
-  if (r.type==="intro") return renderIntro();
-  if (r.type==="library") return renderLibrary();
-  if (r.type==="ops") return renderOps();
-  if (r.type==="kpi") return renderKpi();
-  if (r.type==="reports") return renderReports();
-  if (r.type==="integration") return renderIntegration();
-  if (r.type==="support") return renderSupport();
-  if (r.type==="policies") return renderPolicies();
-  if (r.type==="contact") return renderContact();
-  if (r.type==="mod") return renderModule(r.key, r.tab);
-  render404();
-}
-window.addEventListener('hashchange', route);
-
-/* Overview */
-function renderOverview(){
-  const mount = $('#kpiHome'); clearNode(mount);
-  const demo = ["نضج المعرفة","تغطية المحتوى","رضا المستخدمين","الامتثال","سرعة التقارير","تكامل الشركاء","الأثر المعرفي","تحسين مستمر"].slice(0,8)
-    .map(makeKPIRow);
-  const frag = document.createDocumentFragment();
-  demo.forEach(k=>{ const div=document.createElement('div'); div.className='kpi-card'; div.innerHTML = `
-    <div class="kpi-icon">${KPIIcon()}</div>
-    <div><div class="kpi-title">${k.title}</div>
-      <div class="kpi-meta"><span class="kpi-value">${k.value}</span>
-        <span class="badge ${k.grade}">${k.grade==="ok"?"جيد":k.grade==="warn"?"تحذير":"حرِج"}</span>
-        <span class="badge info">${k.trend}</span></div>
-    </div>`; frag.appendChild(div); });
-  mount.appendChild(frag);
-  $('#view').prepend(Object.assign(document.createElement('div'),{className:'card',innerHTML:'<b>تلميح:</b> استخدم زر <i>بحث موحّد</i> للعثور سريعًا على أي خدمة أو مؤشر.'}));
-}
-
-/* Simple pages */
-function renderIntro(){ $('#view').innerHTML = `
-  <div class="card">
-    <h2 class="section-title">من نحن</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div class="card" style="border-style:dashed"><b>الرؤية</b><br>تمكين المعرفة واتخاذ القرار بسرعة وموثوقية.</div>
-      <div class="card" style="border-style:dashed"><b>الرسالة</b><br>تقديم أدوات عملية لإدارة المحتوى، المؤشرات، التشغيل، والتكامل.</div>
-    </div>
-    <div class="card" style="margin-top:12px"><b>الأهداف</b>
-      <ul style="margin:8px 0 0 0;padding-inline-start:18px">
-        <li>رفع جودة المعرفة وإتاحتها.</li>
-        <li>تعزيز الامتثال وحوكمة البيانات.</li>
-        <li>تسريع اتخاذ القرار بالتقارير الذكية.</li>
-        <li>توسيع التكامل مع الشركاء.</li>
-      </ul>
-    </div>
-  </div>`; }
-function renderLibrary(){ $('#view').innerHTML = `
-  <div class="card"><h2>مكتبة المعرفة</h2>
-    <div class="toolbar"><input class="input" placeholder="بحث عن مقال/وثيقة..."><button class="btn ghost">مسح</button></div>
-    <div class="services-grid">
-      ${["دليل الحوكمة","أفضل الممارسات","قوالب التقارير","وثائق API","مكتبة التدريب"].map(t=>`<div class="service"><h4>${t}</h4><p>وصف مختصر.</p></div>`).join('')}
-    </div>
-  </div>`; }
-function renderOps(){ location.hash = '#/mod/process?tab=operations'; }
-function renderKpi(){ location.hash = '#/mod/insights?tab=indicators'; }
-function renderReports(){ $('#view').innerHTML = `
-  <div class="services-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
-    ${["الأداء الشهري","الامتثال والجودة","التكامل والشراكات","إدارة المعرفة","التعلم المؤسسي","تحسين العمليات"].map(t=>`
-      <a class="service" href="#" onclick="return false" style="text-decoration:none">
-        <h4>تقرير ${t}</h4><p>PDF · آخر إصدار</p>
-      </a>`).join('')}
-  </div>`; }
-function renderSupport(){ $('#view').innerHTML = `<div class="card"><h2>الدعم الفني</h2><p>تجريبي: support@haseef.sa</p></div>`; }
-function renderPolicies(){ $('#view').innerHTML = `<div class="card"><h2>الأدلة والسياسات</h2><p>إرشادات الحوكمة والخصوصية والامتثال.</p></div>`; }
-function renderContact(){ $('#view').innerHTML = `<div class="card"><h2>اتصل بنا</h2><p>نموذج تواصل بسيط (تجريبي).</p></div>`; }
-function renderIntegration(){ $('#view').innerHTML = `
-  <div class="card"><h2>تكامل الشركاء</h2>
-    <p>واجهات تجريبية (Mock) — عند الانتقال للإصدار الفعلي تُستبدل بنقاط نهاية حقيقية.</p>
-    <div class="card" style="margin-top:8px"><b>نماذج نقاط نهاية</b>
-      <ul style="margin:8px 0 0 0;padding-inline-start:18px">
-        <li><code>POST /api/v1/knowledge</code> — إنشاء/تحديث عنصر معرفة.</li>
-        <li><code>GET /api/v1/kpi?module=insights</code> — مؤشرات محدثة حسب الوحدة.</li>
-        <li><code>POST /api/v1/ops</code> — إضافة عملية/مهمة.</li>
-        <li><code>PUT /api/v1/policy/:id</code> — تحديث سياسة.</li>
-      </ul>
-    </div>
-    <div class="card" style="margin-top:8px"><b>قاموس بيانات مختصر</b>
-      <div class="services-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-        <div class="service"><h4>المعرفات</h4><p>content_id, kpi_id, op_id</p></div>
-        <div class="service"><h4>الوصف</h4><p>title, summary, owner, tags</p></div>
-        <div class="service"><h4>المقاييس</h4><p>value, unit, target, grade</p></div>
-        <div class="service"><h4>الميتاداتا</h4><p>source_system, created_at, updated_at</p></div>
-      </div>
-    </div>
-  </div>`; }
-
-/* Module view */
-const TABS = [
-  {key:"summary",label:"الملخص"},
-  {key:"services",label:"الخدمات"},
-  {key:"operations",label:"العمليات"},
-  {key:"indicators",label:"المؤشرات"},
-  {key:"reports",label:"التقارير"},
-  {key:"resources",label:"الموارد"},
-  {key:"governance",label:"الحوكمة"}
-];
-function renderModule(modKey, tabKey){
-  const pack = MODULES[modKey]; if(!pack) return render404();
-  const current = tabKey || "summary";
-  const view = $('#view'); clearNode(view);
-
-  const header=document.createElement('div'); header.className='card'; header.style.display='flex'; header.style.justifyContent='space-between'; header.style.alignItems='center'; header.style.gap='10px';
-  header.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px">
-      <div class="kpi-icon"><svg class="icon" viewBox="0 0 24 24"><use href="${pack.icon}"/></svg></div>
-      <div><div style="font-weight:800">${pack.name}</div>
-        <div style="color:#64748b;font-size:13px">وحدة · تبويب: <b>${(TABS.find(t=>t.key===current)||{}).label||""}</b> <span id='roleChip' class='role-chip' style='margin-inline-start:8px'></span></div>
-      </div>
-    </div>
-    <a class="btn ghost" href="#/library">مكتبة المعرفة</a>`;
-  view.appendChild(header);
-
-  const nav=document.createElement('nav'); nav.className='tabs'; nav.setAttribute('role','tablist'); nav.setAttribute('aria-label','تبويبات الوحدة');
-  nav.innerHTML = TABS.map(t=>`<a class="tab" role="tab" aria-selected="${t.key===current}" href="#/mod/${modKey}?tab=${t.key}">
-        <svg class="icon" viewBox="0 0 24 24"><use href="${pack.icon}"/></svg>${t.label}</a>`).join('');
-  view.appendChild(nav);
-
-  const mount=document.createElement('div'); mount.id='modContent'; view.appendChild(mount);
-
-  if (current==="summary"){
-    const data = makeKPIsForModule(modKey);
-    mount.innerHTML = `<div class="kpi-grid">${data.map(k=>`
-      <div class="kpi-card">
-        <div class="kpi-icon">${KPIIcon()}</div>
-        <div><div class="kpi-title">${k.title}</div>
-          <div class="kpi-meta"><span class="kpi-value">${k.value}</span>
-            <span class="badge ${k.grade}">${k.grade==="ok"?"جيد":k.grade==="warn"?"تحذير":"حرِج"}</span>
-            <span class="badge tgt">${k.target}</span>
-            <span class="badge info">${k.trend}</span>
-          </div>
+<!-- HOME -->
+<section id="home" class="kit" style="display:block">
+  <div class="hero">
+    <div class="container">
+      <div class="card">
+        <h2>رابط وطني مركزي للتكامل بين القطاعات</h2>
+        <p class="small">نسخة تشغيلية محلية — نموذج أولي موحّد (One-file)</p>
+        <div class="flex">
+          <button class="btn" onclick="downloadOfficialDoc()" data-i18n="download">تحميل الوثيقة الرسمية</button>
+          <a class="btn" href="#login" data-i18n="login">تسجيل الدخول</a>
         </div>
-      </div>`).join('')}</div>`;
-  }
-
-  if (current==="services"){
-    const grouped = (pack.services)||{};
-    let blocks = ''; Object.entries(grouped).forEach(([group,items])=>{
-      if (!items.length) return;
-      if (typeof items[0] === 'string'){
-        blocks += `<div class="card" style="margin:8px 0"><b>${group}</b>
-          <div class="services-grid">${items.map(it=>`<div class="service"><h4>${it}</h4><p>تفاصيل قابلة للتخصيص.</p></div>`).join('')}</div>
-        </div>`;
-      } else {
-        blocks += `<div class="card" style="margin:8px 0"><b>${group}</b>` + items.map(f=> formCard(f.form, f.fields, modKey)).join('') + `</div>`;
-      }
-    });
-    mount.innerHTML = blocks || `<div class="card">لا توجد خدمات.</div>`; enforceRole('services');
-  }
-
-  if (current==="operations"){
-    const ops = (pack.ops||[]).slice();
-    mount.innerHTML = `<div class="card">
-      <div style='display:flex;align-items:center;justify-content:space-between'>
-        <b>العمليات الجارية</b><button class='btn ghost' id='ops_export_${modKey}'>تصدير Excel</button>
       </div>
-      <div id="opList_${modKey}">${ops.map(v=>`<div class="card" style="margin-top:8px"><div style="display:flex;justify-content:space-between;gap:8px"><span>${v}</span><button class="btn ghost">تم</button></div></div>`).join('')}</div>
-      <div class="toolbar" style="margin-top:10px"><input id="newOp_${modKey}" class="input" placeholder="أضف مهمة تشغيلية..."><button class="btn" id="addOp_${modKey}">إضافة</button></div>
-    </div>`;
-    const list = document.getElementById('opList_'+modKey);
-    document.getElementById('addOp_'+modKey).onclick = ()=>{
-      const inp = document.getElementById('newOp_'+modKey); const v = inp.value.trim(); if(!v) return;
-      const row = document.createElement('div'); row.className='card'; row.style.marginTop='8px';
-      row.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px"><span>${v}</span><button class="btn ghost">تم</button></div>`;
-      row.querySelector('button').onclick = ()=> row.remove();
-      list.appendChild(row); inp.value='';
-    };
-    document.getElementById('ops_export_'+modKey).onclick = ()=>{
-      const rows = [['المهمة']].concat(Array.from(list.querySelectorAll('.card span')).map(s=>[s.textContent.trim()]));
-      rowsToXLS('operations_'+modKey, rows);
-    };
-    enforceRole('ops');
-  }
+      <div class="card grid grid-3">
+        <div><strong>الحسابات</strong><p class="small">أفراد، خاص، غير ربحي، جامعات، حكومة، مانحون، شركاء، هيئات التطوير، إدارة المنصة.</p></div>
+        <div><strong>الخدمات</strong><p class="small">مشاريع، فرص، محافظ، متحدثون، مرافق، تدريب تعاوني، مؤشرات وخرائط.</p></div>
+        <div><strong>الحوكمة</strong><p class="small">أدوار وصلاحيات، سير موافقات متعدد المراحل، اتفاقيات رقمية.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  if (current==="indicators"){
-    const data = makeKPIsForModule(modKey);
-    mount.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <b>جدول المؤشرات</b><div style="display:flex;gap:6px">
-        <button class="btn ghost" id="kpi_print">طباعة/PDF</button>
-        <button class="btn ghost" id="kpi_export_${modKey}">تصدير Excel</button>
-      </div></div>
-      <table class="table"><thead><tr>
-        <th data-k="title">المؤشر</th><th data-k="value">القيمة</th>
-        <th data-k="grade">التقييم</th><th>الهدف</th><th data-k="trend">الاتجاه</th><th>آخر تحديث</th>
-      </tr></thead>
-      <tbody>${data.map(k=>`
-        <tr>
-          <td>${k.title}</td>
-          <td><b>${k.value}</b></td>
-          <td><span class="badge ${k.grade}">${k.grade==="ok"?"جيد":k.grade==="warn"?"تحذير":"حرِج"}</span></td>
-          <td><span class="badge tgt">${k.target||"-"}</span></td>
-          <td><span class="badge info">${k.trend}</span></td>
-          <td><span class="badge">اليوم</span></td>
-        </tr>`).join('')}</tbody></table>`;
-    $$('#modContent th[data-k]').forEach(th=>{
-      let asc=true; th.addEventListener('click', ()=>{
-        const idx = {title:0,value:1,grade:2,trend:4}[th.dataset.k];
-        const rows = Array.from(document.querySelectorAll('#modContent tbody tr'));
-        rows.sort((a,b)=>{
-          const A=a.children[idx].textContent.trim(), B=b.children[idx].textContent.trim();
-          return asc ? A.localeCompare(B,'ar') : B.localeCompare(A,'ar');
-        }).forEach(r=> r.parentNode.appendChild(r)); asc=!asc;
-      });
-    });
-    const expBtn = document.getElementById('kpi_export_'+modKey); if(expBtn){ expBtn.onclick = ()=>{ 
-      const head = ["المؤشر","القيمة","التقييم","الهدف","الاتجاه","آخر تحديث"];
-      const rows = [head].concat(data.map(k=>[k.title,k.value,({"ok":"جيد","warn":"تحذير","bad":"حرِج"}[k.grade]||k.grade),k.target,k.trend,"اليوم"]));
-      rowsToXLS('kpi_'+modKey, rows);
-    } }
-    const pr = document.getElementById('kpi_print'); if(pr){ pr.onclick = ()=> printSection(); }
-  }
+<!-- ABOUT -->
+<section id="about" class="kit">
+  <div class="container"><div class="card">
+    <h3>عن المنصة</h3>
+    <p>حصيف يعمل كرابط وطني مركزي يجمع بين جميع القطاعات وفق أدوارها، مع خدمات موحّدة ولوحات قياس مرتبطة بأهداف رؤية 2030.</p>
+  </div></div>
+</section>
 
-  if (current==="reports"){
-    mount.innerHTML = `<div class="services-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
-      ${["الأداء الشهري","الامتثال والجودة","التكامل والشراكات","إدارة المعرفة","التعلم المؤسسي","تحسين العمليات"].map(t=>`
-        <a class="service" href="#" onclick="return false" style="text-decoration:none">
-          <h4>تقرير ${t}</h4><p>PDF · آخر إصدار</p>
-        </a>`).join('')}
-    </div>`;
-  }
+<!-- LOGIN -->
+<section id="login" class="kit">
+  <div class="container"><div class="card">
+    <h3>بوابة دخول الحسابات</h3>
+    <div class="grid grid-4" id="accountTiles"></div>
+  </div></div>
+</section>
 
-  if (current==="resources"){
-    mount.innerHTML = `<div class="card"><b>الموارد</b>
-      <ul style="margin:8px 0 0 0;padding-inline-start:18px">
-        <li><a href="#/policies">الأدلة والسياسات</a></li>
-        <li><a href="#/support">الدعم الفني</a></li>
-        <li><a href="#/contact">اتصل بنا</a></li>
-      </ul></div>`;
-  }
+<!-- REGISTER -->
+<section id="register" class="kit">
+  <div class="container"><div class="card">
+    <h3>تسجيل حساب جديد</h3>
+    <div class="row">
+      <div><label>نوع الحساب</label>
+        <select class="input" id="regType">
+          <option value="individual">الأفراد</option>
+          <option value="private">القطاع الخاص</option>
+          <option value="nonprofit">القطاع غير الربحي</option>
+          <option value="universities">الجامعات</option>
+          <option value="government">الحكومة</option>
+          <option value="donors">المانحون</option>
+          <option value="partners">الشركاء الاستراتيجيون</option>
+          <option value="dev_authorities">هيئات التطوير</option>
+        </select>
+      </div>
+      <div><label>اسم المستخدم</label><input class="input" id="regName" placeholder="Admin"></div>
+    </div>
+    <div class="row">
+      <div><label>البريد الإلكتروني</label><input class="input" id="regEmail" placeholder="name@example.com"></div>
+      <div><label>الدور</label><select class="input" id="regRole"><option>Admin</option><option>Manager</option><option>Operator</option><option>Observer</option></select></div>
+    </div>
+    <div class="small" style="margin:8px 0"><input type="checkbox" id="regAgree"> <label for="regAgree">أوافق على <a href="#agreement">الاتفاقية الرقمية</a></label></div>
+    <div style="text-align:end"><button class="btn" onclick="doRegister()">إنشاء الحساب</button></div>
+    <div id="regMsg" class="small hidden" style="margin-top:8px"></div>
+  </div></div>
+</section>
 
-  if (current==="governance"){
-    mount.innerHTML = `<div class="card"><b>الحوكمة والأدوار</b>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div class="card" style="border-style:dashed"><b>الأدوار</b>
-          <ul style="margin:6px 0 0 0;padding-inline-start:18px">
-            <li>مالك الوحدة</li><li>مشرف مؤشرات</li><li>منسق تقارير</li><li>محرر عمليات</li><li>عارض</li>
-          </ul></div>
-        <div class="card" style="border-style:dashed"><b>سياسات البيانات</b>
-          <ul style="margin:6px 0 0 0;padding-inline-start:18px">
-            <li>أقل صلاحية</li><li>إخفاء الهوية</li><li>تدقيق الدخول والتغييرات</li>
-          </ul></div>
-      </div></div>`;
-  }
+<!-- MAP -->
+<section id="map" class="kit">
+  <div class="container"><div class="card">
+    <h3>الخرائط والمؤشرات</h3>
+    <div class="row">
+      <div>
+        <label>اختر المنطقة</label><select class="input" id="regionSel"></select>
+        <div class="grid grid-3" style="margin-top:12px">
+          <div class="card"><div class="small">وظائف</div><h2 id="kpiJobs">—</h2></div>
+          <div class="card"><div class="small">منح</div><h2 id="kpiGrants">—</h2></div>
+          <div class="card"><div class="small">متطوعون</div><h2 id="kpiVols">—</h2></div>
+        </div>
+      </div>
+      <div>
+        <canvas id="mapChart" height="180"></canvas>
+        <p class="small">توزيع الفرص حسب نوع الحساب.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h4>خريطة السعودية (SVG داخلية)</h4>
+      <div id="ksaMap" style="overflow:auto">
+        <svg viewBox="0 0 600 320" style="max-width:100%;height:auto;border:1px solid var(--border);border-radius:12px">
+          <rect data-region="Riyadh"  x="260" y="120" width="140" height="80" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <rect data-region="Hail"    x="200" y=" 80" width="100" height="60" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <rect data-region="Makkah"  x="180" y="170" width="120" height="80" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <rect data-region="Madinah" x="120" y="120" width="120" height="70" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <rect data-region="Eastern" x="420" y="130" width="120" height="120" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <text x="290" y="160" font-size="12" fill="#475569">الرياض</text>
+          <text x="220" y="110" font-size="12" fill="#475569">حائل</text>
+          <text x="200" y="210" font-size="12" fill="#475569">مكة</text>
+          <text x="140" y="160" font-size="12" fill="#475569">المدينة</text>
+          <text x="450" y="190" font-size="12" fill="#475569">الشرقية</text>
+        </svg>
+      </div>
+      <p class="small">انقر منطقة لتحديث المؤشرات.</p>
+    </div>
+  </div></div>
+</section>
+
+<!-- GOV VALUE (مختصر) -->
+<section id="govvalue" class="kit">
+  <div class="container"><div class="card">
+    <h3>القيمة المضافة الحكومية</h3>
+    <div class="grid grid-4" id="govValueCards"></div>
+    <div class="card center"><a class="btn" href="#govvalue-all">عرض التفاصيل</a></div>
+  </div></div>
+</section>
+
+<!-- GOV VALUE TABLE -->
+<section id="govvalue-all" class="kit">
+  <div class="container"><div class="card">
+    <h3>تفاصيل القيمة المضافة</h3>
+    <div class="row"><div><input class="input" id="q" placeholder="ابحث عن جهة..."></div><div style="display:flex;align-items:end"><button class="btn" onclick="filterGovTable()">بحث</button></div></div>
+    <div style="overflow:auto;margin-top:8px">
+      <table class="table" id="tblGV"><thead><tr><th>الجهة</th><th>العنوان المختصر</th><th>الوصف</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div></div>
+</section>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="kit">
+  <div class="container">
+    <div class="card"><h3 id="dashTitle">لوحة الحساب</h3><p class="small" id="dashDesc"></p></div>
+    <div class="tabs" id="dashTabs"></div>
+    <div id="dashContent">
+      <!-- Projects -->
+      <div class="card" data-tab="Projects">
+        <h4>المشاريع/المبادرات</h4>
+        <div class="row">
+          <div><label>العنوان</label><input class="input" id="p_title"></div>
+          <div><label>القطاع المستهدف</label><select class="input" id="p_sector"><option>تعليمي</option><option>صحي</option><option>اجتماعي</option><option>ثقافي</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>الميزانية (SAR)</label><input class="input" id="p_budget" type="number" min="0" step="1000"></div>
+          <div><label>الحالة</label><select class="input" id="p_status"><option>جديد</option><option>قيد التنفيذ</option><option>مكتمل</option></select></div>
+        </div>
+        <div><label>وصف مختصر</label><textarea class="input" id="p_desc" rows="3"></textarea></div>
+        <div style="text-align:end"><button class="btn" data-need="create" onclick="dbAdd('projects')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblProjects"><thead><tr><th>العنوان</th><th>القطاع</th><th>الميزانية</th><th>الحالة</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <!-- Opportunities -->
+      <div class="card hidden" data-tab="Opportunities">
+        <h4>الفرص (وظائف/تطوع/منح/فعاليات)</h4>
+        <div class="row">
+          <div><label>النوع</label><select class="input" id="o_type"><option>وظيفة</option><option>تطوع</option><option>منحة</option><option>فعالية</option></select></div>
+          <div><label>العنوان</label><input class="input" id="o_title"></div>
+        </div>
+        <div class="row">
+          <div><label>الجهة</label><input class="input" id="o_org"></div>
+          <div><label>الموقع</label><input class="input" id="o_loc"></div>
+        </div>
+        <div style="text-align:end"><button class="btn" data-need="create" onclick="dbAdd('opps')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblOpps"><thead><tr><th>النوع</th><th>العنوان</th><th>الجهة</th><th>الموقع</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <!-- Wallet -->
+      <div class="card hidden" data-tab="Wallet">
+        <h4>المحفظة المالية</h4>
+        <div class="row">
+          <div><label>نوع العملية</label><select class="input" id="w_type"><option>تبرع</option><option>استثمار</option><option>اشتراك</option><option>رعاية</option></select></div>
+          <div><label>المبلغ (SAR)</label><input class="input" id="w_amount" type="number" min="0" step="100"></div>
+        </div>
+        <div style="text-align:end"><button class="btn" data-need="create" onclick="dbAdd('wallet')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblWallet"><thead><tr><th>النوع</th><th>المبلغ</th><th>التاريخ</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <!-- Speakers -->
+      <div class="card hidden" data-tab="Speakers">
+        <h4>مركز المتحدثين</h4>
+        <div class="row">
+          <div><label>الاسم</label><input class="input" id="s_name"></div>
+          <div><label>التخصص</label><input class="input" id="s_field"></div>
+        </div>
+        <div class="row">
+          <div><label>الجهة</label><input class="input" id="s_org"></div>
+          <div><label>الحالة</label><select class="input" id="s_status"><option>مرشح</option><option>معتمد</option></select></div>
+        </div>
+        <div style="text-align:end"><button class="btn" data-need="create" onclick="dbAdd('speakers')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblSpeakers"><thead><tr><th>الاسم</th><th>التخصص</th><th>الجهة</th><th>الحالة</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <!-- Facilities -->
+      <div class="card hidden" data-tab="Facilities">
+        <h4>إدارة المرافق</h4>
+        <div class="row">
+          <div><label>المنشأة</label><input class="input" id="f_name"></div>
+          <div><label>النوع</label><select class="input" id="f_type"><option>قاعة</option><option>معمل</option><option>مسرح</option><option>مرفق رياضي</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>السعة</label><input class="input" id="f_cap" type="number" min="0"></div>
+          <div><label>الموقع</label><input class="input" id="f_loc"></div>
+        </div>
+        <div style="text-align:end"><button class="btn" data-need="create" onclick="dbAdd('facilities')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblFacilities"><thead><tr><th>المنشأة</th><th>النوع</th><th>السعة</th><th>الموقع</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+      <!-- Co-op -->
+      <div class="card hidden" data-tab="Coop">
+        <h4>التدريب التعاوني</h4>
+        <div class="row">
+          <div><label>الجهة</label><input class="input" id="c_org"></div>
+          <div><label>المسمى</label><input class="input" id="c_title"></div>
+        </div>
+        <div class="row">
+          <div><label>المدة (أشهر)</label><input class="input" id="c_months" type="number" min="1" max="12"></div>
+          <div><label>الحالة</label><select class="input" id="c_status"><option>متاح</option><option>مغلق</option></select></div>
+        </div>
+        <div style="text-align:end"><button class="btn" data-need="create" onclick="dbAdd('coop')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblCoop"><thead><tr><th>الجهة</th><th>المسمى</th><th>المدة</th><th>الحالة</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUNDING -->
+<section id="funding" class="kit">
+  <div class="container"><div class="card">
+    <h3>سير موافقات التمويل/الرعايات</h3>
+    <p class="small">مراحل: طلب ← تدقيق ← اعتماد أولي ← اعتماد نهائي. (محاكاة محلية)</p>
+    <div class="row">
+      <div><label>عنوان الطلب</label><input class="input" id="wf_title" placeholder="مثال: رعاية فعالية مجتمعية"></div>
+      <div><label>القيمة (SAR)</label><input class="input" id="wf_amount" type="number" min="0" step="1000"></div>
+    </div>
+    <div class="row">
+      <div><label>الحساب</label><select class="input" id="wf_account"><option>غير ربحي</option><option>خاص</option><option>جامعات</option><option>حكومة</option><option>هيئات التطوير</option></select></div>
+      <div style="display:flex;align-items:end"><button class="btn" data-need="create" onclick="wfCreate()">إرسال</button></div>
+    </div>
+    <hr>
+    <table class="table" id="wfTbl"><thead><tr><th>العنوان</th><th>القيمة</th><th>الحساب</th><th>المرحلة</th><th>إجراءات</th></tr></thead><tbody></tbody></table>
+  </div></div>
+</section>
+
+<!-- DOCS -->
+<section id="docs" class="kit">
+  <div class="container"><div class="card">
+    <h3>الوثائق الرسمية</h3>
+    <div id="docsList" class="grid grid-3"></div>
+    <div class="center" style="margin-top:10px"><button class="btn" onclick="downloadOfficialDoc()">تحميل الوثيقة الرسمية</button></div>
+  </div></div>
+</section>
+
+<!-- SUBSCRIPTIONS -->
+<section id="subscriptions" class="kit"><div class="container grid grid-3">
+  <div class="card"><h4>أساسي</h4><ul class="small"><li>إدارة مشاريع حتى 25</li><li>محفظة أساسية</li><li>Webhook واحد</li></ul><div class="center"><button class="btn">ابدأ</button></div></div>
+  <div class="card"><h4>متقدم</h4><ul class="small"><li>مشاريع غير محدودة</li><li>تقارير مالية</li><li>مفاتيح API متعددة</li></ul><div class="center"><button class="btn">اختر</button></div></div>
+  <div class="card"><h4>متميز</h4><ul class="small"><li>حوكمة وصلاحيات</li><li>SLA</li><li>استضافة خاصة</li></ul><div class="center"><button class="btn">تواصل</button></div></div>
+</div></section>
+
+<!-- SPONSORS -->
+<section id="sponsors" class="kit"><div class="container grid grid-3">
+  <div class="card"><h4>استراتيجي</h4><ul class="small"><li>هوية مشتركة</li><li>تقرير وطني</li><li>مساحات رئيسية</li></ul></div>
+  <div class="card"><h4>بلاتيني</h4><ul class="small"><li>شعار رئيسي</li><li>تقارير ربع سنوية</li><li>دعوات</li></ul></div>
+  <div class="card"><h4>ذهبي</h4><ul class="small"><li>شعار داخلي</li><li>تقارير نصف سنوية</li><li>محتوى تعريفي</li></ul></div>
+</div></section>
+
+<!-- SUPPORT -->
+<section id="support" class="kit"><div class="container">
+  <div class="card">
+    <h3>الدعم الفني</h3>
+    <div class="row">
+      <div><label>الموضوع</label><input class="input" id="s1" placeholder="مثال: مشكلة تسجيل الدخول"></div>
+      <div><label>الأولوية</label><select class="input" id="s2"><option>عادية</option><option>عاجلة</option><option>طارئة</option></select></div>
+    </div>
+    <div><label>التفاصيل</label><textarea class="input" id="s3" rows="4"></textarea></div>
+    <div style="text-align:end"><button class="btn" data-need="create" onclick="addTicket()">إرسال</button></div>
+  </div>
+  <div class="card">
+    <h4>تذاكر سابقة</h4>
+    <table class="table" id="tickets"><thead><tr><th>الموضوع</th><th>الأولوية</th><th>الحالة</th></tr></thead><tbody></tbody></table>
+  </div>
+</div></section>
+
+<!-- POLICIES -->
+<section id="policies" class="kit"><div class="container"><div class="card">
+  <h3>السياسات والشروط</h3>
+  <p class="small">نلتزم بحماية البيانات وفق الأنظمة السعودية ومعايير الأمن الوطني.</p>
+</div></div></section>
+
+<!-- CONTACT -->
+<section id="contact" class="kit"><div class="container">
+  <div class="card">
+    <h3>اتصل بنا</h3>
+    <div class="row">
+      <div><label>الاسم</label><input class="input" placeholder="الاسم الكامل"></div>
+      <div><label>البريد الإلكتروني</label><input class="input" placeholder="name@example.com"></div>
+    </div>
+    <div class="row">
+      <div><label>الهاتف</label><input class="input" placeholder="+966 55 608 3172"></div>
+      <div><label>نوع الرسالة</label><select class="input"><option>استفسار</option><option>مقترح</option><option>بلاغ تقني</option><option>رعاية/شراكة</option></select></div>
+    </div>
+    <div><label>الرسالة</label><textarea class="input" rows="4"></textarea></div>
+    <div id="sent" class="card small hidden">تم الإرسال — شكرًا لتواصلك.</div>
+    <div style="text-align:end"><button class="btn" onclick="document.getElementById('sent').classList.remove('hidden')">إرسال</button></div>
+  </div>
+  <div class="card"><h4>بيانات التواصل الرسمية</h4><p class="small">الهاتف: +966 55 608 3172 — البريد: info@talbiya.sa — الموقع: https://talbiya.sa</p></div>
+</div></section>
+
+<!-- AGREEMENT -->
+<section id="agreement" class="kit"><div class="container"><div class="card">
+  <h3>الاتفاقية الرقمية</h3>
+  <ul class="small"><li>الاستخدام المسؤول للخدمات.</li><li>حماية البيانات.</li><li>الالتزام بأهداف رؤية 2030.</li></ul>
+  <div class="center"><a class="btn" href="#login">عودة</a></div>
+</div></div></section>
+
+<footer class="footer">
+  <div class="container flex" style="justify-content:space-between">
+    <div>© 2025 منصة حصيف — شركة تلبية للبحث والتطوير</div>
+    <div class="logoRow">
+      <a href="https://www.vision2030.gov.sa/" target="_blank" title="Vision 2030"><svg class="svg-logo" viewBox="0 0 120 24"><text x="0" y="18" font-size="16" fill="#475569">Vision 2030</text></svg></a>
+      <a href="https://talbiya.sa" target="_blank" title="Talbiya"><svg class="svg-logo" viewBox="0 0 120 24"><text x="0" y="18" font-size="16" fill="#475569">Talbiya</text></svg></a>
+    </div>
+  </div>
+</footer>
+
+<!-- AGREEMENT POPUP -->
+<div class="modal" id="agreementModal">
+  <div class="box">
+    <h4>الاتفاقية الرقمية</h4>
+    <p class="small">يجب الموافقة قبل إنشاء الحساب أو الدخول.</p>
+    <div class="card" style="max-height:220px;overflow:auto"><p>بنود مختصرة: استخدام مسؤول، شفافية، حماية البيانات.</p></div>
+    <div class="flex" style="justify-content:flex-end">
+      <button id="agreeCancel" class="badge">إلغاء</button>
+      <button id="agreeAccept" class="btn">موافقة ومتابعة</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+/* ========= CONFIG ========= */
+window.API_MODE = 'mock';            // 'mock' أو 'rest'
+window.API_BASE = '';                // مسار API عند تفعيل REST
+window.API_TOKEN = '';               // توكن إن وجد
+/* ========================= */
+
+/* i18n */
+const i18n={ar:{home:"الرئيسية",about:"عن المنصة",accounts:"الحسابات",govValue:"القيمة الحكومية",subscriptions:"الاشتراكات",sponsors:"الرعاة",support:"الدعم",policies:"السياسات",contact:"اتصل بنا",download:"تحميل الوثيقة الرسمية",login:"تسجيل الدخول",map:"الخرائط",docs:"الوثائق",funding:"التمويل/الرعايات",admin:"الإدارة",register:"تسجيل"},en:{home:"Home",about:"About",accounts:"Accounts",govValue:"Gov Added Value",subscriptions:"Subscriptions",sponsors:"Sponsors",support:"Support",policies:"Policies",contact:"Contact",download:"Download Official Document",login:"Sign In",map:"Maps",docs:"Documents",funding:"Funding/Sponsorship",admin:"Admin",register:"Register"}};
+function currentLang(){return localStorage.getItem('lang')||'ar'}
+function setLang(lang){localStorage.setItem('lang',lang);document.documentElement.lang=(lang==='ar'?'ar':'en');document.documentElement.dir=(lang==='ar'?'rtl':'ltr');document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute('data-i18n');el.textContent=i18n[lang][k]||el.textContent;});}
+document.addEventListener('DOMContentLoaded',()=>{setLang(currentLang());});
+
+/* Theme */
+(function(){const root=document.documentElement;const saved=localStorage.getItem('theme')||'light';if(saved==='dark'){root.classList.add('dark');}document.getElementById('themeBtn')?.addEventListener('click',()=>{root.classList.toggle('dark');localStorage.setItem('theme',root.classList.contains('dark')?'dark':'light');});})();
+
+/* Router */
+const sections=[...document.querySelectorAll('.kit')];
+function route(){
+  const id=(location.hash||'#home').replace('#','');sections.forEach(s=>s.style.display=s.id===id?'block':'none');
+  document.querySelectorAll('#topNav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));
+  if(id==='home'){renderGovCards();}
+  if(id==='govvalue-all'){renderGovTable();}
+  if(id==='login'){renderAccounts();}
+  if(id==='dashboard'){renderDashboard();initDashTabs();}
+  if(id==='admin'){renderUsers();enforcePerms();}
+  if(id==='map'){renderMap();bindSvgMap();}
+  if(id==='docs'){renderDocs();}
+  if(id==='funding'){wfRender();enforcePerms();}
+}
+window.addEventListener('hashchange',route);route();
+
+/* أيقونات أحادية اللون */
+const ico={person:'👤',bldg:'🏢',gov:'🏛️',uni:'🎓',heart:'💗',handshake:'🤝',cog:'⚙️',map:'🗺️'};
+
+/* GOV VALUE */
+window.govValues=[
+ {id:'mep',name:'وزارة الاقتصاد والتخطيط',brief:'مواءمة الأداء الوطني',detail:'ربط المبادرات بمؤشرات الرؤية وتحليل الفجوات وإصدار تقارير موحدة.'},
+ {id:'mof',name:'وزارة المالية',brief:'كفاءة الإنفاق',detail:'تتبع التمويل التنموي وتحسين العائد عبر محفظة المنح والاستثمار والاشتراك والرعاية.'},
+ {id:'moi',name:'وزارة الداخلية (إمارات المناطق)',brief:'تكامل المناطق',detail:'تقارير مكانية موحدة للمناطق وإدارة المشاريع والموافقات.'},
+ {id:'dev',name:'هيئات تطوير المناطق',brief:'تمكين التطوير',detail:'متابعة مبادرات التنمية وربطها بالأثر وتنسيق الشراكات.'},
+ {id:'moe',name:'وزارة التعليم',brief:'التعزيز العلمي',detail:'إشراك الجامعات كمراكز استشارية وإتاحة التدريب التعاوني.'},
+ {id:'adaa',name:'مركز أداء',brief:'قياس الأثر',detail:'توحيد أدوات القياس وربطها بلوحات المنصة.'},
+ {id:'ncdc',name:'المركز الوطني لتنمية القطاع غير الربحي',brief:'تمكين المنظمات',detail:'رفع كفاءة المنظمات وربطها بالممولين والشركاء.'},
+ {id:'monshaat',name:'منشآت',brief:'دعم المنشآت الصغيرة',detail:'تحفيز الشركات الصغيرة عبر الرعاية والاستثمار.'}
+];
+function renderGovCards(){document.getElementById('govValueCards').innerHTML=govValues.map(v=>`<div class="tile"><div class="icon">${ico.bldg}</div><div><h4>${v.name}</h4><p class="small">${v.brief}</p><p><button class="badge" onclick="showValue('${v.id}')">عرض التفاصيل</button></p></div></div>`).join('');}
+function showValue(id){const m=document.getElementById('agreementModal');m.querySelector('h4').textContent=govValues.find(x=>x.id===id).name;m.querySelector('.card p').textContent=govValues.find(x=>x.id===id).detail;m.style.display='flex';document.getElementById('agreeCancel').onclick=()=>m.style.display='none';document.getElementById('agreeAccept').onclick=()=>m.style.display='none';}
+function renderGovTable(){const tb=document.querySelector('#tblGV tbody');tb.innerHTML='';(govValues||[]).forEach(v=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${v.name}</td><td>${v.brief}</td><td>${v.detail}</td>`;tb.appendChild(tr);});}
+function filterGovTable(){const q=document.getElementById('q').value.trim().toLowerCase();document.querySelectorAll('#tblGV tbody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none');}
+
+/* Accounts */
+const accounts=[
+ {key:'individual',name:'الأفراد',desc:'ملف مبادرات وفرص ومحفظة',icon:ico.person,tabs:['Projects','Opportunities','Wallet']},
+ {key:'private',name:'القطاع الخاص',desc:'CSR ورعايات وتقارير أثر',icon:ico.bldg,tabs:['Projects','Opportunities','Wallet']},
+ {key:'nonprofit',name:'القطاع غير الربحي',desc:'مشاريع ومتطوعون وأثر',icon:ico.gov,tabs:['Projects','Opportunities','Wallet']},
+ {key:'universities',name:'الجامعات',desc:'تعزيز علمي وتدريب تعاوني',icon:ico.uni,tabs:['Projects','Opportunities','Facilities','Speakers','Coop']},
+ {key:'government',name:'الحكومة',desc:'حلول وفعاليات ومؤشرات',icon:ico.gov,tabs:['Projects','Speakers','Facilities','Coop']},
+ {key:'donors',name:'المانحون',desc:'محفظة وتقارير أثر',icon:ico.heart,tabs:['Wallet','Opportunities']},
+ {key:'partners',name:'الشركاء الاستراتيجيون',desc:'لوحات وطنية وتبادل بيانات',icon:ico.handshake,tabs:['Projects','Opportunities']},
+ {key:'dev_authorities',name:'هيئات التطوير',desc:'مشاريع المناطق والشراكات',icon:ico.map,tabs:['Projects','Facilities','Speakers']},
+ {key:'admin',name:'إدارة المنصة (Admin)',desc:'حوكمة وصلاحيات وتكامل',icon:ico.cog,tabs:[]} // ينتقل لقسم الإدارة
+];
+function renderAccounts(){document.getElementById('accountTiles').innerHTML=accounts.map(a=>`<div class="tile"><div class="icon">${a.icon}</div><div><h4>${a.name}</h4><p class="small">${a.desc}</p><p><button class="badge" onclick="loginAs('${a.key}')">دخول</button></p></div></div>`).join('');}
+function openAgreement(onAccept){const modal=document.getElementById('agreementModal');modal.style.display='flex';document.getElementById('agreeAccept').onclick=()=>{modal.style.display='none';onAccept&&onAccept();};document.getElementById('agreeCancel').onclick=()=>{modal.style.display='none';};}
+function loginAs(account){openAgreement(()=>{localStorage.setItem('account',account);location.hash=(account==='admin')?'admin':'dashboard';});}
+
+/* “قاعدة بيانات” محلية */
+const DB_KEY='hasseef_db_onefile_v5';
+const db = {
+  load(){try{return JSON.parse(localStorage.getItem(DB_KEY))||{projects:[],opps:[],wallet:[],speakers:[],facilities:[],coop:[],wf:[],users:[],roles:{Admin:'قراءة, إنشاء, تعديل, اعتماد, تكامل, حذف',Manager:'قراءة, إنشاء, تعديل, اعتماد',Operator:'قراءة, إنشاء, تعديل',Observer:'قراءة'}}}catch(e){return {projects:[],opps:[],wallet:[],speakers:[],facilities:[],coop:[],wf:[],users:[],roles:{}}}},
+  save(data){localStorage.setItem(DB_KEY,JSON.stringify(data))}
+};
+let state=db.load();
+
+/* Dashboard */
+function renderDashboard(){
+  const acc=localStorage.getItem('account')||'individual';
+  const meta=accounts.find(a=>a.key===acc)||accounts[0];
+  document.getElementById('dashTitle').textContent='لوحة حساب: '+meta.name;
+  document.getElementById('dashDesc').textContent=meta.desc;
+  // تبويبات
+  const tabs=document.getElementById('dashTabs'); tabs.innerHTML='';
+  (meta.tabs||[]).forEach((t,i)=>{tabs.insertAdjacentHTML('beforeend',`<button class="tab ${i===0?'active':''}" data-t="${t}" onclick="switchTab('${t}')">${t}</button>`);});
+  // إظهار أول تبويب
+  document.querySelectorAll('#dashContent>[data-tab]').forEach(x=>x.classList.add('hidden'));
+  if(meta.tabs?.[0]) document.querySelector(`#dashContent [data-tab="${meta.tabs[0]}"]`)?.classList.remove('hidden');
+  fillTables(); enforcePerms();
+}
+function initDashTabs(){
+  const acc=localStorage.getItem('account')||'individual';
+  const meta=accounts.find(a=>a.key===acc)||accounts[0];
+  (meta.tabs||[]).forEach((t,i)=>{if(i===0)switchTab(t);});
+}
+function switchTab(t){
+  document.querySelectorAll('#dashContent>[data-tab]').forEach(x=>x.classList.toggle('hidden',x.getAttribute('data-tab')!==t));
+  document.querySelectorAll('#dashTabs .tab').forEach(x=>x.classList.toggle('active',x.getAttribute('data-t')===t));
+}
+function fillTables(){
+  const tbP=document.querySelector('#tblProjects tbody'); if(tbP){tbP.innerHTML='';state.projects.forEach((r,i)=>tbP.insertAdjacentHTML('beforeend',`<tr><td>${r.title}</td><td>${r.sector}</td><td>${(+r.budget).toLocaleString('en')}</td><td>${r.status}</td><td><button class="badge danger-only" data-need="delete" onclick="delRow('projects',${i})">حذف</button></td></tr>`));}
+  const tbO=document.querySelector('#tblOpps tbody'); if(tbO){tbO.innerHTML='';state.opps.forEach((r,i)=>tbO.insertAdjacentHTML('beforeend',`<tr><td><span class="tag">${r.type}</span></td><td>${r.title}</td><td>${r.org}</td><td>${r.loc}</td><td><button class="badge danger-only" data-need="delete" onclick="delRow('opps',${i})">حذف</button></td></tr>`));}
+  const tbW=document.querySelector('#tblWallet tbody'); if(tbW){tbW.innerHTML='';state.wallet.forEach((r,i)=>tbW.insertAdjacentHTML('beforeend',`<tr><td>${r.type}</td><td>${(+r.amount).toLocaleString('en')}</td><td>${new Date(r.ts).toLocaleDateString()}</td><td><button class="badge danger-only" data-need="delete" onclick="delRow('wallet',${i})">حذف</button></td></tr>`));}
+  const tbS=document.querySelector('#tblSpeakers tbody'); if(tbS){tbS.innerHTML='';state.speakers.forEach((r,i)=>tbS.insertAdjacentHTML('beforeend',`<tr><td>${r.name}</td><td>${r.field}</td><td>${r.org}</td><td>${r.status}</td><td><button class="badge danger-only" data-need="delete" onclick="delRow('speakers',${i})">حذف</button></td></tr>`));}
+  const tbF=document.querySelector('#tblFacilities tbody'); if(tbF){tbF.innerHTML='';state.facilities.forEach((r,i)=>tbF.insertAdjacentHTML('beforeend',`<tr><td>${r.name}</td><td>${r.type}</td><td>${r.cap}</td><td>${r.loc}</td><td><button class="badge danger-only" data-need="delete" onclick="delRow('facilities',${i})">حذف</button></td></tr>`));}
+  const tbC=document.querySelector('#tblCoop tbody'); if(tbC){tbC.innerHTML='';state.coop.forEach((r,i)=>tbC.insertAdjacentHTML('beforeend',`<tr><td>${r.org}</td><td>${r.title}</td><td>${r.months}</td><td>${r.status}</td><td><button class="badge danger-only" data-need="delete" onclick="delRow('coop',${i})">حذف</button></td></tr>`));}
 }
 
-/* Global search */
-(function(){
-  const btn = document.getElementById('globalSearchBtn');
-  if(btn){ btn.onclick = ()=>{ $('#globalSearchBackdrop').style.display='block'; $('#globalSearchWrap').style.display='grid'; setTimeout(()=> $('#gs_q').focus(),0); }; }
-  const close = ()=>{ $('#globalSearchBackdrop').style.display='none'; $('#globalSearchWrap').style.display='none'; };
-  $('#gs_close').onclick = close;
-  $('#globalSearchBackdrop').onclick = close;
-  $('#gs_go').onclick = ()=>{
-    const q = ($('#gs_q').value||'').trim();
-    const grid = $('#gs_results'); grid.innerHTML='';
-    if(!q){ grid.innerHTML='<div class="card">أدخل عبارة للبحث.</div>'; return; }
-    // ابحث في جميع عناوين الخدمات لكل الوحدات
-    const res=[];
-    Object.entries(MODULES).forEach(([key, pack])=>{
-      const groups = pack.services||{};
-      Object.entries(groups).forEach(([g, items])=>{
-        if(!items || !items.length) return;
-        if(typeof items[0]==='string'){
-          items.forEach(it=>{
-            const hay = (it + ' ' + g + ' ' + (pack.name||key));
-            if(hay.includes(q)) res.push({mod:key, title: it, group: g});
-          });
-        }
-      });
-    });
-    if(!res.length){ grid.innerHTML='<div class="card">لا توجد نتائج.</div>'; return; }
-    const frag = document.createDocumentFragment();
-    res.slice(0,40).forEach(r=>{
-      const a = document.createElement('a');
-      a.className='service'; a.href = `#/mod/${r.mod}?tab=services`; a.onclick=(ev)=>{ev.preventDefault(); close(); location.hash=a.getAttribute('href');};
-      a.innerHTML = `<h4>${r.title}</h4><p>${(MODULES[r.mod]?.name||r.mod)} — ${r.group}</p>`;
-      frag.appendChild(a);
-    });
-    grid.appendChild(frag);
-  };
-})();
+/* إدراج بيانات */
+function dbAdd(key){
+  if(key==='projects'){
+    const r={title:val('p_title'),sector:val('p_sector'),budget:+val('p_budget')||0,status:val('p_status'),desc:val('p_desc'),id:Date.now()};
+    if(!r.title) return alert('أدخل عنوان المشروع'); state.projects.unshift(r);
+  }
+  if(key==='opps'){
+    const r={type:val('o_type'),title:val('o_title'),org:val('o_org'),loc:val('o_loc'),id:Date.now()};
+    if(!r.title) return alert('أدخل عنوان الفرصة'); state.opps.unshift(r);
+  }
+  if(key==='wallet'){
+    const r={type:val('w_type'),amount:+val('w_amount')||0,ts:Date.now(),id:Date.now()}; state.wallet.unshift(r);
+  }
+  if(key==='speakers'){
+    const r={name:val('s_name'),field:val('s_field'),org:val('s_org'),status:val('s_status'),id:Date.now()};
+    if(!r.name) return alert('أدخل اسم المتحدث'); state.speakers.unshift(r);
+  }
+  if(key==='facilities'){
+    const r={name:val('f_name'),type:val('f_type'),cap:+val('f_cap')||0,loc:val('f_loc'),id:Date.now()};
+    if(!r.name) return alert('أدخل اسم المنشأة'); state.facilities.unshift(r);
+  }
+  if(key==='coop'){
+    const r={org:val('c_org'),title:val('c_title'),months:+val('c_months')||0,status:val('c_status'),id:Date.now()};
+    if(!r.title) return alert('أدخل المسمى'); state.coop.unshift(r);
+  }
+  db.save(state); fillTables(); enforcePerms();
+}
+function val(id){return (document.getElementById(id)?.value||'').trim()}
+function delRow(key,i){state[key].splice(i,1);db.save(state);fillTables();enforcePerms();}
 
-/* Start */
-window.addEventListener('load', ()=>{
-  document.querySelectorAll('details').forEach(d=> d.addEventListener('toggle', ()=>{ if(d.open) document.querySelectorAll('details').forEach(x=> x!==d && (x.open=false)); }));
-  if (!location.hash || location.hash==="#" || location.hash==="#/") location.hash = '#/overview';
-  route();
-  const fab=document.querySelector('.fab-home'); if(fab) fab.style.display = isMobile() ? 'flex' : 'none'; if(isMobile()) fab.href = '#/overview';
-});
-document.addEventListener('keydown', (e)=>{
-  const inInput=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName||''); if(inInput) return;
-  if((e.altKey&&(e.key==='h'||e.key==='H'))||(e.key==='h'||e.key==='H')){ e.preventDefault(); location.hash='#/overview'; }
-});
+/* ADMIN - Users & Roles */
+function renderUsers(){
+  const tb=document.querySelector('#usersTbl tbody'); if(!tb) return; tb.innerHTML='';
+  (state.users||[]).forEach((u,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${u.name}</td><td>${u.role}</td><td>${u.account}</td><td><button class='badge danger-only' data-need="delete" onclick='uDel(${i})'>حذف</button></td>`;tb.appendChild(tr);});
+  const out=document.getElementById('rolesOut'); if(out) out.textContent=JSON.stringify(state.roles,null,2);
+  enforcePerms();
+}
+function addUser(){
+  const n=document.getElementById('uName').value.trim();
+  const r=document.getElementById('uRole').value;
+  const a=document.getElementById('uAccount').value;
+  if(!n) return alert('ادخل الاسم');
+  state.users.unshift({name:n,role:r,account:a}); db.save(state); renderUsers();
+}
+function uDel(i){state.users.splice(i,1);db.save(state);renderUsers();}
+function saveRole(){const role=document.getElementById('roleSel').value; const perms=document.getElementById('rolePerms').value.trim(); state.roles[role]=perms; db.save(state); document.getElementById('rolesOut').textContent=JSON.stringify(state.roles,null,2);}
+
+/* WORKFLOW */
+const wfStages=['طلب','تدقيق','اعتماد أولي','اعتماد نهائي'];
+function wfSave(){db.save(state);}
+function wfRender(){const tb=document.querySelector('#wfTbl tbody'); if(!tb) return; tb.innerHTML=''; (state.wf||[]).forEach((it,i)=>{const next=wfStages[it.stage+1]||'—';tb.insertAdjacentHTML('beforeend',`<tr><td>${it.title}</td><td>${(+it.amount).toLocaleString('en')}</td><td>${it.account}</td><td>${wfStages[it.stage]}</td><td>${it.stage<wfStages.length-1?`<button class="badge" data-need="approve" onclick="wfNext(${i})">مرحلة: ${next}</button>`:''} <button class="badge danger-only" data-need="delete" onclick="wfDel(${i})">حذف</button></td></tr>`);}); enforcePerms();}
+function wfCreate(){const t=val('wf_title');const a=+val('wf_amount')||0;const acc=val('wf_account');if(!t)return alert('أدخل العنوان');state.wf.unshift({title:t,amount:a,account:acc,stage:0,ts:Date.now(),id:Date.now()});wfSave();wfRender();}
+function wfNext(i){if(state.wf[i].stage<wfStages.length-1){state.wf[i].stage++;wfSave();wfRender();}}
+function wfDel(i){state.wf.splice(i,1);wfSave();wfRender();}
+
+/* SUPPORT */
+const ticketsKey='tickets_onefile_v5';const tickets=JSON.parse(localStorage.getItem(ticketsKey)||'[]');
+function renderTickets(){const tb=document.querySelector('#tickets tbody');if(!tb)return;tb.innerHTML='';tickets.forEach(t=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${t.t}</td><td>${t.p}</td><td>${t.s}</td>`;tb.appendChild(tr);});}
+function addTicket(){tickets.push({t:document.getElementById('s1').value,p:document.getElementById('s2').value,s:'مفتوحة'});localStorage.setItem(ticketsKey,JSON.stringify(tickets));renderTickets();}renderTickets();
+
+/* DOCS: توليد وثيقة رسمية عند الطلب (Blob PDF بسيط) */
+function downloadOfficialDoc(){
+  const lang = currentLang();
+  const title = (lang==='ar'?'الوثيقة الرسمية لمنصة حصيف — نموذج أولي تشغيلي':'Hasseef Official Document — Operational Prototype');
+  const body = (lang==='ar'
+    ? 'هذه نسخة توضيحية تشغيلية مولّدة داخل المتصفح للعرض فقط.\nالمنصة: حصيف — تكامل تنموي وطني.\nالشعارات والروابط مفعلة، والخدمات تجريبية محلية.'
+    : 'This is a browser-generated demo document for presentation only.\nPlatform: Hasseef — National Developmental Integration.\nLogos and links are active, services are local mock.');
+  const content = `%PDF-1.4
+1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj
+2 0 obj<</Type/Pages/Count 1/Kids[3 0 R]>>endobj
+3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj
+4 0 obj<</Length  ${(title.length+body.length+200)}>>stream
+BT /F1 18 Tf 50 780 Td (${title}) Tj
+/F1 12 Tf 50 750 Td (${body.replace(/\n/g,' \\n ')}) Tj ET
+endstream endobj
+5 0 obj<</Type/Font/Subtype/Type1/Name/F1/BaseFont/Helvetica>>endobj
+xref 0 6
+0000000000 65535 f 
+0000000010 00000 n 
+0000000063 00000 n 
+0000000119 00000 n 
+0000000305 00000 n 
+0000000530 00000 n 
+trailer<</Size 6/Root 1 0 R>>
+startxref
+650
+%%EOF`;
+  const blob=new Blob([content],{type:'application/pdf'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Hasseef_Official_Document.pdf';a.click();
+}
+function renderDocs(){
+  const docs=[{name:'الوثيقة الرسمية الرئيسية',act:downloadOfficialDoc},{name:'الملف القانوني والاستراتيجي (نموذج)',act:downloadOfficialDoc},{name:'وثيقة النظام التنفيذي والتقني (نموذج)',act:downloadOfficialDoc}];
+  const el=document.getElementById('docsList'); if(!el) return;
+  el.innerHTML=docs.map((d,i)=>`<div class="card"><h4>${d.name}</h4><p class="small">PDF</p><button class="btn" onclick="(${d.act.toString()})();">تحميل</button></div>`).join('');
+}
+
+/* Charts + Map */
+let mapChart;
+const regions=[{id:'Hail',name:'حائل',jobs:72,grants:18,vols:220,dist:[12,18,22,10,8,20]},{id:'Riyadh',name:'الرياض',jobs:310,grants:95,vols:920,dist:[20,28,34,12,10,26]},{id:'Makkah',name:'مكة المكرمة',jobs:280,grants:88,vols:840,dist:[18,26,30,11,9,22]},{id:'Madinah',name:'المدينة المنورة',jobs:130,grants:42,vols:410,dist:[10,14,18,8,6,12]},{id:'Eastern',name:'الشرقية',jobs:260,grants:74,vols:700,dist:[16,24,28,10,8,18]}];
+function renderMap(){const sel=document.getElementById('regionSel');if(!sel)return;sel.innerHTML=regions.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');sel.onchange=()=>updateRegion(sel.value);updateRegion(regions[0].id);}
+function updateRegion(id){const r=regions.find(x=>x.id===id);if(!r)return;document.getElementById('kpiJobs').textContent=r.jobs;document.getElementById('kpiGrants').textContent=r.grants;document.getElementById('kpiVols').textContent=r.vols;if(typeof Chart==='undefined')return;const ctx=document.getElementById('mapChart');if(!ctx)return;if(mapChart)mapChart.destroy();mapChart=new Chart(ctx,{type:'bar',data:{labels:['الأفراد','الخاص','غير الربحي','الجامعات','الحكومة','المانحون'],datasets:[{label:'الفرص',data:r.dist}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});}
+function bindSvgMap(){const svg=document.querySelector('#ksaMap svg');if(svg && !svg.dataset.bound){svg.dataset.bound='1';svg.querySelectorAll('[data-region]').forEach(el=>{el.style.cursor='pointer';el.addEventListener('click',()=>updateRegion(el.getAttribute('data-region')));el.addEventListener('mouseenter',()=>el.setAttribute('fill','#e2e8f0'));el.addEventListener('mouseleave',()=>el.setAttribute('fill','#e5e7eb'));});}}
+
+/* PERMISSIONS */
+const ROLE_PERMS = {
+  Admin:    ['read','create','update','approve','integrate','delete'],
+  Manager:  ['read','create','update','approve'],
+  Operator: ['read','create','update'],
+  Observer: ['read']
+};
+function currentRole(){
+  const users = state.users||[];
+  return users[0]?.role || 'Admin';
+}
+function can(action){ return (ROLE_PERMS[currentRole()]||[]).includes(action); }
+function enforcePerms(){
+  document.querySelectorAll('[data-need]').forEach(el=>{
+    const need = el.getAttribute('data-need');
+    const ok = can(need);
+    el.disabled = !ok;
+    if(el.classList.contains('danger-only')) el.classList.toggle('hidden',!ok);
+  });
+}
+
+/* REGISTER */
+function doRegister(){
+  const type=val('regType'); const name=(val('regName')||'Admin'); const email=val('regEmail'); const role=val('regRole'); const agree=document.getElementById('regAgree').checked;
+  if(!agree)return alert('الرجاء الموافقة على الاتفاقية'); state.users=state.users||[]; state.users.unshift({name,role,account:type,email}); db.save(state); localStorage.setItem('account',type); location.hash='#dashboard'; const msg=document.getElementById('regMsg');msg.classList.remove('hidden');msg.textContent='تم إنشاء الحساب (محلي).';
+}
+
+/* SEED */
+document.addEventListener('DOMContentLoaded',()=>{ if(!state.users?.length){state.users=[{name:'Admin',role:'Admin',account:'admin',email:'admin@example.com'}];db.save(state);} });
+
+/* Helpers */
+function $(sel){return document.querySelector(sel);}
+</script>
+
+<!-- ADMIN SECTION -->
+<section id="admin" class="kit">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card">
+        <h4>إدارة المستخدمين</h4>
+        <div class="row">
+          <div><label>الاسم</label><input class="input" id="uName" placeholder="اسم المستخدم"></div>
+          <div><label>الدور</label><select class="input" id="uRole"><option>Admin</option><option>Manager</option><option>Operator</option><option>Observer</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>الحساب</label><select class="input" id="uAccount">
+            <option>individual</option><option>private</option><option>nonprofit</option><option>universities</option>
+            <option>government</option><option>donors</option><option>partners</option><option>dev_authorities</option>
+          </select></div>
+          <div style="display:flex;align-items:end"><button class="btn" data-need="create" onclick="addUser()">إضافة</button></div>
+        </div>
+        <hr>
+        <table class="table" id="usersTbl"><thead><tr><th>الاسم</th><th>الدور</th><th>الحساب</th><th></th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="card">
+        <h4>طبقات الصلاحيات</h4>
+        <p class="small">تحرير الصلاحيات لكل دور (عرض تجريبي).</p>
+        <div class="row">
+          <div><label>الدور</label><select class="input" id="roleSel"><option>Admin</option><option>Manager</option><option>Operator</option><option>Observer</option></select></div>
+          <div><label>الصلاحيات</label><input class="input" id="rolePerms" placeholder="مثال: قراءة، إنشاء، اعتماد، تكامل"></div>
+        </div>
+        <div style="margin-top:8px"><button class="btn" data-need="update" onclick="saveRole()">حفظ</button></div>
+        <hr><pre id="rolesOut" class="small" style="white-space:pre-wrap"></pre>
+      </div>
+      <div class="card">
+        <h4>تصدير تقرير القيمة الحكومية</h4>
+        <p class="small">CSV — للاستخدام التحليلي.</p>
+        <button class="btn" data-need="read" onclick="exportValueReport()">تصدير CSV</button>
+        <div id="exportHint" class="small"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+function exportValueReport(){
+  const data=(govValues||[]).map(v=>`${v.name},${v.brief},${v.detail.replace(/\n/g,' ')}`);
+  const csv="name,brief,detail\n"+data.join("\n");
+  const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Gov_Added_Value_Report.csv';a.click();
+  const hint=document.getElementById('exportHint');if(hint)hint.textContent='تم إنشاء التقرير (CSV).';
+}
 </script>
 </body>
 </html>
