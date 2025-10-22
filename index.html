@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>منصة حصيف — ملف واحد (Charts + Media)</title>
+<title>منصة حصيف — ملف واحد (Advanced)</title>
 <style>
 :root{
   --green:#0b5b34; --gold:#c9a227; --bg:#f7f6f1; --ink:#111827; --muted:#6b7280; --bd:#e5e7eb; --card:#fff;
@@ -25,7 +25,8 @@ main{display:grid;gap:14px}
 nav a{display:block;color:var(--ink);text-decoration:none;padding:8px 10px;border-radius:10px}
 nav a:hover,nav a.active{background:#ecfdf5}
 table{width:100%;border-collapse:collapse}
-th,td{border-top:1px solid var(--bd);padding:8px;text-align:start;vertical-align:top}
+th,td{border-top:1px solid var(--bd);padding:8px;text-align:start;vertical-align:top;white-space:nowrap}
+th.sortable{cursor:pointer}
 .grid{display:grid;gap:12px}
 .grid-2{grid-template-columns:repeat(2,1fr)}
 .grid-3{grid-template-columns:repeat(3,1fr)}
@@ -43,8 +44,10 @@ th,td{border-top:1px solid var(--bd);padding:8px;text-align:start;vertical-align
 .media-card .content{padding:8px}
 .media-thumb{width:100%;height:130px;object-fit:cover;background:#f2f2f2;display:block}
 .media-actions{display:flex;justify-content:space-between;gap:6px;margin-top:6px}
+.pager{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.pager button{background:#fff;color:#111;border:1px solid var(--bd)}
 footer{color:var(--muted);text-align:center;padding:18px}
-@media (max-width:1000px){ .layout{grid-template-columns:1fr} aside{position:static} }
+@media (max-width:1000px){ .layout{grid-template-columns:1fr} aside{position:static} th,td{white-space:normal}}
 </style>
 </head>
 <body>
@@ -94,25 +97,24 @@ footer{color:var(--muted);text-align:center;padding:18px}
       <h2>لوحة المؤشرات</h2>
       <div id="kpis" class="grid grid-3"></div>
       <div class="hr"></div>
-      <!-- Canvas chart -->
       <div class="grid grid-2">
         <div>
           <h3>رسم بياني — ملخص المؤشرات</h3>
           <canvas id="kpiCanvas" width="560" height="280" style="max-width:100%;border:1px solid var(--bd);border-radius:12px;background:#fff"></canvas>
-          <small class="muted">يُحدّث تلقائيًا عند إضافة بيانات.</small>
+          <small class="muted">الألوان تتغيّر حسب نوع الحساب المختار.</small>
         </div>
         <div>
           <span class="pill">رؤية 2030</span>
           <span class="pill">حوكمة</span>
           <span class="pill">تمكين مجتمعي</span>
           <div class="hr"></div>
-          <div class="muted">تلميح: أضف مشروعًا/حلاً/فعالية وسترى التغيّر على الرسم.</div>
+          <div class="muted">أضف مشروعًا/حلاً/فعالية وسترى التغيّر على الرسم.</div>
         </div>
       </div>
     </section>
 
     <!-- التحديات -->
-    <section class="card sec" data-tags="government development_authority region admin">
+    <section class="card sec" data-tags="government development_authority region admin" id="sec-challenges">
       <h2>التحديات</h2>
       <form id="chForm" class="grid grid-3">
         <input name="ownerOrgId" placeholder="Org ID (مثال org-gov-001)" required>
@@ -120,12 +122,27 @@ footer{color:var(--muted);text-align:center;padding:18px}
         <input name="domain" placeholder="المجال (تقنية/صحة/ثقافة)" required>
         <button>إضافة</button>
       </form>
-      <table><thead><tr><th>العنوان</th><th>المجال</th><th>الجهة</th><th>الحالة</th><th>إغلاق</th></tr></thead>
-      <tbody id="chT"></tbody></table>
+      <div class="grid grid-3">
+        <input id="chFilter" placeholder="بحث في التحديات">
+        <select id="chPageSize"><option>5</option><option selected>10</option><option>20</option></select>
+        <div class="pager" id="chPager"></div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" data-key="title">العنوان</th>
+            <th class="sortable" data-key="domain">المجال</th>
+            <th class="sortable" data-key="ownerOrgId">الجهة</th>
+            <th class="sortable" data-key="status">الحالة</th>
+            <th>إغلاق</th>
+          </tr>
+        </thead>
+        <tbody id="chT"></tbody>
+      </table>
     </section>
 
     <!-- الحلول -->
-    <section class="card sec" data-tags="government private nonprofit university individual development_authority admin">
+    <section class="card sec" data-tags="government private nonprofit university individual development_authority admin" id="sec-solutions">
       <h2>الحلول</h2>
       <form id="soForm" class="grid grid-3">
         <input name="challengeId" placeholder="Challenge ID (ch-001)" required>
@@ -133,12 +150,26 @@ footer{color:var(--muted);text-align:center;padding:18px}
         <input name="summary" placeholder="ملخص الحل" required>
         <button>تقديم</button>
       </form>
-      <table><thead><tr><th>الحل</th><th>للتحدي</th><th>المُقدّم</th><th>تقييم</th></tr></thead>
-      <tbody id="soT"></tbody></table>
+      <div class="grid grid-3">
+        <input id="soFilter" placeholder="بحث في الحلول">
+        <select id="soPageSize"><option>5</option><option selected>10</option><option>20</option></select>
+        <div class="pager" id="soPager"></div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" data-key="summary">الحل</th>
+            <th class="sortable" data-key="challengeId">للتحدي</th>
+            <th class="sortable" data-key="proposerOrgId">المُقدّم</th>
+            <th>تقييم</th>
+          </tr>
+        </thead>
+        <tbody id="soT"></tbody>
+      </table>
     </section>
 
     <!-- المشاريع -->
-    <section class="card sec" data-tags="government development_authority region admin private nonprofit university donor">
+    <section class="card sec" data-tags="government development_authority region admin private nonprofit university donor" id="sec-projects">
       <h2>المشاريع</h2>
       <form id="prForm" class="grid grid-3">
         <input name="ownerOrgId" placeholder="Org ID" required>
@@ -146,8 +177,24 @@ footer{color:var(--muted);text-align:center;padding:18px}
         <input name="budget" type="number" placeholder="الميزانية" required>
         <button>إضافة</button>
       </form>
-      <table><thead><tr><th>المعرف</th><th>الجهة</th><th>الهدف</th><th>الميزانية</th><th>الحالة</th><th>تحديث الحالة</th></tr></thead>
-      <tbody id="prT"></tbody></table>
+      <div class="grid grid-3">
+        <input id="prFilter" placeholder="بحث في المشاريع">
+        <select id="prPageSize"><option>5</option><option selected>10</option><option>20</option></select>
+        <div class="pager" id="prPager"></div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" data-key="id">المعرف</th>
+            <th class="sortable" data-key="ownerOrgId">الجهة</th>
+            <th class="sortable" data-key="visionGoal">الهدف</th>
+            <th class="sortable" data-key="budgetNum">الميزانية</th>
+            <th class="sortable" data-key="status">الحالة</th>
+            <th>تحديث الحالة</th>
+          </tr>
+        </thead>
+        <tbody id="prT"></tbody>
+      </table>
     </section>
 
     <!-- الرعايات/المحفظة -->
@@ -184,7 +231,7 @@ footer{color:var(--muted);text-align:center;padding:18px}
     </section>
 
     <!-- فعاليات ومتحدثون -->
-    <section class="card sec" data-tags="government private nonprofit university development_authority admin">
+    <section class="card sec" data-tags="government private nonprofit university development_authority admin" id="sec-events">
       <h2>الفعاليات والمتحدثون</h2>
       <form id="evForm" class="grid grid-3">
         <input name="orgId" placeholder="Org ID" required>
@@ -193,11 +240,27 @@ footer{color:var(--muted);text-align:center;padding:18px}
         <input name="speakers" placeholder="متحدثون (أسماء مفصولة بفواصل)">
         <button>إنشاء</button>
       </form>
-      <table><thead><tr><th>المعرف</th><th>العنوان</th><th>التاريخ</th><th>الجهة</th><th>متحدثون</th></tr></thead><tbody id="evT"></tbody></table>
+      <div class="grid grid-3">
+        <input id="evFilter" placeholder="بحث في الفعاليات">
+        <select id="evPageSize"><option>5</option><option selected>10</option><option>20</option></select>
+        <div class="pager" id="evPager"></div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" data-key="id">المعرف</th>
+            <th class="sortable" data-key="title">العنوان</th>
+            <th class="sortable" data-key="date">التاريخ</th>
+            <th class="sortable" data-key="orgId">الجهة</th>
+            <th>متحدثون</th>
+          </tr>
+        </thead>
+        <tbody id="evT"></tbody>
+      </table>
     </section>
 
     <!-- التطوع/التدريب/الاستشارات -->
-    <section class="card sec" data-tags="nonprofit university private individual government admin">
+    <section class="card sec" data-tags="nonprofit university private individual government admin" id="sec-engagements">
       <h2>Engagements: التطوع / التدريب / الاستشارات</h2>
       <form id="enForm" class="grid grid-3">
         <select name="type"><option value="volunteer">تطوع</option><option value="training">تدريب</option><option value="consulting">استشارة</option></select>
@@ -206,7 +269,23 @@ footer{color:var(--muted);text-align:center;padding:18px}
         <input name="fee" type="number" placeholder="الأتعاب (للاستشارة)">
         <button>تسجيل</button>
       </form>
-      <table><thead><tr><th>#</th><th>النوع</th><th>الجهة</th><th>ساعات</th><th>أتعاب</th></tr></thead><tbody id="enT"></tbody></table>
+      <div class="grid grid-3">
+        <input id="enFilter" placeholder="بحث في السجلات">
+        <select id="enPageSize"><option>5</option><option selected>10</option><option>20</option></select>
+        <div class="pager" id="enPager"></div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" data-key="id">#</th>
+            <th class="sortable" data-key="type">النوع</th>
+            <th class="sortable" data-key="orgId">الجهة</th>
+            <th class="sortable" data-key="hoursNum">ساعات</th>
+            <th class="sortable" data-key="feeNum">أتعاب</th>
+          </tr>
+        </thead>
+        <tbody id="enT"></tbody>
+      </table>
     </section>
 
     <!-- الاتفاقيات والشهادات -->
@@ -237,7 +316,7 @@ footer{color:var(--muted);text-align:center;padding:18px}
       </div>
     </section>
 
-    <!-- الإعلام والتوثيق (مع رفع وسائط) -->
+    <!-- الإعلام والتوثيق (مع رفع/ضغط وسائط) -->
     <section class="card sec" data-tags="government private nonprofit university development_authority region admin">
       <h2>الإعلام والتوثيق (صور/فيديو)</h2>
       <form id="mdForm" class="grid grid-3">
@@ -279,13 +358,13 @@ footer{color:var(--muted);text-align:center;padding:18px}
   </main>
 </div>
 
-<footer>© HASIF Demo — ملف واحد | Prototype شامل (Charts + Media)</footer>
+<footer>© HASIF Demo — ملف واحد | Prototype شامل (Filters + Sorting + Paging + Role Colors + Media Compression)</footer>
 
 <script>
 /* =========================
    بيانات، قوائم، RBAC واجهوي
 ========================= */
-const LS_KEY='hasif:data:v3';
+const LS_KEY='hasif:data:v4';
 const seed = {
   organizations:[
     {id:'org-gov-001',name:'وزارة التنمية',type:'gov',region:'الرياض'},
@@ -359,7 +438,7 @@ const Q = sel => document.querySelector(sel);
 const QA = sel => [...document.querySelectorAll(sel)];
 
 /* =========================
-   تبديل اللغة RTL/LTR (واجهوي)
+   تبديل اللغة RTL/LTR
 ========================= */
 let lang='ar';
 Q('#langBtn').onclick=()=>{
@@ -381,7 +460,7 @@ Q('#seedBtn').onclick=()=>{dbSave(seed); audit('system','seed',{}); renderAll();
 Q('#resetBtn').onclick=()=>{ if(confirm('مسح جميع البيانات؟')){ localStorage.removeItem(LS_KEY); dbSave(seed); audit('system','reset',{}); renderAll(); } };
 
 /* =========================
-   بناء القائمة الجانبية حسب الدور (RBAC)
+   القائمة حسب الدور + إخفاء/إظهار الأقسام
 ========================= */
 const roleSel=Q('#roleSel'), sideNav=Q('#sideNav'), roleLabel=Q('#roleLabel');
 roleSel.onchange=()=>{ buildSide(); filterSections(); renderAll(); };
@@ -390,7 +469,7 @@ function buildSide(){
   const list=menus[role]||[];
   sideNav.innerHTML='';
   const aDash=document.createElement('a'); aDash.textContent='لوحة المؤشرات'; aDash.href="#sec-dashboard"; aDash.classList.add('active'); sideNav.appendChild(aDash);
-  list.forEach((label,i)=>{
+  list.forEach((label)=>{
     const anchor=document.createElement('a');
     anchor.textContent=label;
     const map = {
@@ -417,14 +496,28 @@ function filterSections(){
   const allowed = RBAC[role]||[];
   QA('.sec').forEach(sec=>{
     const tags = (sec.getAttribute('data-tags')||'').split(/\s+/);
-    const show = allowed.includes('*') || tags.some(t=>allowed.includes(mapTag(t)));
+    const show = allowed.includes('*') || tags.some(t=>allowed.includes(t));
     sec.style.display = show ? '' : 'none';
   });
-  function mapTag(t){ return t; }
 }
 
 /* =========================
-   مؤشرات (KPIs) + الرسم البياني
+   ألوان الرسم حسب نوع الحساب
+========================= */
+const roleColors = {
+  government:"#0b5b34",
+  development_authority:"#1e3a8a",
+  region:"#7c2d12",
+  private:"#6d28d9",
+  nonprofit:"#047857",
+  university:"#0ea5e9",
+  donor:"#b45309",
+  individual:"#374151",
+  admin:"#111827"
+};
+
+/* =========================
+   مؤشرات (KPIs) + الرسم
 ========================= */
 function renderKPIs(){
   const d=dbLoad();
@@ -455,76 +548,180 @@ function drawKpiChart(data){
   const ctx=Q('#kpiCanvas').getContext('2d');
   const w=ctx.canvas.width, h=ctx.canvas.height;
   ctx.clearRect(0,0,w,h);
-  // محاور بسيطة
-  ctx.fillStyle="#111"; ctx.font="12px system-ui";
+  const role=roleSel.value;
+  const color = roleColors[role] || "#0b5b34";
   const labels=["Projects","Funded","Budget(K)","Solutions","Engagements","Challenges"];
   const values=[data.projects,data.funded,Math.round((+data.budget||0)/1000),data.solutions,data.engagements,data.challenges];
   const max = Math.max(...values, 5);
   const pad=40, barW= (w - pad*2) / values.length - 16;
-  // grid
+  ctx.fillStyle="#111"; ctx.font="12px system-ui"; ctx.textAlign="left";
   ctx.strokeStyle="#eee";
   for(let i=0;i<=5;i++){ const y=pad + (h-pad*2)*(i/5); ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad,y); ctx.stroke(); }
-  // bars
   values.forEach((v,i)=>{
     const x = pad + i*(barW+16) + 8;
     const y = h - pad;
     const bh = (h - pad*2) * (v/max);
-    ctx.fillStyle = "#0b5b34";
+    ctx.fillStyle = color;
     ctx.fillRect(x, y-bh, barW, bh);
-    // value
     ctx.fillStyle="#111"; ctx.textAlign="center";
     ctx.fillText(String(v), x+barW/2, y-bh-6);
-    // label
     ctx.fillStyle="#555"; ctx.save(); ctx.translate(x+barW/2, y+14); ctx.rotate(-Math.PI/8);
     ctx.fillText(labels[i], 0, 0); ctx.restore();
   });
-  // frame
   ctx.strokeStyle="#c9a227"; ctx.strokeRect(1,1,w-2,h-2);
 }
 
 /* =========================
-   CRUD مبسّط للأقسام
+   أدوات جدول: فرز + فلترة + صفحات
+========================= */
+function makeTable({data, columns, tbodyId, pagerId, pageSizeSelId, filterInputId, defaultSortKey, rowRenderer, afterChange}){
+  let sortKey = defaultSortKey || columns[0].key;
+  let sortDir = 'asc';
+  let page = 1;
+
+  const tbody = Q(tbodyId);
+  const pager = Q(pagerId);
+  const pageSizeSel = Q(pageSizeSelId);
+  const filterInput = Q(filterInputId);
+
+  function apply(){
+    const ps = +pageSizeSel.value || 10;
+    const q = (filterInput.value||'').toLowerCase().trim();
+
+    // filter
+    let filtered = data.filter(r=>{
+      if(!q) return true;
+      return Object.values(r).some(v => (v==null?'':String(v)).toLowerCase().includes(q));
+    });
+
+    // sort
+    filtered.sort((a,b)=>{
+      const va = a[sortKey], vb = b[sortKey];
+      if(va==null && vb==null) return 0;
+      if(va==null) return sortDir==='asc'?-1:1;
+      if(vb==null) return sortDir==='asc'?1:-1;
+      if(typeof va==='number' && typeof vb==='number') return sortDir==='asc' ? va-vb : vb-va;
+      return sortDir==='asc' ? String(va).localeCompare(String(vb),'ar') : String(vb).localeCompare(String(va),'ar');
+    });
+
+    // page
+    const total = filtered.length;
+    const pages = Math.max(1, Math.ceil(total/ps));
+    if(page>pages) page = pages;
+    const start = (page-1)*ps;
+    const slice = filtered.slice(start, start+ps);
+
+    // render rows
+    tbody.innerHTML='';
+    slice.forEach(r=>tbody.appendChild(rowRenderer(r)));
+
+    // render pager
+    pager.innerHTML='';
+    const info=document.createElement('span'); info.textContent=`الصفحة ${page} من ${pages} — ${total} سجل`;
+    const prev=document.createElement('button'); prev.textContent='السابق'; prev.disabled=page<=1; prev.onclick=()=>{page--; apply();};
+    const next=document.createElement('button'); next.textContent='التالي'; next.disabled=page>=pages; next.onclick=()=>{page++; apply();};
+    pager.appendChild(prev); pager.appendChild(next); pager.appendChild(info);
+
+    afterChange && afterChange();
+  }
+
+  // header sorting hook
+  tbody.closest('table').querySelectorAll('th.sortable').forEach(th=>{
+    th.onclick=()=>{
+      const k=th.dataset.key;
+      if(k===sortKey) sortDir = (sortDir==='asc'?'desc':'asc'); else { sortKey=k; sortDir='asc'; }
+      apply();
+    };
+  });
+
+  pageSizeSel.onchange=()=>{page=1; apply();};
+  filterInput.oninput=()=>{page=1; apply();};
+
+  apply();
+  return {refresh:apply, goto:(p)=>{page=p; apply();}, setSort:(k,d='asc')=>{sortKey=k; sortDir=d; apply();}};
+}
+
+/* =========================
+   CRUD وعرض الجداول (مع الأدوات)
 ========================= */
 const QV = id => Q(id).value;
+
 function renderChallenges(){
-  const d=dbLoad(), tb=Q('#chT'); tb.innerHTML='';
-  d.challenges.forEach(ch=>{
+  const d=dbLoad();
+  const rows = d.challenges.map(x=>({...x}));
+  rows.forEach(r=>{ r.createdAtNum = Date.parse(r.createdAt||''); });
+  const tbody = Q('#chT');
+  const renderRow = (ch)=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${ch.title}</td><td>${ch.domain}</td><td>${ch.ownerOrgId}</td><td>${ch.status}</td>
     <td><button class="btn-ghost" data-id="${ch.id}">إغلاق</button></td>`;
-    tr.querySelector('button').onclick=()=>{ ch.status='closed'; dbSave(d); audit('challenge','close',{id:ch.id}); renderChallenges(); renderKPIs(); };
-    tb.appendChild(tr);
+    tr.querySelector('button').onclick=()=>{ const d2=dbLoad(); const target=d2.challenges.find(c=>c.id===ch.id); if(target){ target.status='closed'; dbSave(d2); audit('challenge','close',{id:ch.id}); renderChallenges(); renderKPIs(); } };
+    return tr;
+  };
+  makeTable({
+    data: rows,
+    columns:[
+      {key:'title'},{key:'domain'},{key:'ownerOrgId'},{key:'status'},{key:'createdAtNum'}
+    ],
+    tbodyId:'#chT',
+    pagerId:'#chPager',
+    pageSizeSelId:'#chPageSize',
+    filterInputId:'#chFilter',
+    defaultSortKey:'createdAtNum',
+    rowRenderer: renderRow
   });
 }
 Q('#chForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
   const ch={id:id('ch'),status:'open',createdAt:ts(),...f}; d.challenges.push(ch); dbSave(d); audit('challenge','create',ch); e.target.reset(); renderChallenges(); renderKPIs();};
 
 function renderSolutions(){
-  const d=dbLoad(), tb=Q('#soT'); tb.innerHTML='';
-  d.solutions.forEach(so=>{
+  const d=dbLoad();
+  const rows = d.solutions.map(x=>({...x}));
+  const renderRow = (so)=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${so.summary}</td><td>${so.challengeId}</td><td>${so.proposerOrgId}</td>
       <td><input type="number" min="0" max="5" value="${so.score||0}" style="width:80px"></td>`;
-    tr.querySelector('input').onchange=(ev)=>{ so.score=+ev.target.value; dbSave(d); audit('solution','score',{id:so.id,score:so.score}); renderKPIs();};
-    tb.appendChild(tr);
+    tr.querySelector('input').onchange=(ev)=>{ const d2=dbLoad(); const target=d2.solutions.find(s=>s.id===so.id); if(target){ target.score=+ev.target.value; dbSave(d2); audit('solution','score',{id:so.id,score:target.score}); renderKPIs();}};
+    return tr;
+  };
+  makeTable({
+    data: rows,
+    columns:[{key:'summary'},{key:'challengeId'},{key:'proposerOrgId'},{key:'score'}],
+    tbodyId:'#soT',
+    pagerId:'#soPager',
+    pageSizeSelId:'#soPageSize',
+    filterInputId:'#soFilter',
+    defaultSortKey:'score',
+    rowRenderer: renderRow
   });
 }
 Q('#soForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
   const so={id:id('sol'),score:0,...f}; d.solutions.push(so); dbSave(d); audit('solution','create',so); e.target.reset(); renderSolutions(); renderKPIs();};
 
 function renderProjects(){
-  const d=dbLoad(), tb=Q('#prT'); tb.innerHTML='';
-  d.projects.forEach(pr=>{
+  const d=dbLoad();
+  const rows = d.projects.map(x=>({...x, budgetNum:+x.budget||0}));
+  const renderRow = (pr)=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${pr.id}</td><td>${pr.ownerOrgId}</td><td>${pr.visionGoal}</td><td>${(+pr.budget||0).toLocaleString()}</td><td>${pr.status}</td>
+    tr.innerHTML=`<td>${pr.id}</td><td>${pr.ownerOrgId}</td><td>${pr.visionGoal}</td><td>${(pr.budgetNum).toLocaleString()}</td><td>${pr.status}</td>
     <td><select data-id="${pr.id}">
       <option value="pending" ${pr.status==='pending'?'selected':''}>قيد التقييم</option>
       <option value="in_progress" ${pr.status==='in_progress'?'selected':''}>قيد التنفيذ</option>
       <option value="funded" ${pr.status==='funded'?'selected':''}>ممول</option>
       <option value="completed" ${pr.status==='completed'?'selected':''}>مكتمل</option>
     </select></td>`;
-    tr.querySelector('select').onchange=(ev)=>{ pr.status=ev.target.value; dbSave(d); audit('project','status',{id:pr.id,status:pr.status}); renderProjects(); renderKPIs(); };
-    tb.appendChild(tr);
+    tr.querySelector('select').onchange=(ev)=>{ const d2=dbLoad(); const target=d2.projects.find(p=>p.id===pr.id); if(target){ target.status=ev.target.value; dbSave(d2); audit('project','status',{id:pr.id,status:target.status}); renderProjects(); renderKPIs(); } };
+    return tr;
+  };
+  makeTable({
+    data: rows,
+    columns:[{key:'id'},{key:'ownerOrgId'},{key:'visionGoal'},{key:'budgetNum'},{key:'status'}],
+    tbodyId:'#prT',
+    pagerId:'#prPager',
+    pageSizeSelId:'#prPageSize',
+    filterInputId:'#prFilter',
+    defaultSortKey:'budgetNum',
+    rowRenderer: renderRow
   });
 }
 Q('#prForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
@@ -548,19 +745,43 @@ Q('#spForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object
   dbSave(d); audit('sponsorship','approve',sp); e.target.reset(); renderSponsorships(); renderKPIs();};
 
 /* فعاليات */
-function renderEvents(){const d=dbLoad(),tb=Q('#evT'); tb.innerHTML='';
-  d.events.forEach(ev=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${ev.id}</td><td>${ev.title}</td><td>${ev.date}</td><td>${ev.orgId}</td><td>${(ev.speakers||[]).join(', ')}</td>`; tb.appendChild(tr);});}
+function renderEvents(){const d=dbLoad();
+  const rows = d.events.map(x=>({...x}));
+  const renderRow=(ev)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${ev.id}</td><td>${ev.title}</td><td>${ev.date}</td><td>${ev.orgId}</td><td>${(ev.speakers||[]).join(', ')}</td>`; return tr;};
+  makeTable({
+    data:rows,
+    columns:[{key:'id'},{key:'title'},{key:'date'},{key:'orgId'}],
+    tbodyId:'#evT',
+    pagerId:'#evPager',
+    pageSizeSelId:'#evPageSize',
+    filterInputId:'#evFilter',
+    defaultSortKey:'date',
+    rowRenderer:renderRow
+  });
+}
 Q('#evForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
   const ev={id:id('ev'),orgId:f.orgId,title:f.title,date:f.date,speakers:(f.speakers||'').split(',').map(s=>s.trim()).filter(Boolean),approvals:[]};
   d.events.push(ev); dbSave(d); audit('event','create',ev); e.target.reset(); renderEvents(); renderKPIs();};
 
 /* التطوع/التدريب/الاستشارات */
-function renderEngagements(){const d=dbLoad(),tb=Q('#enT'); tb.innerHTML='';
-  d.engagements.forEach(en=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${en.id}</td><td>${en.type}</td><td>${en.orgId}</td><td>${en.hours||'-'}</td><td>${en.fee||'-'}</td>`; tb.appendChild(tr);});}
+function renderEngagements(){const d=dbLoad();
+  const rows = d.engagements.map(x=>({...x, hoursNum:+(x.hours||0), feeNum:+(x.fee||0)}));
+  const renderRow=(en)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${en.id}</td><td>${en.type}</td><td>${en.orgId}</td><td>${en.hoursNum||'-'}</td><td>${en.feeNum||'-'}</td>`; return tr;};
+  makeTable({
+    data:rows,
+    columns:[{key:'id'},{key:'type'},{key:'orgId'},{key:'hoursNum'},{key:'feeNum'}],
+    tbodyId:'#enT',
+    pagerId:'#enPager',
+    pageSizeSelId:'#enPageSize',
+    filterInputId:'#enFilter',
+    defaultSortKey:'type',
+    rowRenderer:renderRow
+  });
+}
 Q('#enForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
   const en={id:id('en'),...f,hours:+(f.hours||0)||undefined,fee:+(f.fee||0)||undefined}; d.engagements.push(en); dbSave(d); audit('engagement','create',en); e.target.reset(); renderEngagements(); renderKPIs();};
 
-/* اتفاقيات وشهادات (طباعة) */
+/* اتفاقيات وشهادات */
 function printableAgreement({partyA,partyB,title}){const vId=id('agr'),dt=new Date().toISOString().slice(0,10);
   const html=`<div style="font-family:system-ui;width:800px;margin:0 auto">
     <div style="background:#0b5b34;color:#fff;padding:16px;border-bottom:4px solid #c9a227">
@@ -595,16 +816,14 @@ Q('#certForm').onsubmit=(e)=>{e.preventDefault(); const f=Object.fromEntries(new
 };
 function printNode(node){const w=open('','_blank'); w.document.write(`<!doctype html><meta charset="utf-8"><title>Print</title>${node.innerHTML}`); w.document.close(); w.focus(); w.print();}
 
-/* الإعلام مع رفع وسائط */
+/* الإعلام مع رفع/ضغط وسائط */
 function renderMedia(){
   const d=dbLoad(), tb=Q('#mdT'); tb.innerHTML='';
   const grid=Q('#mediaGrid'); grid.innerHTML='';
   d.media.forEach((m,i)=>{
-    // جدول نصي
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${i+1}</td><td>${m.targetType}:${m.targetId||'-'}</td><td>${m.headline||'-'}</td><td>${m.url?`<a target="_blank" href="${m.url}">رابط</a>`:'—'}</td>`;
     tb.appendChild(tr);
-    // كروت وسائط
     const card=document.createElement('div'); card.className='media-card';
     const hdr=document.createElement('header'); hdr.textContent=m.headline||'—'; card.appendChild(hdr);
     const content=document.createElement('div'); content.className='content';
@@ -632,9 +851,14 @@ Q('#mdForm').onsubmit=async (e)=>{
   const file = Q('#mediaFile').files[0];
   let blob=null, mime=null;
   if(file){
-    // تحويل إلى dataURL للتخزين المحلي
-    blob = await fileToDataURL(file);
-    mime = file.type || '';
+    if(file.type.startsWith('image/')){
+      const compressed = await compressImageFile(file, 1280, 720, 0.85);
+      blob = compressed.dataUrl; mime = compressed.mime;
+    }else{
+      // فيديو: نكتفي بالتخزين كما هو (قد يكون كبيرًا)
+      blob = await fileToDataURL(file);
+      mime = file.type || '';
+    }
   }
   const item={id:id('md'), ...f, blob, mime};
   d.media.push(item); dbSave(d); audit('media','add', {id:item.id, mime, withFile: Boolean(blob)});
@@ -642,6 +866,23 @@ Q('#mdForm').onsubmit=async (e)=>{
   renderMedia();
 };
 function fileToDataURL(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
+function compressImageFile(file, maxW, maxH, quality=0.85){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>{ const img=new Image(); img.onload=()=>{
+      let {width:w, height:h} = img;
+      const ratio=Math.min(maxW/w, maxH/h, 1);
+      const cw = Math.round(w*ratio), ch = Math.round(h*ratio);
+      const canvas=document.createElement('canvas'); canvas.width=cw; canvas.height=ch;
+      const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,cw,ch);
+      // استخدم WebP إن أمكن وإلا JPEG
+      const mime = 'image/webp';
+      const dataUrl = canvas.toDataURL(mime, quality);
+      resolve({dataUrl, mime});
+    }; img.onerror=reject; img.src=r.result; };
+    r.onerror=reject; r.readAsDataURL(file);
+  });
+}
 
 /* الحاضنات */
 function renderIncubators(){const d=dbLoad(),tb=Q('#ibT'); tb.innerHTML='';
