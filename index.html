@@ -1,1 +1,681 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>منصة حصيف الوطنية للتكامل التنموي — V4 Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--royal:#0B3B74;--gold:#D4AF37;--slate:#0f172a;--muted:#475569;--bg:#F6F7F9;--border:#e2e8f0}
+:root.dark{--bg:#0b1220;--slate:#e5e7eb;--muted:#94a3b8;--border:#334155}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:'Tajawal',system-ui,Arial;background:var(--bg);color:var(--slate)}
+a{color:var(--royal);text-decoration:none}button{cursor:pointer}
+.header{background:var(--royal);color:#fff;border-bottom:4px solid var(--gold)}
+.container{max-width:1240px;margin:0 auto;padding:16px}
+.flex{display:flex;align-items:center;gap:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:900px){.row{grid-template-columns:1fr}}
+.brand{font-weight:900;font-size:18px;display:flex;gap:10px;align-items:center}
+.brand img{height:34px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;flex:1}
+.nav a{color:#fff;opacity:.92;padding:6px 8px;border-radius:8px}
+.nav a.active{opacity:1;background:rgba(255,255,255,.12)}
+.badge{display:inline-block;border:1px solid var(--gold);color:var(--royal);border-radius:999px;padding:6px 12px;font-size:12px;background:#fff}
+.btn{display:inline-block;background:#1e40af;color:#fff;border:2px solid var(--gold);padding:10px 14px;border-radius:12px;font-weight:700}
+.hero{padding:24px 0}
+.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;margin:12px 0}
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:1100px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.grid-3,.grid-4,.grid-2{grid-template-columns:1fr}}
+.tile{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;display:flex;gap:12px;align-items:flex-start;transition:.2s}
+.tile:hover{border-color:var(--gold);box-shadow:0 6px 16px rgba(0,0,0,.05)}
+.icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;background:#fff}
+.small{font-size:12px;color:var(--muted)}
+.center{text-align:center}
+.footer{padding:20px 0;border-top:1px solid var(--border);color:var(--muted);font-size:14px}
+.input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border:1px solid var(--border);padding:10px 12px;font-size:14px;text-align:right;vertical-align:top}
+.table th{background:#f8fafc}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal .box{background:#fff;border-radius:16px;border:1px solid var(--border);max-width:900px;width:100%;padding:16px}
+.hidden{display:none!important}
+.logoRow{display:flex;gap:8px;align-items:center}
+.kit{display:none}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.tab{border:1px solid var(--border);border-radius:999px;padding:6px 10px;background:#fff}
+.tab.active{border-color:var(--gold)}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;background:#eef2ff;color:#1e40af;font-size:12px}
+html.dark body{background:var(--bg);color:var(--slate)}
+html.dark .header{background:#0a2540}
+html.dark .card{background:#0f172a;border-color:var(--border)}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="container flex" style="justify-content:space-between">
+    <!-- يمين: شعار حصيف -->
+    <a class="brand logoRow" href="#home" title="منصة حصيف">
+      <img src="assets/hasseef.png" alt="Hasseef" onerror="this.style.display='none'">
+      <span id="brandTitle">منصة حصيف الوطنية للتكامل التنموي</span>
+    </a>
+    <!-- المنتصف: قائمة -->
+    <nav class="nav" id="topNav">
+      <a href="#home" data-i18n="home" class="active">الرئيسية</a>
+      <a href="#about" data-i18n="about">عن المنصة</a>
+      <a href="#login" data-i18n="accounts">الحسابات</a>
+      <a href="#register" data-i18n="register">تسجيل</a>
+      <a href="#map" data-i18n="map">الخرائط</a>
+      <a href="#govvalue" data-i18n="govValue">القيمة الحكومية</a>
+      <a href="#funding" data-i18n="funding">التمويل/الرعايات</a>
+      <a href="#docs" data-i18n="docs">الوثائق</a>
+      <a href="#subscriptions" data-i18n="subscriptions">الاشتراكات</a>
+      <a href="#sponsors" data-i18n="sponsors">الرعاة</a>
+      <a href="#support" data-i18n="support">الدعم</a>
+      <a href="#policies" data-i18n="policies">السياسات</a>
+      <a href="#contact" data-i18n="contact">اتصل بنا</a>
+      <a href="#admin" data-i18n="admin">الإدارة</a>
+    </nav>
+    <!-- يسار: وضع ليلي + لغة + شعارات -->
+    <div class="flex" style="gap:10px;align-items:center">
+      <button class="badge" id="themeBtn" title="تبديل الوضع">☀︎/🌙</button>
+      <div class="lang">
+        <button class="badge" onclick="setLang('ar')">عربي</button>
+        <button class="badge" onclick="setLang('en')">English</button>
+      </div>
+      <a href="https://www.vision2030.gov.sa/" target="_blank" class="logoRow" title="Vision 2030">
+        <img src="assets/vision2030.png" alt="Vision 2030" style="height:28px" onerror="this.style.display='none'">
+      </a>
+      <a href="https://talbiya.sa" target="_blank" class="logoRow" title="Talbiya R&D">
+        <img src="assets/talbiya.png" alt="Talbiya" style="height:28px" onerror="this.style.display='none'">
+      </a>
+    </div>
+  </div>
+</header>
 
+<!-- HOME -->
+<section id="home" class="kit" style="display:block">
+  <div class="hero">
+    <div class="container">
+      <div class="card">
+        <h2>رابط وطني مركزي للتكامل بين القطاعات</h2>
+        <p class="small">نسخة تشغيلية تجريبية محلية (V4 Demo)</p>
+        <div class="flex">
+          <a class="btn" href="./docs/Hasseef_Official_Report_Main.pdf" target="_blank" data-i18n="download">تحميل الوثيقة الرسمية</a>
+          <a class="btn" href="#login" data-i18n="login">تسجيل الدخول</a>
+        </div>
+      </div>
+      <div class="card grid grid-3">
+        <div><strong>الحسابات</strong><p class="small">أفراد، خاص، غير ربحي، جامعات، حكومة، مانحون، شركاء، هيئات التطوير، إدارة المنصة.</p></div>
+        <div><strong>الخدمات</strong><p class="small">مشاريع، فرص، محافظ، متحدثون، مرافق، تدريب تعاوني، مؤشرات وخرائط.</p></div>
+        <div><strong>الحوكمة</strong><p class="small">أدوار وصلاحيات، سير موافقات متعدد المراحل، اتفاقيات رقمية.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="kit">
+  <div class="container"><div class="card">
+    <h3>عن المنصة</h3>
+    <p>حصيف يعمل كرابط وطني مركزي يجمع بين جميع القطاعات وفق أدوارها، مع خدمات موحّدة ولوحات قياس مرتبطة بأهداف رؤية 2030.</p>
+  </div></div>
+</section>
+
+<!-- LOGIN -->
+<section id="login" class="kit">
+  <div class="container"><div class="card">
+    <h3>بوابة دخول الحسابات</h3>
+    <div class="grid grid-4" id="accountTiles"></div>
+  </div></div>
+</section>
+
+<!-- REGISTER -->
+<section id="register" class="kit">
+  <div class="container"><div class="card">
+    <h3>تسجيل حساب جديد</h3>
+    <div class="row">
+      <div><label>نوع الحساب</label>
+        <select class="input" id="regType">
+          <option value="individual">الأفراد</option>
+          <option value="private">القطاع الخاص</option>
+          <option value="nonprofit">القطاع غير الربحي</option>
+          <option value="universities">الجامعات</option>
+          <option value="government">الحكومة</option>
+          <option value="donors">المانحون</option>
+          <option value="partners">الشركاء الاستراتيجيون</option>
+          <option value="dev_authorities">هيئات التطوير</option>
+        </select>
+      </div>
+      <div><label>اسم المستخدم</label><input class="input" id="regName" placeholder="Admin"></div>
+    </div>
+    <div class="row">
+      <div><label>البريد الإلكتروني</label><input class="input" id="regEmail" placeholder="name@example.com"></div>
+      <div><label>الدور</label><select class="input" id="regRole"><option>Admin</option><option>مدير</option><option>مشغّل</option><option>مراقب</option></select></div>
+    </div>
+    <div class="small" style="margin:8px 0"><input type="checkbox" id="regAgree"> <label for="regAgree">أوافق على <a href="#agreement">الاتفاقية الرقمية</a></label></div>
+    <div style="text-align:end"><button class="btn" onclick="doRegister()">إنشاء الحساب</button></div>
+    <div id="regMsg" class="small hidden" style="margin-top:8px"></div>
+  </div></div>
+</section>
+
+<!-- MAP -->
+<section id="map" class="kit">
+  <div class="container"><div class="card">
+    <h3>الخرائط والمؤشرات</h3>
+    <div class="row">
+      <div>
+        <label>اختر المنطقة</label><select class="input" id="regionSel"></select>
+        <div class="grid grid-3" style="margin-top:12px">
+          <div class="card"><div class="small">وظائف</div><h2 id="kpiJobs">—</h2></div>
+          <div class="card"><div class="small">منح</div><h2 id="kpiGrants">—</h2></div>
+          <div class="card"><div class="small">متطوعون</div><h2 id="kpiVols">—</h2></div>
+        </div>
+      </div>
+      <div>
+        <canvas id="mapChart" height="180"></canvas>
+        <p class="small">توزيع الفرص حسب نوع الحساب.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h4>خريطة السعودية (تجريبية)</h4>
+      <div id="ksaMap" style="overflow:auto">
+        <svg viewBox="0 0 600 320" style="max-width:100%;height:auto;border:1px solid var(--border);border-radius:12px">
+          <rect data-region="Riyadh"  x="260" y="120" width="140" height="80" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <rect data-region="Hail"    x="200" y=" 80" width="100" height="60" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <rect data-region="Makkah"  x="180" y="170" width="120" height="80" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <rect data-region="Madinah" x="120" y="120" width="120" height="70" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <rect data-region="Eastern" x="420" y="130" width="120" height="120" fill="#e5e7eb" stroke="#cbd5e1"/>
+          <text x="290" y="160" font-size="12" fill="#475569">الرياض</text>
+          <text x="220" y="110" font-size="12" fill="#475569">حائل</text>
+          <text x="200" y="210" font-size="12" fill="#475569">مكة</text>
+          <text x="140" y="160" font-size="12" fill="#475569">المدينة</text>
+          <text x="450" y="190" font-size="12" fill="#475569">الشرقية</text>
+        </svg>
+      </div>
+      <p class="small">انقر منطقة لتحديث المؤشرات.</p>
+    </div>
+  </div></div>
+</section>
+
+<!-- GOV VALUE (مختصر) -->
+<section id="govvalue" class="kit">
+  <div class="container"><div class="card">
+    <h3>القيمة المضافة الحكومية</h3>
+    <div class="grid grid-4" id="govValueCards"></div>
+    <div class="card center"><a class="btn" href="#govvalue-all">عرض التفاصيل</a></div>
+  </div></div>
+</section>
+
+<!-- GOV VALUE TABLE -->
+<section id="govvalue-all" class="kit">
+  <div class="container"><div class="card">
+    <h3>تفاصيل القيمة المضافة</h3>
+    <div class="row"><div><input class="input" id="q" placeholder="ابحث عن جهة..."></div><div style="display:flex;align-items:end"><button class="btn" onclick="filterGovTable()">بحث</button></div></div>
+    <div style="overflow:auto;margin-top:8px">
+      <table class="table" id="tblGV"><thead><tr><th>الجهة</th><th>العنوان المختصر</th><th>الوصف</th></tr></thead><tbody></tbody></table>
+    </div>
+  </div></div>
+</section>
+
+<!-- DASHBOARD (لوحة الحساب) -->
+<section id="dashboard" class="kit">
+  <div class="container">
+    <div class="card"><h3 id="dashTitle">لوحة الحساب</h3><p class="small" id="dashDesc"></p></div>
+
+    <div class="tabs" id="dashTabs"></div>
+
+    <div id="dashContent">
+      <!-- تبويب Projects -->
+      <div class="card" data-tab="Projects">
+        <h4>المشاريع/المبادرات</h4>
+        <div class="row">
+          <div><label>العنوان</label><input class="input" id="p_title"></div>
+          <div><label>القطاع المستهدف</label><select class="input" id="p_sector"><option>تعليمي</option><option>صحي</option><option>اجتماعي</option><option>ثقافي</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>الميزانية (SAR)</label><input class="input" id="p_budget" type="number" min="0" step="1000"></div>
+          <div><label>الحالة</label><select class="input" id="p_status"><option>جديد</option><option>قيد التنفيذ</option><option>مكتمل</option></select></div>
+        </div>
+        <div><label>وصف مختصر</label><textarea class="input" id="p_desc" rows="3"></textarea></div>
+        <div style="text-align:end"><button class="btn" onclick="dbAdd('projects')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblProjects"><thead><tr><th>العنوان</th><th>القطاع</th><th>الميزانية</th><th>الحالة</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+      <!-- تبويب Opportunities -->
+      <div class="card hidden" data-tab="Opportunities">
+        <h4>الفرص (وظائف/تطوع/منح/فعاليات)</h4>
+        <div class="row">
+          <div><label>النوع</label><select class="input" id="o_type"><option>وظيفة</option><option>تطوع</option><option>منحة</option><option>فعالية</option></select></div>
+          <div><label>العنوان</label><input class="input" id="o_title"></div>
+        </div>
+        <div class="row">
+          <div><label>الجهة</label><input class="input" id="o_org"></div>
+          <div><label>الموقع</label><input class="input" id="o_loc"></div>
+        </div>
+        <div style="text-align:end"><button class="btn" onclick="dbAdd('opps')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblOpps"><thead><tr><th>النوع</th><th>العنوان</th><th>الجهة</th><th>الموقع</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+      <!-- تبويب Wallet -->
+      <div class="card hidden" data-tab="Wallet">
+        <h4>المحفظة المالية</h4>
+        <div class="row">
+          <div><label>نوع العملية</label><select class="input" id="w_type"><option>تبرع</option><option>استثمار</option><option>اشتراك</option><option>رعاية</option></select></div>
+          <div><label>المبلغ (SAR)</label><input class="input" id="w_amount" type="number" min="0" step="100"></div>
+        </div>
+        <div style="text-align:end"><button class="btn" onclick="dbAdd('wallet')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblWallet"><thead><tr><th>النوع</th><th>المبلغ</th><th>التاريخ</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+      <!-- تبويب Speakers -->
+      <div class="card hidden" data-tab="Speakers">
+        <h4>مركز المتحدثين</h4>
+        <div class="row">
+          <div><label>الاسم</label><input class="input" id="s_name"></div>
+          <div><label>التخصص</label><input class="input" id="s_field"></div>
+        </div>
+        <div class="row">
+          <div><label>الجهة</label><input class="input" id="s_org"></div>
+          <div><label>الحالة</label><select class="input" id="s_status"><option>مرشح</option><option>معتمد</option></select></div>
+        </div>
+        <div style="text-align:end"><button class="btn" onclick="dbAdd('speakers')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblSpeakers"><thead><tr><th>الاسم</th><th>التخصص</th><th>الجهة</th><th>الحالة</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+      <!-- تبويب Facilities -->
+      <div class="card hidden" data-tab="Facilities">
+        <h4>إدارة المرافق</h4>
+        <div class="row">
+          <div><label>المنشأة</label><input class="input" id="f_name"></div>
+          <div><label>النوع</label><select class="input" id="f_type"><option>قاعة</option><option>معمل</option><option>مسرح</option><option>مرفق رياضي</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>السعة</label><input class="input" id="f_cap" type="number" min="0"></div>
+          <div><label>الموقع</label><input class="input" id="f_loc"></div>
+        </div>
+        <div style="text-align:end"><button class="btn" onclick="dbAdd('facilities')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblFacilities"><thead><tr><th>المنشأة</th><th>النوع</th><th>السعة</th><th>الموقع</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+      <!-- تبويب Co-op -->
+      <div class="card hidden" data-tab="Coop">
+        <h4>التدريب التعاوني</h4>
+        <div class="row">
+          <div><label>الجهة</label><input class="input" id="c_org"></div>
+          <div><label>المسمى</label><input class="input" id="c_title"></div>
+        </div>
+        <div class="row">
+          <div><label>المدة (أشهر)</label><input class="input" id="c_months" type="number" min="1" max="12"></div>
+          <div><label>الحالة</label><select class="input" id="c_status"><option>متاح</option><option>مغلق</option></select></div>
+        </div>
+        <div style="text-align:end"><button class="btn" onclick="dbAdd('coop')">إضافة</button></div>
+        <div class="card"><table class="table" id="tblCoop"><thead><tr><th>الجهة</th><th>المسمى</th><th>المدة</th><th>الحالة</th><th></th></tr></thead><tbody></tbody></table></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FUNDING -->
+<section id="funding" class="kit">
+  <div class="container"><div class="card">
+    <h3>سير موافقات التمويل/الرعايات</h3>
+    <p class="small">مراحل: طلب ← تدقيق ← اعتماد أولي ← اعتماد نهائي. (محاكاة محلية)</p>
+    <div class="row">
+      <div><label>عنوان الطلب</label><input class="input" id="wf_title" placeholder="مثال: رعاية فعالية مجتمعية"></div>
+      <div><label>القيمة (SAR)</label><input class="input" id="wf_amount" type="number" min="0" step="1000"></div>
+    </div>
+    <div class="row">
+      <div><label>الحساب</label><select class="input" id="wf_account"><option>غير ربحي</option><option>خاص</option><option>جامعات</option><option>حكومة</option><option>هيئات التطوير</option></select></div>
+      <div style="display:flex;align-items:end"><button class="btn" onclick="wfCreate()">إرسال</button></div>
+    </div>
+    <hr>
+    <table class="table" id="wfTbl"><thead><tr><th>العنوان</th><th>القيمة</th><th>الحساب</th><th>المرحلة</th><th>إجراءات</th></tr></thead><tbody></tbody></table>
+  </div></div>
+</section>
+
+<!-- DOCS -->
+<section id="docs" class="kit">
+  <div class="container"><div class="card">
+    <h3>الوثائق الرسمية</h3>
+    <div id="docsList" class="grid grid-3"></div>
+    <div class="center" style="margin-top:10px"><a class="btn" href="./docs/Hasseef_Official_Report_Main.pdf" target="_blank">تحميل الوثيقة الرسمية</a></div>
+  </div></div>
+</section>
+
+<!-- SUBSCRIPTIONS -->
+<section id="subscriptions" class="kit"><div class="container grid grid-3">
+  <div class="card"><h4>أساسي</h4><ul class="small"><li>إدارة مشاريع حتى 25</li><li>محفظة أساسية</li><li>Webhook واحد</li></ul><div class="center"><button class="btn">ابدأ</button></div></div>
+  <div class="card"><h4>متقدم</h4><ul class="small"><li>مشاريع غير محدودة</li><li>تقارير مالية</li><li>مفاتيح API متعددة</li></ul><div class="center"><button class="btn">اختر</button></div></div>
+  <div class="card"><h4>متميز</h4><ul class="small"><li>حوكمة وصلاحيات</li><li>SLA</li><li>استضافة خاصة</li></ul><div class="center"><button class="btn">تواصل</button></div></div>
+</div></section>
+
+<!-- SPONSORS -->
+<section id="sponsors" class="kit"><div class="container grid grid-3">
+  <div class="card"><h4>استراتيجي</h4><ul class="small"><li>هوية مشتركة</li><li>تقرير وطني</li><li>مساحات رئيسية</li></ul></div>
+  <div class="card"><h4>بلاتيني</h4><ul class="small"><li>شعار رئيسي</li><li>تقارير ربع سنوية</li><li>دعوات</li></ul></div>
+  <div class="card"><h4>ذهبي</h4><ul class="small"><li>شعار داخلي</li><li>تقارير نصف سنوية</li><li>محتوى تعريفي</li></ul></div>
+</div></section>
+
+<!-- SUPPORT -->
+<section id="support" class="kit"><div class="container">
+  <div class="card">
+    <h3>الدعم الفني</h3>
+    <div class="row">
+      <div><label>الموضوع</label><input class="input" id="s1" placeholder="مثال: مشكلة تسجيل الدخول"></div>
+      <div><label>الأولوية</label><select class="input" id="s2"><option>عادية</option><option>عاجلة</option><option>طارئة</option></select></div>
+    </div>
+    <div><label>التفاصيل</label><textarea class="input" id="s3" rows="4"></textarea></div>
+    <div style="text-align:end"><button class="btn" onclick="addTicket()">إرسال</button></div>
+  </div>
+  <div class="card">
+    <h4>تذاكر سابقة</h4>
+    <table class="table" id="tickets"><thead><tr><th>الموضوع</th><th>الأولوية</th><th>الحالة</th></tr></thead><tbody></tbody></table>
+  </div>
+</div></section>
+
+<!-- POLICIES -->
+<section id="policies" class="kit"><div class="container"><div class="card">
+  <h3>السياسات والشروط</h3>
+  <p class="small">نلتزم بحماية البيانات وفق الأنظمة السعودية ومعايير الأمن الوطني.</p>
+</div></div></section>
+
+<!-- CONTACT -->
+<section id="contact" class="kit"><div class="container">
+  <div class="card">
+    <h3>اتصل بنا</h3>
+    <div class="row">
+      <div><label>الاسم</label><input class="input" placeholder="الاسم الكامل"></div>
+      <div><label>البريد الإلكتروني</label><input class="input" placeholder="name@example.com"></div>
+    </div>
+    <div class="row">
+      <div><label>الهاتف</label><input class="input" placeholder="+966 55 608 3172"></div>
+      <div><label>نوع الرسالة</label><select class="input"><option>استفسار</option><option>مقترح</option><option>بلاغ تقني</option><option>رعاية/شراكة</option></select></div>
+    </div>
+    <div><label>الرسالة</label><textarea class="input" rows="4"></textarea></div>
+    <div id="sent" class="card small hidden">تم الإرسال — شكرًا لتواصلك.</div>
+    <div style="text-align:end"><button class="btn" onclick="document.getElementById('sent').classList.remove('hidden')">إرسال</button></div>
+  </div>
+  <div class="card"><h4>بيانات التواصل الرسمية</h4><p class="small">الهاتف: +966 55 608 3172 — البريد: info@talbiya.sa — الموقع: https://talbiya.sa</p></div>
+</div></section>
+
+<!-- AGREEMENT -->
+<section id="agreement" class="kit"><div class="container"><div class="card">
+  <h3>الاتفاقية الرقمية</h3>
+  <ul class="small"><li>الاستخدام المسؤول للخدمات.</li><li>حماية البيانات.</li><li>الالتزام بأهداف رؤية 2030.</li></ul>
+  <div class="center"><a class="btn" href="#login">عودة</a></div>
+</div></div></section>
+
+<footer class="footer">
+  <div class="container flex" style="justify-content:space-between">
+    <div>© 2025 منصة حصيف — شركة تلبية للبحث والتطوير</div>
+    <div class="logoRow">
+      <a href="https://www.vision2030.gov.sa/" target="_blank"><img src="assets/vision2030.png" alt="vision" style="height:26px" onerror="this.style.display='none'"></a>
+      <a href="https://talbiya.sa" target="_blank"><img src="assets/talbiya.png" alt="talbiya" style="height:26px" onerror="this.style.display='none'"></a>
+    </div>
+  </div>
+</footer>
+
+<!-- AGREEMENT POPUP -->
+<div class="modal" id="agreementModal">
+  <div class="box">
+    <h4>الاتفاقية الرقمية</h4>
+    <p class="small">يجب الموافقة قبل إنشاء الحساب أو الدخول.</p>
+    <div class="card" style="max-height:220px;overflow:auto"><p>بنود مختصرة: استخدام مسؤول، شفافية، حماية البيانات.</p></div>
+    <div class="flex" style="justify-content:flex-end">
+      <button id="agreeCancel" class="badge">إلغاء</button>
+      <button id="agreeAccept" class="btn">موافقة ومتابعة</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+/* i18n */
+const i18n={ar:{home:"الرئيسية",about:"عن المنصة",accounts:"الحسابات",govValue:"القيمة الحكومية",subscriptions:"الاشتراكات",sponsors:"الرعاة",support:"الدعم",policies:"السياسات",contact:"اتصل بنا",download:"تحميل الوثيقة الرسمية",login:"تسجيل الدخول",map:"الخرائط",docs:"الوثائق",funding:"التمويل/الرعايات",admin:"الإدارة",register:"تسجيل"},en:{home:"Home",about:"About",accounts:"Accounts",govValue:"Gov Added Value",subscriptions:"Subscriptions",sponsors:"Sponsors",support:"Support",policies:"Policies",contact:"Contact",download:"Download Official Document",login:"Sign In",map:"Maps",docs:"Documents",funding:"Funding/Sponsorship",admin:"Admin",register:"Register"}};
+function currentLang(){return localStorage.getItem('lang')||'ar'}
+function setLang(lang){localStorage.setItem('lang',lang);document.documentElement.lang=(lang==='ar'?'ar':'en');document.documentElement.dir=(lang==='ar'?'rtl':'ltr');document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute('data-i18n');el.textContent=i18n[lang][k]||el.textContent;});}
+document.addEventListener('DOMContentLoaded',()=>{setLang(currentLang());});
+
+/* Theme */
+(function(){const root=document.documentElement;const saved=localStorage.getItem('theme')||'light';if(saved==='dark'){root.classList.add('dark');}document.getElementById('themeBtn')?.addEventListener('click',()=>{root.classList.toggle('dark');localStorage.setItem('theme',root.classList.contains('dark')?'dark':'light');});})();
+
+/* Router */
+const sections=[...document.querySelectorAll('.kit')];
+function route(){
+  const id=(location.hash||'#home').replace('#','');sections.forEach(s=>s.style.display=s.id===id?'block':'none');
+  document.querySelectorAll('#topNav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));
+  if(id==='home'){renderGovCards();}
+  if(id==='govvalue-all'){renderGovTable();}
+  if(id==='login'){renderAccounts();}
+  if(id==='dashboard'){renderDashboard();initDashTabs();}
+  if(id==='admin'){renderUsers();}
+  if(id==='map'){renderMap();bindSvgMap();}
+  if(id==='docs'){renderDocs();}
+  if(id==='funding'){wfRender();}
+}
+window.addEventListener('hashchange',route);route();
+
+/* أيقونات أحادية اللون */
+const ico={person:'👤',bldg:'🏢',gov:'🏛️',uni:'🎓',heart:'💗',handshake:'🤝',cog:'⚙️',map:'🗺️'};
+
+/* GOV VALUE */
+window.govValues=[
+ {id:'mep',name:'وزارة الاقتصاد والتخطيط',brief:'مواءمة الأداء الوطني',detail:'ربط المبادرات بمؤشرات الرؤية وتحليل الفجوات وإصدار تقارير موحدة.'},
+ {id:'mof',name:'وزارة المالية',brief:'كفاءة الإنفاق',detail:'تتبع التمويل التنموي وتحسين العائد عبر محفظة المنح والاستثمار والاشتراك والرعاية.'},
+ {id:'moi',name:'وزارة الداخلية (إمارات المناطق)',brief:'تكامل المناطق',detail:'تقارير مكانية موحدة للمناطق وإدارة المشاريع والموافقات.'},
+ {id:'dev',name:'هيئات تطوير المناطق',brief:'تمكين التطوير',detail:'متابعة مبادرات التنمية وربطها بالأثر وتنسيق الشراكات.'},
+ {id:'moe',name:'وزارة التعليم',brief:'التعزيز العلمي',detail:'إشراك الجامعات كمراكز استشارية وإتاحة التدريب التعاوني.'},
+ {id:'adaa',name:'مركز أداء',brief:'قياس الأثر',detail:'توحيد أدوات القياس وربطها بلوحات المنصة.'},
+ {id:'ncdc',name:'المركز الوطني لتنمية القطاع غير الربحي',brief:'تمكين المنظمات',detail:'رفع كفاءة المنظمات وربطها بالممولين والشركاء.'},
+ {id:'monshaat',name:'منشآت',brief:'دعم المنشآت الصغيرة',detail:'تحفيز الشركات الصغيرة عبر الرعاية والاستثمار.'}
+];
+function renderGovCards(){document.getElementById('govValueCards').innerHTML=govValues.map(v=>`<div class="tile"><div class="icon">${ico.bldg}</div><div><h4>${v.name}</h4><p class="small">${v.brief}</p><p><button class="badge" onclick="showValue('${v.id}')">عرض التفاصيل</button></p></div></div>`).join('');}
+function showValue(id){const m=document.getElementById('agreementModal');m.querySelector('h4').textContent=govValues.find(x=>x.id===id).name;m.querySelector('.card p').textContent=govValues.find(x=>x.id===id).detail;m.style.display='flex';document.getElementById('agreeCancel').onclick=()=>m.style.display='none';document.getElementById('agreeAccept').onclick=()=>m.style.display='none';}
+function renderGovTable(){const tb=document.querySelector('#tblGV tbody');tb.innerHTML='';(govValues||[]).forEach(v=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${v.name}</td><td>${v.brief}</td><td>${v.detail}</td>`;tb.appendChild(tr);});}
+function filterGovTable(){const q=document.getElementById('q').value.trim().toLowerCase();document.querySelectorAll('#tblGV tbody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none');}
+
+/* Accounts */
+const accounts=[
+ {key:'individual',name:'الأفراد',desc:'ملف مبادرات وفرص ومحفظة',icon:ico.person,tabs:['Projects','Opportunities','Wallet']},
+ {key:'private',name:'القطاع الخاص',desc:'CSR ورعايات وتقارير أثر',icon:ico.bldg,tabs:['Projects','Opportunities','Wallet']},
+ {key:'nonprofit',name:'القطاع غير الربحي',desc:'مشاريع ومتطوعون وأثر',icon:ico.gov,tabs:['Projects','Opportunities','Wallet']},
+ {key:'universities',name:'الجامعات',desc:'تعزيز علمي وتدريب تعاوني',icon:ico.uni,tabs:['Projects','Opportunities','Facilities','Speakers','Coop']},
+ {key:'government',name:'الحكومة',desc:'حلول وفعاليات ومؤشرات',icon:ico.gov,tabs:['Projects','Speakers','Facilities','Coop']},
+ {key:'donors',name:'المانحون',desc:'محفظة وتقارير أثر',icon:ico.heart,tabs:['Wallet','Opportunities']},
+ {key:'partners',name:'الشركاء الاستراتيجيون',desc:'لوحات وطنية وتبادل بيانات',icon:ico.handshake,tabs:['Projects','Opportunities']},
+ {key:'dev_authorities',name:'هيئات التطوير',desc:'مشاريع المناطق والشراكات',icon:ico.map,tabs:['Projects','Facilities','Speakers']},
+ {key:'admin',name:'إدارة المنصة (Admin)',desc:'حوكمة وصلاحيات وتكامل',icon:ico.cog,tabs:[]} // ينتقل لقسم الإدارة
+];
+function renderAccounts(){document.getElementById('accountTiles').innerHTML=accounts.map(a=>`<div class="tile"><div class="icon">${a.icon}</div><div><h4>${a.name}</h4><p class="small">${a.desc}</p><p><button class="badge" onclick="loginAs('${a.key}')">دخول</button></p></div></div>`).join('');}
+function openAgreement(onAccept){const modal=document.getElementById('agreementModal');modal.style.display='flex';document.getElementById('agreeAccept').onclick=()=>{modal.style.display='none';onAccept&&onAccept();};document.getElementById('agreeCancel').onclick=()=>{modal.style.display='none';};}
+function loginAs(account){openAgreement(()=>{localStorage.setItem('account',account);location.hash=(account==='admin')?'admin':'dashboard';});}
+
+/* “قاعدة بيانات” محلية */
+const DB_KEY='hasseef_db_v4';
+const db = {
+  load(){try{return JSON.parse(localStorage.getItem(DB_KEY))||{projects:[],opps:[],wallet:[],speakers:[],facilities:[],coop:[],wf:[],users:[],roles:{Admin:'قراءة, إنشاء, تعديل, اعتماد, تكامل',Manager:'قراءة, إنشاء, تعديل, اعتماد',Operator:'قراءة, تنفيذ',Observer:'قراءة'}}}catch(e){return {projects:[],opps:[],wallet:[],speakers:[],facilities:[],coop:[],wf:[],users:[],roles:{}}}},
+  save(data){localStorage.setItem(DB_KEY,JSON.stringify(data))}
+};
+let state=db.load();
+
+/* Dashboard */
+function renderDashboard(){
+  const acc=localStorage.getItem('account')||'individual';
+  const meta=accounts.find(a=>a.key===acc)||accounts[0];
+  document.getElementById('dashTitle').textContent='لوحة حساب: '+meta.name;
+  document.getElementById('dashDesc').textContent=meta.desc;
+  // تهيئة التبويبات حسب الحساب
+  const tabs=document.getElementById('dashTabs'); tabs.innerHTML='';
+  (meta.tabs||[]).forEach((t,i)=>{tabs.insertAdjacentHTML('beforeend',`<button class="tab ${i===0?'active':''}" data-t="${t}" onclick="switchTab('${t}')">${t}</button>`);});
+  // إظهار أول تبويب
+  document.querySelectorAll('#dashContent>[data-tab]').forEach(x=>x.classList.add('hidden'));
+  if(meta.tabs?.[0]) document.querySelector(`#dashContent [data-tab="${meta.tabs[0]}"]`)?.classList.remove('hidden');
+  // ملء الجداول
+  fillTables();
+}
+function initDashTabs(){
+  const acc=localStorage.getItem('account')||'individual';
+  const meta=accounts.find(a=>a.key===acc)||accounts[0];
+  (meta.tabs||[]).forEach((t,i)=>{if(i===0)switchTab(t);});
+}
+function switchTab(t){
+  document.querySelectorAll('#dashContent>[data-tab]').forEach(x=>x.classList.toggle('hidden',x.getAttribute('data-tab')!==t));
+  document.querySelectorAll('#dashTabs .tab').forEach(x=>x.classList.toggle('active',x.getAttribute('data-t')===t));
+}
+function fillTables(){
+  // Projects
+  const tbP=document.querySelector('#tblProjects tbody'); if(tbP){tbP.innerHTML='';state.projects.forEach((r,i)=>tbP.insertAdjacentHTML('beforeend',`<tr><td>${r.title}</td><td>${r.sector}</td><td>${(+r.budget).toLocaleString('en')}</td><td>${r.status}</td><td><button class="badge" onclick="delRow('projects',${i})">حذف</button></td></tr>`));}
+  // Opps
+  const tbO=document.querySelector('#tblOpps tbody'); if(tbO){tbO.innerHTML='';state.opps.forEach((r,i)=>tbO.insertAdjacentHTML('beforeend',`<tr><td><span class="tag">${r.type}</span></td><td>${r.title}</td><td>${r.org}</td><td>${r.loc}</td><td><button class="badge" onclick="delRow('opps',${i})">حذف</button></td></tr>`));}
+  // Wallet
+  const tbW=document.querySelector('#tblWallet tbody'); if(tbW){tbW.innerHTML='';state.wallet.forEach((r,i)=>tbW.insertAdjacentHTML('beforeend',`<tr><td>${r.type}</td><td>${(+r.amount).toLocaleString('en')}</td><td>${new Date(r.ts).toLocaleDateString()}</td><td><button class="badge" onclick="delRow('wallet',${i})">حذف</button></td></tr>`));}
+  // Speakers
+  const tbS=document.querySelector('#tblSpeakers tbody'); if(tbS){tbS.innerHTML='';state.speakers.forEach((r,i)=>tbS.insertAdjacentHTML('beforeend',`<tr><td>${r.name}</td><td>${r.field}</td><td>${r.org}</td><td>${r.status}</td><td><button class="badge" onclick="delRow('speakers',${i})">حذف</button></td></tr>`));}
+  // Facilities
+  const tbF=document.querySelector('#tblFacilities tbody'); if(tbF){tbF.innerHTML='';state.facilities.forEach((r,i)=>tbF.insertAdjacentHTML('beforeend',`<tr><td>${r.name}</td><td>${r.type}</td><td>${r.cap}</td><td>${r.loc}</td><td><button class="badge" onclick="delRow('facilities',${i})">حذف</button></td></tr>`));}
+  // Coop
+  const tbC=document.querySelector('#tblCoop tbody'); if(tbC){tbC.innerHTML='';state.coop.forEach((r,i)=>tbC.insertAdjacentHTML('beforeend',`<tr><td>${r.org}</td><td>${r.title}</td><td>${r.months}</td><td>${r.status}</td><td><button class="badge" onclick="delRow('coop',${i})">حذف</button></td></tr>`));}
+}
+function delRow(key,i){state[key].splice(i,1);db.save(state);fillTables();}
+
+/* إدراج بيانات */
+function dbAdd(key){
+  if(key==='projects'){
+    const r={title:val('p_title'),sector:val('p_sector'),budget:+val('p_budget')||0,status:val('p_status'),desc:val('p_desc')};
+    if(!r.title) return alert('أدخل عنوان المشروع'); state.projects.unshift(r);
+  }
+  if(key==='opps'){
+    const r={type:val('o_type'),title:val('o_title'),org:val('o_org'),loc:val('o_loc')};
+    if(!r.title) return alert('أدخل عنوان الفرصة'); state.opps.unshift(r);
+  }
+  if(key==='wallet'){
+    const r={type:val('w_type'),amount:+val('w_amount')||0,ts:Date.now()}; state.wallet.unshift(r);
+  }
+  if(key==='speakers'){
+    const r={name:val('s_name'),field:val('s_field'),org:val('s_org'),status:val('s_status')};
+    if(!r.name) return alert('أدخل اسم المتحدث'); state.speakers.unshift(r);
+  }
+  if(key==='facilities'){
+    const r={name:val('f_name'),type:val('f_type'),cap:+val('f_cap')||0,loc:val('f_loc')};
+    if(!r.name) return alert('أدخل اسم المنشأة'); state.facilities.unshift(r);
+  }
+  if(key==='coop'){
+    const r={org:val('c_org'),title:val('c_title'),months:+val('c_months')||0,status:val('c_status')};
+    if(!r.title) return alert('أدخل المسمى'); state.coop.unshift(r);
+  }
+  db.save(state); fillTables();
+}
+function val(id){return (document.getElementById(id)?.value||'').trim()}
+
+/* ADMIN */
+function renderUsers(){
+  const tb=document.querySelector('#usersTbl tbody'); if(!tb) return; tb.innerHTML='';
+  (state.users||[]).forEach((u,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${u.name}</td><td>${u.role}</td><td>${u.account}</td><td><button class='badge' onclick='uDel(${i})'>حذف</button></td>`;tb.appendChild(tr);});
+  // أدوار
+  const out=document.getElementById('rolesOut'); if(out) out.textContent=JSON.stringify(state.roles,null,2);
+}
+function addUser(){
+  const n=document.getElementById('uName').value.trim();
+  const r=document.getElementById('uRole').value;
+  const a=document.getElementById('uAccount').value;
+  if(!n) return alert('ادخل الاسم');
+  state.users.unshift({name:n,role:r,account:a}); db.save(state); renderUsers();
+}
+function uDel(i){state.users.splice(i,1);db.save(state);renderUsers();}
+function saveRole(){const role=document.getElementById('roleSel').value; const perms=document.getElementById('rolePerms').value.trim(); state.roles[role]=perms; db.save(state); document.getElementById('rolesOut').textContent=JSON.stringify(state.roles,null,2);}
+
+/* ADMIN Section markup (reused from V3) */
+</script>
+
+<section id="admin" class="kit">
+  <div class="container">
+    <div class="grid grid-3">
+      <div class="card">
+        <h4>إدارة المستخدمين</h4>
+        <div class="row">
+          <div><label>الاسم</label><input class="input" id="uName" placeholder="اسم المستخدم"></div>
+          <div><label>الدور</label><select class="input" id="uRole"><option>Admin</option><option>Manager</option><option>Operator</option><option>Observer</option></select></div>
+        </div>
+        <div class="row">
+          <div><label>الحساب</label><select class="input" id="uAccount">
+            <option>individual</option><option>private</option><option>nonprofit</option><option>universities</option>
+            <option>government</option><option>donors</option><option>partners</option><option>dev_authorities</option>
+          </select></div>
+          <div style="display:flex;align-items:end"><button class="btn" onclick="addUser()">إضافة</button></div>
+        </div>
+        <hr>
+        <table class="table" id="usersTbl"><thead><tr><th>الاسم</th><th>الدور</th><th>الحساب</th><th></th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="card">
+        <h4>طبقات الصلاحيات</h4>
+        <p class="small">تحرير الصلاحيات لكل دور (عرض تجريبي).</p>
+        <div class="row">
+          <div><label>الدور</label><select class="input" id="roleSel"><option>Admin</option><option>Manager</option><option>Operator</option><option>Observer</option></select></div>
+          <div><label>الصلاحيات</label><input class="input" id="rolePerms" placeholder="مثال: قراءة، إنشاء، اعتماد، تكامل"></div>
+        </div>
+        <div style="margin-top:8px"><button class="btn" onclick="saveRole()">حفظ</button></div>
+        <hr><pre id="rolesOut" class="small" style="white-space:pre-wrap"></pre>
+      </div>
+      <div class="card">
+        <h4>تصدير تقرير قيمة حكومية</h4>
+        <p class="small">يمكن نقل التقارير لاحقًا لـ API فعلية.</p>
+        <button class="btn" onclick="exportValueReport()">تصدير CSV</button>
+        <div id="exportHint" class="small"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function exportValueReport(){
+  const data=(govValues||[]).map(v=>`${v.name},${v.brief},${v.detail.replace(/\n/g,' ')}`);
+  const csv="name,brief,detail\n"+data.join("\n");
+  const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Gov_Added_Value_Report.csv';a.click();
+  const hint=document.getElementById('exportHint');if(hint)hint.textContent='تم إنشاء التقرير (CSV).';
+}
+
+/* WORKFLOW */
+const wfStages=['طلب','تدقيق','اعتماد أولي','اعتماد نهائي'];
+function wfSave(){db.save(state);}
+function wfRender(){const tb=document.querySelector('#wfTbl tbody'); if(!tb) return; tb.innerHTML=''; (state.wf||[]).forEach((it,i)=>{const next=wfStages[it.stage+1]||'—';tb.insertAdjacentHTML('beforeend',`<tr><td>${it.title}</td><td>${(+it.amount).toLocaleString('en')}</td><td>${it.account}</td><td>${wfStages[it.stage]}</td><td>${it.stage<wfStages.length-1?`<button class="badge" onclick="wfNext(${i})">مرحلة: ${next}</button>`:''} <button class="badge" onclick="wfDel(${i})">حذف</button></td></tr>`);});}
+function wfCreate(){const t=val('wf_title');const a=+val('wf_amount')||0;const acc=val('wf_account');if(!t)return alert('أدخل العنوان');state.wf.unshift({title:t,amount:a,account:acc,stage:0,ts:Date.now()});wfSave();wfRender();}
+function wfNext(i){if(state.wf[i].stage<wfStages.length-1){state.wf[i].stage++;wfSave();wfRender();}}
+function wfDel(i){state.wf.splice(i,1);wfSave();wfRender();}
+
+/* SUPPORT */
+const ticketsKey='tickets_v4';const tickets=JSON.parse(localStorage.getItem(ticketsKey)||'[]');
+function renderTickets(){const tb=document.querySelector('#tickets tbody');if(!tb)return;tb.innerHTML='';tickets.forEach(t=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${t.t}</td><td>${t.p}</td><td>${t.s}</td>`;tb.appendChild(tr);});}
+function addTicket(){tickets.push({t:document.getElementById('s1').value,p:document.getElementById('s2').value,s:'مفتوحة'});localStorage.setItem(ticketsKey,JSON.stringify(tickets));renderTickets();}renderTickets();
+
+/* DOCS */
+const docsStatic=[{name:'الوثيقة الرسمية الرئيسية',file:'Hasseef_Official_Report_Main.pdf'},{name:'الملف القانوني والاستراتيجي',file:'Legal_Strategic_File.pdf'},{name:'وثيقة النظام التنفيذي والتقني',file:'Executive_Tech_System.pdf'}];
+function renderDocs(){const el=document.getElementById('docsList');if(!el)return;el.innerHTML=docsStatic.map(d=>`<div class="card"><h4>${d.name}</h4><p class="small">${d.file.split('.').pop().toUpperCase()}</p><a class="btn" href="./docs/${d.file}" target="_blank">تحميل</a></div>`).join('');}
+
+/* Register (creates first Admin if needed) */
+function doRegister(){
+  const type=val('regType'); const name=(val('regName')||'Admin'); const email=val('regEmail'); const role=val('regRole'); const agree=document.getElementById('regAgree').checked;
+  if(!agree)return alert('الرجاء الموافقة على الاتفاقية'); state.users=state.users||[]; state.users.unshift({name,role,account:type,email}); db.save(state); localStorage.setItem('account',type); location.hash='#dashboard'; const msg=document.getElementById('regMsg');msg.classList.remove('hidden');msg.textContent='تم إنشاء الحساب (محلي).';
+}
+
+/* Charts + Map */
+let mapChart;
+const regions=[{id:'Hail',name:'حائل',jobs:72,grants:18,vols:220,dist:[12,18,22,10,8,20]},{id:'Riyadh',name:'الرياض',jobs:310,grants:95,vols:920,dist:[20,28,34,12,10,26]},{id:'Makkah',name:'مكة المكرمة',jobs:280,grants:88,vols:840,dist:[18,26,30,11,9,22]},{id:'Madinah',name:'المدينة المنورة',jobs:130,grants:42,vols:410,dist:[10,14,18,8,6,12]},{id:'Eastern',name:'الشرقية',jobs:260,grants:74,vols:700,dist:[16,24,28,10,8,18]}];
+function renderMap(){const sel=document.getElementById('regionSel');if(!sel)return;sel.innerHTML=regions.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');sel.onchange=()=>updateRegion(sel.value);updateRegion(regions[0].id);}
+function updateRegion(id){const r=regions.find(x=>x.id===id);if(!r)return;document.getElementById('kpiJobs').textContent=r.jobs;document.getElementById('kpiGrants').textContent=r.grants;document.getElementById('kpiVols').textContent=r.vols;if(typeof Chart==='undefined')return;const ctx=document.getElementById('mapChart');if(!ctx)return;if(mapChart)mapChart.destroy();mapChart=new Chart(ctx,{type:'bar',data:{labels:['الأفراد','الخاص','غير الربحي','الجامعات','الحكومة','المانحون'],datasets:[{label:'الفرص',data:r.dist}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});}
+function bindSvgMap(){const svg=document.querySelector('#ksaMap svg');if(svg && !svg.dataset.bound){svg.dataset.bound='1';svg.querySelectorAll('[data-region]').forEach(el=>{el.style.cursor='pointer';el.addEventListener('click',()=>updateRegion(el.getAttribute('data-region')));el.addEventListener('mouseenter',()=>el.setAttribute('fill','#e2e8f0'));el.addEventListener('mouseleave',()=>el.setAttribute('fill','#e5e7eb'));});}}
+
+/* Utils */
+document.addEventListener('DOMContentLoaded',()=>{ // seed أولي لمستخدم Admin في حال عدم وجوده
+  if(!state.users?.length){state.users=[{name:'Admin',role:'Admin',account:'admin',email:'admin@example.com'}];db.save(state);}
+});
+function setActiveTabByName(n){document.querySelectorAll('#dashTabs .tab').forEach(t=>t.classList.toggle('active',t.textContent===n));}
+function setVisible(selector, show){const el=document.querySelector(selector);if(el)el.classList.toggle('hidden',!show);}
+function $(sel){return document.querySelector(sel);}
+</script>
+</body>
+</html>
