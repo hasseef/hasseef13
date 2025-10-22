@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>منصة حصيف — ملف واحد (Demo)</title>
+<title>منصة حصيف — ملف واحد (Charts + Media)</title>
 <style>
 :root{
   --green:#0b5b34; --gold:#c9a227; --bg:#f7f6f1; --ink:#111827; --muted:#6b7280; --bd:#e5e7eb; --card:#fff;
@@ -37,6 +37,12 @@ th,td{border-top:1px solid var(--bd);padding:8px;text-align:start;vertical-align
 .qr{border:1px dashed var(--ink);width:92px;height:92px;display:flex;align-items:center;justify-content:center;font-size:11px}
 .warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:8px}
 .badge{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;padding:2px 6px;border-radius:7px;font-size:12px}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.media-card{border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:#fff}
+.media-card header{padding:8px 10px;background:#fafafa;border-bottom:1px solid var(--bd);color:#111}
+.media-card .content{padding:8px}
+.media-thumb{width:100%;height:130px;object-fit:cover;background:#f2f2f2;display:block}
+.media-actions{display:flex;justify-content:space-between;gap:6px;margin-top:6px}
 footer{color:var(--muted);text-align:center;padding:18px}
 @media (max-width:1000px){ .layout{grid-template-columns:1fr} aside{position:static} }
 </style>
@@ -45,7 +51,6 @@ footer{color:var(--muted);text-align:center;padding:18px}
 <header>
   <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
     <div class="brand">
-      <!-- شعار مضمّن -->
       <svg viewBox="0 0 280 80" aria-label="HASIF"><rect width="280" height="80" fill="#0b5b34"/><rect y="70" width="280" height="4" fill="#c9a227"/><text x="20" y="50" font-size="28" font-family="Arial" fill="#fff">HASIF | منصة حصيف</text></svg>
       <div>
         <div style="font-weight:800">منصة حصيف — نموذج شامل (ملف واحد)</div>
@@ -89,9 +94,21 @@ footer{color:var(--muted);text-align:center;padding:18px}
       <h2>لوحة المؤشرات</h2>
       <div id="kpis" class="grid grid-3"></div>
       <div class="hr"></div>
-      <span class="pill">رؤية 2030</span>
-      <span class="pill">حوكمة</span>
-      <span class="pill">تمكين مجتمعي</span>
+      <!-- Canvas chart -->
+      <div class="grid grid-2">
+        <div>
+          <h3>رسم بياني — ملخص المؤشرات</h3>
+          <canvas id="kpiCanvas" width="560" height="280" style="max-width:100%;border:1px solid var(--bd);border-radius:12px;background:#fff"></canvas>
+          <small class="muted">يُحدّث تلقائيًا عند إضافة بيانات.</small>
+        </div>
+        <div>
+          <span class="pill">رؤية 2030</span>
+          <span class="pill">حوكمة</span>
+          <span class="pill">تمكين مجتمعي</span>
+          <div class="hr"></div>
+          <div class="muted">تلميح: أضف مشروعًا/حلاً/فعالية وسترى التغيّر على الرسم.</div>
+        </div>
+      </div>
     </section>
 
     <!-- التحديات -->
@@ -220,17 +237,20 @@ footer{color:var(--muted);text-align:center;padding:18px}
       </div>
     </section>
 
-    <!-- الإعلام والتوثيق -->
+    <!-- الإعلام والتوثيق (مع رفع وسائط) -->
     <section class="card sec" data-tags="government private nonprofit university development_authority region admin">
-      <h2>الإعلام والتوثيق</h2>
+      <h2>الإعلام والتوثيق (صور/فيديو)</h2>
       <form id="mdForm" class="grid grid-3">
         <select name="targetType"><option>project</option><option>event</option></select>
         <input name="targetId" placeholder="pr-*/ev-*">
         <input name="headline" placeholder="عنوان خبر/تغطية">
         <input name="url" placeholder="رابط (اختياري)">
+        <input id="mediaFile" type="file" accept="image/*,video/*">
         <button>إضافة</button>
       </form>
-      <table><thead><tr><th>#</th><th>الموضوع</th><th>العنوان</th><th>الرابط</th></tr></thead><tbody id="mdT"></tbody></table>
+      <div class="hr"></div>
+      <div id="mediaGrid" class="media-grid"></div>
+      <table style="margin-top:10px"><thead><tr><th>#</th><th>الموضوع</th><th>العنوان</th><th>الرابط</th></tr></thead><tbody id="mdT"></tbody></table>
     </section>
 
     <!-- الحاضنات والمسرّعات -->
@@ -254,18 +274,18 @@ footer{color:var(--muted);text-align:center;padding:18px}
     <!-- نبذة -->
     <section class="card">
       <h2>حول هذا النموذج</h2>
-      <p class="muted">هذا ملف واحد للتجربة والتعليم. <strong>ليس نسخة إنتاج</strong>. ما زالت الخصائص الإنتاجية (نفاذ/SSO، RBAC خادمي، PostgreSQL/Prisma، توقيع رقمي وQR حي، تكاملات حكومية/دفع) خارج المتصفح.</p>
+      <p class="muted">هذا ملف واحد للتجربة والتعليم. <strong>ليس نسخة إنتاج</strong>. خصائص الإنتاج (نفاذ/SSO، RBAC خادمي، PostgreSQL/Prisma، توقيع رقمي وQR حي، تكاملات حكومية/دفع) خارج المتصفح.</p>
     </section>
   </main>
 </div>
 
-<footer>© HASIF Demo — ملف واحد | يصلح كـ Prototype يعكس كل ما نوقش.</footer>
+<footer>© HASIF Demo — ملف واحد | Prototype شامل (Charts + Media)</footer>
 
 <script>
 /* =========================
    بيانات، قوائم، RBAC واجهوي
 ========================= */
-const LS_KEY='hasif:data:v2';
+const LS_KEY='hasif:data:v3';
 const seed = {
   organizations:[
     {id:'org-gov-001',name:'وزارة التنمية',type:'gov',region:'الرياض'},
@@ -369,12 +389,10 @@ function buildSide(){
   const role=roleSel.value; roleLabel.textContent='الحساب: '+role;
   const list=menus[role]||[];
   sideNav.innerHTML='';
-  // أول عنصر دائمًا لوحة المؤشرات
   const aDash=document.createElement('a'); aDash.textContent='لوحة المؤشرات'; aDash.href="#sec-dashboard"; aDash.classList.add('active'); sideNav.appendChild(aDash);
   list.forEach((label,i)=>{
     const anchor=document.createElement('a');
     anchor.textContent=label;
-    // تخطيط سهل: خريطة التسميات إلى أقسام
     const map = {
       "التحديات":"challenges","الحلول":"solutions","المشاريع":"projects","المؤشرات/الرؤية":"kpi",
       "الشراكات/الاتفاقيات":"agreements","الفعاليات":"events","التقارير":"audit",
@@ -402,23 +420,11 @@ function filterSections(){
     const show = allowed.includes('*') || tags.some(t=>allowed.includes(mapTag(t)));
     sec.style.display = show ? '' : 'none';
   });
-  function mapTag(t){ // تحويل أسماء منطقية داخل RBAC
-    return t
-      .replace('agreements','agreements')
-      .replace('engagements','engagements')
-      .replace('finance','finance')
-      .replace('incubators','incubators')
-      .replace('media','media')
-      .replace('events','events')
-      .replace('projects','projects')
-      .replace('solutions','solutions')
-      .replace('government','government')
-      .replace('development_authority','development_authority')
-  }
+  function mapTag(t){ return t; }
 }
 
 /* =========================
-   مؤشرات (KPIs)
+   مؤشرات (KPIs) + الرسم البياني
 ========================= */
 function renderKPIs(){
   const d=dbLoad();
@@ -443,11 +449,43 @@ function renderKPIs(){
       <div><div style="font-weight:700">${it.t}</div><div class="v">${it.v}</div></div>`;
     el.appendChild(c);
   });
+  drawKpiChart({projects:totalProjects,funded,budget,solutions,engagements,challenges});
+}
+function drawKpiChart(data){
+  const ctx=Q('#kpiCanvas').getContext('2d');
+  const w=ctx.canvas.width, h=ctx.canvas.height;
+  ctx.clearRect(0,0,w,h);
+  // محاور بسيطة
+  ctx.fillStyle="#111"; ctx.font="12px system-ui";
+  const labels=["Projects","Funded","Budget(K)","Solutions","Engagements","Challenges"];
+  const values=[data.projects,data.funded,Math.round((+data.budget||0)/1000),data.solutions,data.engagements,data.challenges];
+  const max = Math.max(...values, 5);
+  const pad=40, barW= (w - pad*2) / values.length - 16;
+  // grid
+  ctx.strokeStyle="#eee";
+  for(let i=0;i<=5;i++){ const y=pad + (h-pad*2)*(i/5); ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(w-pad,y); ctx.stroke(); }
+  // bars
+  values.forEach((v,i)=>{
+    const x = pad + i*(barW+16) + 8;
+    const y = h - pad;
+    const bh = (h - pad*2) * (v/max);
+    ctx.fillStyle = "#0b5b34";
+    ctx.fillRect(x, y-bh, barW, bh);
+    // value
+    ctx.fillStyle="#111"; ctx.textAlign="center";
+    ctx.fillText(String(v), x+barW/2, y-bh-6);
+    // label
+    ctx.fillStyle="#555"; ctx.save(); ctx.translate(x+barW/2, y+14); ctx.rotate(-Math.PI/8);
+    ctx.fillText(labels[i], 0, 0); ctx.restore();
+  });
+  // frame
+  ctx.strokeStyle="#c9a227"; ctx.strokeRect(1,1,w-2,h-2);
 }
 
 /* =========================
    CRUD مبسّط للأقسام
 ========================= */
+const QV = id => Q(id).value;
 function renderChallenges(){
   const d=dbLoad(), tb=Q('#chT'); tb.innerHTML='';
   d.challenges.forEach(ch=>{
@@ -467,7 +505,7 @@ function renderSolutions(){
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${so.summary}</td><td>${so.challengeId}</td><td>${so.proposerOrgId}</td>
       <td><input type="number" min="0" max="5" value="${so.score||0}" style="width:80px"></td>`;
-    tr.querySelector('input').onchange=(ev)=>{ so.score=+ev.target.value; dbSave(d); audit('solution','score',{id:so.id,score:so.score});};
+    tr.querySelector('input').onchange=(ev)=>{ so.score=+ev.target.value; dbSave(d); audit('solution','score',{id:so.id,score:so.score}); renderKPIs();};
     tb.appendChild(tr);
   });
 }
@@ -493,12 +531,12 @@ Q('#prForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object
   const pr={id:id('pr'),status:'pending',createdAt:ts(),budget:+f.budget||0,...f}; d.projects.push(pr); dbSave(d); audit('project','create',pr); e.target.reset(); renderProjects(); renderKPIs();};
 
 /* محفظة ورعايات */
-function walletView(){ const d=dbLoad(); const org=Q('#walletOrg').value.trim(); const v=Q('#walletView');
+function walletView(){ const d=dbLoad(); const org=QV('#walletOrg'); const v=Q('#walletView');
   const w=d.wallets.find(x=>x.orgId===org)||{orgId:org,balance:0}; v.textContent=`Org: ${org||'—'} — Balance: ${(w.balance||0).toLocaleString()}`;}
 Q('#walletLoad').onclick=walletView;
-Q('#txDo').onclick=()=>{const d=dbLoad(); const org=Q('#walletOrg').value.trim(); if(!org) return alert('أدخل Org ID');
+Q('#txDo').onclick=()=>{const d=dbLoad(); const org=QV('#walletOrg'); if(!org) return alert('أدخل Org ID');
   let w=d.wallets.find(x=>x.orgId===org); if(!w){w={id:id('w'),orgId:org,balance:0}; d.wallets.push(w);}
-  const type=Q('#txType').value, amount=+(Q('#txAmount').value||0), ref=Q('#txRef').value||'-';
+  const type=QV('#txType'), amount=+(QV('#txAmount')||0), ref=QV('#txRef')||'-';
   if(type==='credit') w.balance+=amount; else w.balance-=amount;
   const tx={id:id('tx'),walletId:w.id,type,amount,ref,ts:ts()}; d.transactions.push(tx); dbSave(d); audit('wallet','tx',tx); walletView(); renderKPIs();
 };
@@ -506,7 +544,7 @@ function renderSponsorships(){const d=dbLoad(), tb=Q('#spT'); tb.innerHTML='';
   d.sponsorships.forEach((sp,i)=>{const tr=document.createElement('tr'); const t=(sp.target?.type+':'+sp.target?.id)||'-';
     tr.innerHTML=`<td>${i+1}</td><td>${t}</td><td>${sp.donorOrgId}</td><td>${(+sp.amount||0).toLocaleString()}</td><td>${sp.status||'approved'}</td>`; tb.appendChild(tr);});}
 Q('#spForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
-  const sp={id:id('sp'),target:{type:Q('#spTarget').value,id:f.targetId},donorOrgId:f.donorOrgId,amount:+f.amount||0,status:'approved'}; d.sponsorships.push(sp);
+  const sp={id:id('sp'),target:{type:QV('#spTarget'),id:f.targetId},donorOrgId:f.donorOrgId,amount:+f.amount||0,status:'approved'}; d.sponsorships.push(sp);
   dbSave(d); audit('sponsorship','approve',sp); e.target.reset(); renderSponsorships(); renderKPIs();};
 
 /* فعاليات */
@@ -557,24 +595,68 @@ Q('#certForm').onsubmit=(e)=>{e.preventDefault(); const f=Object.fromEntries(new
 };
 function printNode(node){const w=open('','_blank'); w.document.write(`<!doctype html><meta charset="utf-8"><title>Print</title>${node.innerHTML}`); w.document.close(); w.focus(); w.print();}
 
-/* إعلام/حاضنات/تدقيق */
-function renderMedia(){const d=dbLoad(),tb=Q('#mdT'); tb.innerHTML='';
-  d.media.forEach((m,i)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${m.targetType}:${m.targetId||'-'}</td><td>${m.headline||'-'}</td><td>${m.url?`<a target="_blank" href="${m.url}">رابط</a>`:'—'}</td>`; tb.appendChild(tr);});}
-Q('#mdForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
-  const item={id:id('md'),...f}; d.media.push(item); dbSave(d); audit('media','add',item); e.target.reset(); renderMedia();};
+/* الإعلام مع رفع وسائط */
+function renderMedia(){
+  const d=dbLoad(), tb=Q('#mdT'); tb.innerHTML='';
+  const grid=Q('#mediaGrid'); grid.innerHTML='';
+  d.media.forEach((m,i)=>{
+    // جدول نصي
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${m.targetType}:${m.targetId||'-'}</td><td>${m.headline||'-'}</td><td>${m.url?`<a target="_blank" href="${m.url}">رابط</a>`:'—'}</td>`;
+    tb.appendChild(tr);
+    // كروت وسائط
+    const card=document.createElement('div'); card.className='media-card';
+    const hdr=document.createElement('header'); hdr.textContent=m.headline||'—'; card.appendChild(hdr);
+    const content=document.createElement('div'); content.className='content';
+    if(m.blob && m.mime && m.mime.startsWith('image/')){
+      const img=document.createElement('img'); img.className='media-thumb'; img.src=m.blob; img.alt=m.headline||'media';
+      content.appendChild(img);
+    }else if(m.blob && m.mime && m.mime.startsWith('video/')){
+      const vid=document.createElement('video'); vid.className='media-thumb'; vid.src=m.blob; vid.controls=true;
+      content.appendChild(vid);
+    }else{
+      const div=document.createElement('div'); div.className='media-thumb'; div.style.display='flex'; div.style.alignItems='center'; div.style.justifyContent='center'; div.textContent='—';
+      content.appendChild(div);
+    }
+    const actions=document.createElement('div'); actions.className='media-actions';
+    const aOpen=document.createElement('a'); aOpen.className='btn-ghost'; aOpen.style.padding='6px 10px'; aOpen.textContent='فتح';
+    if(m.url){ aOpen.href=m.url; aOpen.target='_blank'; } else if(m.blob){ aOpen.href=m.blob; aOpen.target='_blank'; } else { aOpen.href='#'; aOpen.onclick=e=>e.preventDefault(); }
+    const btnDel=document.createElement('button'); btnDel.className='btn-ghost'; btnDel.textContent='حذف';
+    btnDel.onclick=()=>{ const d2=dbLoad(); d2.media = d2.media.filter(x=>x.id!==m.id); dbSave(d2); audit('media','delete',{id:m.id}); renderMedia(); };
+    actions.appendChild(aOpen); actions.appendChild(btnDel);
+    content.appendChild(actions); card.appendChild(content); grid.appendChild(card);
+  });
+}
+Q('#mdForm').onsubmit=async (e)=>{
+  e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const file = Q('#mediaFile').files[0];
+  let blob=null, mime=null;
+  if(file){
+    // تحويل إلى dataURL للتخزين المحلي
+    blob = await fileToDataURL(file);
+    mime = file.type || '';
+  }
+  const item={id:id('md'), ...f, blob, mime};
+  d.media.push(item); dbSave(d); audit('media','add', {id:item.id, mime, withFile: Boolean(blob)});
+  e.target.reset(); Q('#mediaFile').value='';
+  renderMedia();
+};
+function fileToDataURL(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
 
+/* الحاضنات */
 function renderIncubators(){const d=dbLoad(),tb=Q('#ibT'); tb.innerHTML='';
-  d.incubators.forEach((ib,i)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${ib.name}</td><td>${ib.kind}</td><td>${ib.ownerOrgId}</td>`; tb.appendChild(tr);});}
+  d.incubators.forEach((ib,i)=>{const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${ib.name}</td><td>${ib.kind}</td><td>${ib.ownerOrgId}</td>`; tb.appendChild(tr);});}
 Q('#ibForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
   const ib={id:id('ib'),...f}; d.incubators.push(ib); dbSave(d); audit('incubator','create',ib); e.target.reset(); renderIncubators();};
 
+/* التدقيق */
 function renderAudit(){const d=dbLoad(),tb=Q('#auT'); tb.innerHTML='';
-  d.audit.slice(-300).reverse().forEach(a=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${a.ts}</td><td>${a.entity}</td><td>${a.action}</td><td class="muted"><pre style="white-space:pre-wrap;margin:0">${escapeHTML(JSON.stringify(a.details,null,2))}</pre></td>`; tb.appendChild(tr);});}
+  d.audit.slice(-300).reverse().forEach(a=>{const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${a.ts}</td><td>${a.entity}</td><td>${a.action}</td><td class="muted"><pre style="white-space:pre-wrap;margin:0">${escapeHTML(JSON.stringify(a.details,null,2))}</pre></td>`; tb.appendChild(tr);});}
 function escapeHTML(s){return (s||'').replace(/[<>&]/g,m=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[m]))}
 
-/* =========================
-   تشغيل أولي
-========================= */
+/* تشغيل أولي */
 function renderAll(){
   renderKPIs();
   renderChallenges();
@@ -587,8 +669,8 @@ function renderAll(){
   renderIncubators();
   renderAudit();
 }
-if(!localStorage.getItem(LS_KEY)) dbSave(seed);
-buildSide(); filterSections(); renderAll();
+function init(){ if(!localStorage.getItem(LS_KEY)) dbSave(seed); buildSide(); filterSections(); renderAll(); }
+window.addEventListener('load', init);
 </script>
 </body>
 </html>
