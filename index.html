@@ -2,292 +2,279 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>منصة حصيف — نموذج شامل أحادي الملف</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>منصة حصيف — ملف واحد (Demo)</title>
 <style>
-  :root{
-    --green:#0b5b34; --green-700:#0a4d2c; --gold:#c9a227; --sand:#f7f6f1; --ink:#111827; --muted:#6b7280;
-    --bd:#e5e7eb; --card:#ffffff;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui, -apple-system, Segoe UI, Roboto, "Noto Naskh Arabic UI", Arial; color:var(--ink); background:var(--sand)}
-  header{background:var(--green); color:#fff; border-bottom:4px solid var(--gold)}
-  header .wrap{max-width:1200px;margin:0 auto;padding:16px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between}
-  h1{margin:0;font-size:20px}
-  nav a{color:#fff;text-decoration:none;margin-inline:10px;font-weight:700}
-  .wrap{max-width:1200px;margin:0 auto;padding:20px}
-  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
-  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
-  .row{display:flex;flex-wrap:wrap;gap:8px}
-  input,select,textarea,button{padding:9px;border:1px solid var(--bd);border-radius:10px;font:inherit}
-  button{background:var(--green);color:#fff;border:none;cursor:pointer}
-  .btn-ghost{background:#fff;color:var(--green);border:1px solid var(--green)}
-  .toolbar{display:flex;gap:8px;align-items:center}
-  table{width:100%;border-collapse:collapse}
-  th,td{border-top:1px solid var(--bd);padding:8px;text-align:start}
-  .muted{color:var(--muted);font-size:12px}
-  .divider{height:1px;background:var(--bd);margin:12px 0}
-  .pill{display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;color:#065f46;border:1px solid #bbf7d0;padding:4px 8px;border-radius:999px;font-size:12px}
-  .tabs{display:flex;gap:8px;flex-wrap:wrap}
-  .tabs .tab{background:#fff;color:var(--ink);border:1px solid var(--bd)}
-  .tabs .tab[aria-selected="true"]{background:#ecfdf5;border-color:#10b981}
-  .kv{display:flex;gap:10px;align-items:flex-start}
-  .qrbox{border:1px dashed var(--ink);width:92px;height:92px;display:flex;align-items:center;justify-content:center;font-size:11px}
-  .sticky-tools{position:sticky;top:10px;z-index:10;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:10px}
-  .badge{background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;padding:2px 6px;border-radius:7px;font-size:12px}
-  .warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:8px}
-  @media (max-width:900px){ .grid-3{grid-template-columns:1fr} .grid-2{grid-template-columns:1fr} header .wrap{flex-direction:column; align-items:flex-start}}
+:root{
+  --green:#0b5b34; --gold:#c9a227; --bg:#f7f6f1; --ink:#111827; --muted:#6b7280; --bd:#e5e7eb; --card:#fff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,Segoe UI,Roboto,"Noto Naskh Arabic UI",Arial}
+header{background:var(--green);color:#fff;border-bottom:4px solid var(--gold)}
+.wrap{max-width:1300px;margin:0 auto;padding:14px 18px}
+.brand{display:flex;gap:12px;align-items:center}
+.brand svg{height:38px}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+select,input,button,textarea{font:inherit;padding:8px 10px;border:1px solid var(--bd);border-radius:10px}
+button{background:var(--green);color:#fff;border:none;cursor:pointer}
+.btn-ghost{background:#fff;color:var(--green);border:1px solid var(--green)}
+.layout{display:grid;grid-template-columns:270px 1fr;gap:14px}
+aside{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;position:sticky;top:10px;height:max-content}
+main{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
+nav a{display:block;color:var(--ink);text-decoration:none;padding:8px 10px;border-radius:10px}
+nav a:hover,nav a.active{background:#ecfdf5}
+table{width:100%;border-collapse:collapse}
+th,td{border-top:1px solid var(--bd);padding:8px;text-align:start;vertical-align:top}
+.grid{display:grid;gap:12px}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.kpi{display:flex;gap:10px;align-items:center}
+.kpi .v{font-weight:800;font-size:22px}
+.muted{color:var(--muted)}
+.pill{display:inline-flex;gap:6px;align-items:center;background:#f0fdf4;border:1px solid #bbf7d0;color:#065f46;padding:2px 8px;border-radius:999px;font-size:12px}
+.hr{height:1px;background:var(--bd);margin:10px 0}
+.qr{border:1px dashed var(--ink);width:92px;height:92px;display:flex;align-items:center;justify-content:center;font-size:11px}
+.warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:8px}
+.badge{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;padding:2px 6px;border-radius:7px;font-size:12px}
+footer{color:var(--muted);text-align:center;padding:18px}
+@media (max-width:1000px){ .layout{grid-template-columns:1fr} aside{position:static} }
 </style>
 </head>
 <body>
 <header>
-  <div class="wrap">
-    <div>
-      <h1>منصة حصيف — نموذج شامل أحادي الملف (Demo)</h1>
-      <div class="muted">حلول صائبة يُقترح فعلها — نسخة متصفح للتجربة والتعليم فقط</div>
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div class="brand">
+      <!-- شعار مضمّن -->
+      <svg viewBox="0 0 280 80" aria-label="HASIF"><rect width="280" height="80" fill="#0b5b34"/><rect y="70" width="280" height="4" fill="#c9a227"/><text x="20" y="50" font-size="28" font-family="Arial" fill="#fff">HASIF | منصة حصيف</text></svg>
+      <div>
+        <div style="font-weight:800">منصة حصيف — نموذج شامل (ملف واحد)</div>
+        <div class="muted">حلول صائبة يُقترح فعلها — نسخة متصفح للتجربة والتعليم</div>
+      </div>
     </div>
-    <div class="toolbar">
-      <select id="roleSel" title="الدور">
+    <div class="tools">
+      <select id="roleSel" title="نوع الحساب">
         <option value="government">القطاع الحكومي</option>
+        <option value="development_authority">هيئة التطوير</option>
+        <option value="region">إمارة المنطقة</option>
         <option value="private">القطاع الخاص</option>
         <option value="nonprofit">القطاع غير الربحي</option>
         <option value="university">الجامعات</option>
         <option value="donor">المانح</option>
         <option value="individual">الأفراد</option>
-        <option value="region">إمارة المنطقة</option>
         <option value="admin">إدارة المنصة</option>
       </select>
       <button id="langBtn" class="btn-ghost">English</button>
       <button id="exportBtn" class="btn-ghost">تصدير JSON</button>
-      <input id="importFile" type="file" accept="application/json" style="display:none">
+      <input id="importFile" type="file" accept="application/json" hidden>
       <button id="importBtn" class="btn-ghost">استيراد JSON</button>
+      <button id="seedBtn" class="btn-ghost">إدخال عينات</button>
+      <button id="resetBtn" class="btn-ghost">مسح البيانات</button>
     </div>
   </div>
 </header>
 
-<main class="wrap">
-  <div class="grid-3">
-    <aside class="sticky-tools">
-      <h3>المحتوى</h3>
-      <nav id="toc" class="row" style="gap:6px">
-        <a class="pill" href="#dash">لوحة المؤشرات</a>
-        <a class="pill" href="#challenges">التحديات</a>
-        <a class="pill" href="#solutions">الحلول</a>
-        <a class="pill" href="#projects">المشاريع</a>
-        <a class="pill" href="#finance">التمويل/الرعايات/المحفظة</a>
-        <a class="pill" href="#events">الفعاليات والمتحدثون</a>
-        <a class="pill" href="#engage">التطوع/التدريب/الاستشارات</a>
-        <a class="pill" href="#agreements">الاتفاقيات والشهادات</a>
-        <a class="pill" href="#media">الإعلام والتوثيق</a>
-        <a class="pill" href="#incubators">الحاضنات والمسرعات</a>
-        <a class="pill" href="#audit">التدقيق والسجلات</a>
-        <a class="pill" href="#about">نطاق النموذج</a>
-      </nav>
-      <div class="divider"></div>
-      <div class="warn">
-        <strong>تنبيه:</strong> هذا نموذج متصفح فقط (بدون خادم/توقيع/تكاملات). كل البيانات محفوظة محليًا.
-      </div>
-    </aside>
+<div class="wrap layout">
+  <aside>
+    <h3 style="margin:0 0 8px">القوائم الرئيسية</h3>
+    <small id="roleLabel" class="muted">—</small>
+    <nav id="sideNav" style="margin-top:10px"></nav>
+    <div class="hr"></div>
+    <div class="warn"><strong>تنبيه:</strong> هذا نموذج متصفح فقط (بدون خادم/نفاذ/توقيع رقمي/تكاملات). البيانات تُحفظ محليًا.</div>
+  </aside>
 
-    <section class="card" id="dash" style="grid-column:span 2">
-      <h2>لوحة مؤشرات سريعة</h2>
-      <div id="kpis" class="grid-auto"></div>
-      <div class="divider"></div>
-      <div class="row">
-        <button class="btn-ghost" id="seedBtn">إدخال عينات</button>
-        <button class="btn-ghost" id="resetBtn">مسح جميع البيانات</button>
-      </div>
+  <main id="main">
+    <!-- لوحة المؤشرات -->
+    <section class="card" id="sec-dashboard">
+      <h2>لوحة المؤشرات</h2>
+      <div id="kpis" class="grid grid-3"></div>
+      <div class="hr"></div>
+      <span class="pill">رؤية 2030</span>
+      <span class="pill">حوكمة</span>
+      <span class="pill">تمكين مجتمعي</span>
     </section>
-  </div>
 
-  <!-- تحديات -->
-  <section id="challenges" class="card">
-    <h2>التحديات (Government → Society)</h2>
-    <form id="chForm" class="row">
-      <input name="ownerOrgId" placeholder="Org ID (مثال org-gov-001)" required>
-      <input name="title" placeholder="عنوان التحدي" required>
-      <input name="domain" placeholder="المجال (تقنية/صحة/ثقافة)" required>
-      <button>إضافة</button>
-    </form>
-    <table><thead><tr><th>العنوان</th><th>المجال</th><th>الجهة</th><th>الحالة</th><th>إغلاق</th></tr></thead>
-      <tbody id="chTbody"></tbody></table>
-  </section>
+    <!-- التحديات -->
+    <section class="card sec" data-tags="government development_authority region admin">
+      <h2>التحديات</h2>
+      <form id="chForm" class="grid grid-3">
+        <input name="ownerOrgId" placeholder="Org ID (مثال org-gov-001)" required>
+        <input name="title" placeholder="عنوان التحدي" required>
+        <input name="domain" placeholder="المجال (تقنية/صحة/ثقافة)" required>
+        <button>إضافة</button>
+      </form>
+      <table><thead><tr><th>العنوان</th><th>المجال</th><th>الجهة</th><th>الحالة</th><th>إغلاق</th></tr></thead>
+      <tbody id="chT"></tbody></table>
+    </section>
 
-  <!-- حلول -->
-  <section id="solutions" class="card">
-    <h2>الحلول (Private/Nonprofit/Universities/Individuals)</h2>
-    <form id="soForm" class="row">
-      <input name="challengeId" placeholder="Challenge ID (ch-001)" required>
-      <input name="proposerOrgId" placeholder="Org ID (خاص/جامعة/غير ربحي/أفراد)" required>
-      <input name="summary" placeholder="ملخص الحل" required>
-      <button>تقديم</button>
-    </form>
-    <table><thead><tr><th>الحل</th><th>للتحدي</th><th>المُقدّم</th><th>تقييم</th></tr></thead>
-      <tbody id="soTbody"></tbody></table>
-  </section>
+    <!-- الحلول -->
+    <section class="card sec" data-tags="government private nonprofit university individual development_authority admin">
+      <h2>الحلول</h2>
+      <form id="soForm" class="grid grid-3">
+        <input name="challengeId" placeholder="Challenge ID (ch-001)" required>
+        <input name="proposerOrgId" placeholder="Org ID (خاص/جامعة/غير ربحي/أفراد)" required>
+        <input name="summary" placeholder="ملخص الحل" required>
+        <button>تقديم</button>
+      </form>
+      <table><thead><tr><th>الحل</th><th>للتحدي</th><th>المُقدّم</th><th>تقييم</th></tr></thead>
+      <tbody id="soT"></tbody></table>
+    </section>
 
-  <!-- مشاريع -->
-  <section id="projects" class="card">
-    <h2>المشاريع (Solution → Project)</h2>
-    <form id="prForm" class="row">
-      <input name="ownerOrgId" placeholder="Org ID" required>
-      <input name="visionGoal" placeholder="هدف الرؤية" required>
-      <input name="budget" type="number" placeholder="الميزانية" required>
-      <input name="sourceSolution" placeholder="Solution ID (اختياري)">
-      <button>إضافة</button>
-    </form>
-    <table><thead><tr><th>المعرف</th><th>الجهة</th><th>الهدف</th><th>الميزانية</th><th>الحالة</th><th>تحديث الحالة</th></tr></thead>
-      <tbody id="prTbody"></tbody></table>
-  </section>
+    <!-- المشاريع -->
+    <section class="card sec" data-tags="government development_authority region admin private nonprofit university donor">
+      <h2>المشاريع</h2>
+      <form id="prForm" class="grid grid-3">
+        <input name="ownerOrgId" placeholder="Org ID" required>
+        <input name="visionGoal" placeholder="هدف الرؤية" required>
+        <input name="budget" type="number" placeholder="الميزانية" required>
+        <button>إضافة</button>
+      </form>
+      <table><thead><tr><th>المعرف</th><th>الجهة</th><th>الهدف</th><th>الميزانية</th><th>الحالة</th><th>تحديث الحالة</th></tr></thead>
+      <tbody id="prT"></tbody></table>
+    </section>
 
-  <!-- تمويل / رعاية / محفظة -->
-  <section id="finance" class="card">
-    <h2>التمويل والرعايات والمحفظة</h2>
-    <div class="grid-2">
-      <div>
-        <h3>المحفظة</h3>
-        <div class="row"><input id="walletOrg" placeholder="Org ID"><button id="walletLoad" class="btn-ghost">عرض الرصيد</button></div>
-        <div id="walletView" class="muted">—</div>
-        <div class="row" style="margin-top:8px">
-          <select id="txType"><option value="credit">إيداع</option><option value="debit">سحب</option></select>
-          <input id="txAmount" type="number" placeholder="المبلغ">
-          <input id="txRef" placeholder="المرجع">
-          <button id="txDo">تنفيذ</button>
+    <!-- الرعايات/المحفظة -->
+    <section class="card sec" data-tags="donor private nonprofit government development_authority admin">
+      <h2>التمويل والرعايات والمحفظة</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>المحفظة</h3>
+          <div class="grid grid-3">
+            <input id="walletOrg" placeholder="Org ID (org-donor-001)">
+            <button id="walletLoad" class="btn-ghost">عرض الرصيد</button>
+            <span id="walletView" class="muted">—</span>
+          </div>
+          <div class="hr"></div>
+          <div class="grid grid-3">
+            <select id="txType"><option value="credit">إيداع</option><option value="debit">سحب</option></select>
+            <input id="txAmount" type="number" placeholder="المبلغ">
+            <input id="txRef" placeholder="المرجع">
+            <button id="txDo">تنفيذ</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>الرعايات</h3>
+          <form id="spForm" class="grid grid-3">
+            <select id="spTarget"><option value="project">Project</option><option value="event">Event</option></select>
+            <input name="targetId" placeholder="pr-*/ev-*">
+            <input name="donorOrgId" placeholder="Donor Org">
+            <input name="amount" type="number" placeholder="المبلغ">
+            <button>اعتماد رعاية</button>
+          </form>
+          <table><thead><tr><th>#</th><th>الهدف</th><th>المانح</th><th>المبلغ</th><th>الحالة</th></tr></thead><tbody id="spT"></tbody></table>
         </div>
       </div>
-      <div>
-        <h3>الرعاية</h3>
-        <form id="spForm" class="row">
-          <select id="spTarget">
-            <option value="project">Project</option>
-            <option value="event">Event</option>
-          </select>
-          <input name="targetId" placeholder="معرّف الهدف (pr-*/ev-*)" required>
-          <input name="donorOrgId" placeholder="Org Donor (org-donor-001)" required>
-          <input name="amount" type="number" placeholder="المبلغ" required>
-          <button>اعتماد رعاية</button>
-        </form>
-        <table><thead><tr><th>#</th><th>الهدف</th><th>المانح</th><th>المبلغ</th><th>الحالة</th></tr></thead>
-          <tbody id="spTbody"></tbody></table>
+    </section>
+
+    <!-- فعاليات ومتحدثون -->
+    <section class="card sec" data-tags="government private nonprofit university development_authority admin">
+      <h2>الفعاليات والمتحدثون</h2>
+      <form id="evForm" class="grid grid-3">
+        <input name="orgId" placeholder="Org ID" required>
+        <input name="title" placeholder="عنوان الفعالية" required>
+        <input name="date" type="date" required>
+        <input name="speakers" placeholder="متحدثون (أسماء مفصولة بفواصل)">
+        <button>إنشاء</button>
+      </form>
+      <table><thead><tr><th>المعرف</th><th>العنوان</th><th>التاريخ</th><th>الجهة</th><th>متحدثون</th></tr></thead><tbody id="evT"></tbody></table>
+    </section>
+
+    <!-- التطوع/التدريب/الاستشارات -->
+    <section class="card sec" data-tags="nonprofit university private individual government admin">
+      <h2>Engagements: التطوع / التدريب / الاستشارات</h2>
+      <form id="enForm" class="grid grid-3">
+        <select name="type"><option value="volunteer">تطوع</option><option value="training">تدريب</option><option value="consulting">استشارة</option></select>
+        <input name="orgId" placeholder="Org ID" required>
+        <input name="hours" type="number" placeholder="الساعات (للتطوع/التدريب)">
+        <input name="fee" type="number" placeholder="الأتعاب (للاستشارة)">
+        <button>تسجيل</button>
+      </form>
+      <table><thead><tr><th>#</th><th>النوع</th><th>الجهة</th><th>ساعات</th><th>أتعاب</th></tr></thead><tbody id="enT"></tbody></table>
+    </section>
+
+    <!-- الاتفاقيات والشهادات -->
+    <section class="card sec" data-tags="government private nonprofit university development_authority admin">
+      <h2>الاتفاقيات الرقمية والشهادات</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>اتفاقية رقمية (قابلة للطباعة)</h3>
+          <form id="agForm" class="grid grid-3">
+            <input name="partyA" placeholder="الطرف الأول" required>
+            <input name="partyB" placeholder="الطرف الثاني" required>
+            <input name="title"  placeholder="عنوان الاتفاقية" required>
+            <button>توليد اتفاقية</button>
+          </form>
+          <div id="agOut" class="muted">—</div>
+        </div>
+        <div class="card">
+          <h3>شهادة مشاركة/تدريب/استشارة (قابلة للطباعة)</h3>
+          <form id="certForm" class="grid grid-3">
+            <input name="name" placeholder="الاسم" required>
+            <input name="org"  placeholder="الجهة" required>
+            <select name="kind"><option>تطوع</option><option>تدريب</option><option>استشارة</option></select>
+            <input name="hours" type="number" placeholder="الساعات/المدة">
+            <button>توليد شهادة</button>
+          </form>
+          <div id="certOut" class="muted">—</div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- فعاليات ومتحدثون -->
-  <section id="events" class="card">
-    <h2>الفعاليات والمتحدثون</h2>
-    <form id="evForm" class="row">
-      <input name="orgId" placeholder="Org ID" required>
-      <input name="title" placeholder="عنوان الفعالية" required>
-      <input name="date" type="date" required>
-      <input name="speakers" placeholder="متحدثون مفصولون بفواصل (أسماء)">
-      <button>إنشاء فعالية</button>
-    </form>
-    <table><thead><tr><th>المعرف</th><th>العنوان</th><th>التاريخ</th><th>الجهة</th><th>متحدثون</th></tr></thead>
-      <tbody id="evTbody"></tbody></table>
-  </section>
+    <!-- الإعلام والتوثيق -->
+    <section class="card sec" data-tags="government private nonprofit university development_authority region admin">
+      <h2>الإعلام والتوثيق</h2>
+      <form id="mdForm" class="grid grid-3">
+        <select name="targetType"><option>project</option><option>event</option></select>
+        <input name="targetId" placeholder="pr-*/ev-*">
+        <input name="headline" placeholder="عنوان خبر/تغطية">
+        <input name="url" placeholder="رابط (اختياري)">
+        <button>إضافة</button>
+      </form>
+      <table><thead><tr><th>#</th><th>الموضوع</th><th>العنوان</th><th>الرابط</th></tr></thead><tbody id="mdT"></tbody></table>
+    </section>
 
-  <!-- التطوع / التدريب / الاستشارات -->
-  <section id="engage" class="card">
-    <h2>Engagements: التطوع / التدريب / الاستشارات</h2>
-    <form id="enForm" class="row">
-      <select name="type">
-        <option value="volunteer">تطوع</option>
-        <option value="training">تدريب</option>
-        <option value="consulting">استشارة</option>
-      </select>
-      <input name="orgId" placeholder="Org ID" required>
-      <input name="hours" type="number" placeholder="الساعات (للتطوع/التدريب)">
-      <input name="fee" type="number" placeholder="الأتعاب (للاستشارة)">
-      <button>تسجيل</button>
-    </form>
-    <table><thead><tr><th>#</th><th>النوع</th><th>الجهة</th><th>ساعات</th><th>أتعاب</th></tr></thead>
-      <tbody id="enTbody"></tbody></table>
-  </section>
+    <!-- الحاضنات والمسرّعات -->
+    <section class="card sec" data-tags="development_authority university private nonprofit admin">
+      <h2>الحاضنات والمسرّعات</h2>
+      <form id="ibForm" class="grid grid-3">
+        <input name="name" placeholder="اسم الحاضنة/المسرّعة" required>
+        <select name="kind"><option>حاضنة</option><option>مسرّعة</option></select>
+        <input name="ownerOrgId" placeholder="Org ID" required>
+        <button>إنشاء</button>
+      </form>
+      <table><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>الجهة</th></tr></thead><tbody id="ibT"></tbody></table>
+    </section>
 
-  <!-- الاتفاقيات والشهادات -->
-  <section id="agreements" class="card">
-    <h2>الاتفاقيات الرقمية والشهادات</h2>
-    <div class="grid-2">
-      <div>
-        <h3>اتفاقية رقمية (قابلة للطباعة)</h3>
-        <form id="agForm" class="row">
-          <input name="partyA" placeholder="الطرف الأول" required>
-          <input name="partyB" placeholder="الطرف الثاني" required>
-          <input name="title"  placeholder="عنوان الاتفاقية" required>
-          <button>توليد اتفاقية</button>
-        </form>
-        <div id="agOut" class="muted">—</div>
-      </div>
-      <div>
-        <h3>شهادة مشاركة/تدريب (قابلة للطباعة)</h3>
-        <form id="certForm" class="row">
-          <input name="name" placeholder="الاسم" required>
-          <input name="org"  placeholder="الجهة" required>
-          <select name="kind"><option>تطوع</option><option>تدريب</option><option>استشارة</option></select>
-          <input name="hours" type="number" placeholder="الساعات/المدة">
-          <button>توليد شهادة</button>
-        </form>
-        <div id="certOut" class="muted">—</div>
-      </div>
-    </div>
-  </section>
+    <!-- التدقيق -->
+    <section class="card sec" data-tags="admin government development_authority region">
+      <h2>سجل التدقيق (Audit)</h2>
+      <table><thead><tr><th>الوقت</th><th>الكيان</th><th>الحدث</th><th>التفاصيل</th></tr></thead><tbody id="auT"></tbody></table>
+    </section>
 
-  <!-- الإعلام والتوثيق -->
-  <section id="media" class="card">
-    <h2>الإعلام والتوثيق</h2>
-    <form id="mdForm" class="row">
-      <select name="targetType"><option>project</option><option>event</option></select>
-      <input name="targetId" placeholder="pr-*/ev-*">
-      <input name="headline" placeholder="عنوان خبر/تغطية">
-      <input name="url" placeholder="رابط (اختياري)">
-      <button>إضافة توثيق</button>
-    </form>
-    <table><thead><tr><th>#</th><th>الموضوع</th><th>العنوان</th><th>الرابط</th></tr></thead>
-      <tbody id="mdTbody"></tbody></table>
-  </section>
+    <!-- نبذة -->
+    <section class="card">
+      <h2>حول هذا النموذج</h2>
+      <p class="muted">هذا ملف واحد للتجربة والتعليم. <strong>ليس نسخة إنتاج</strong>. ما زالت الخصائص الإنتاجية (نفاذ/SSO، RBAC خادمي، PostgreSQL/Prisma، توقيع رقمي وQR حي، تكاملات حكومية/دفع) خارج المتصفح.</p>
+    </section>
+  </main>
+</div>
 
-  <!-- الحاضنات والمسرعات -->
-  <section id="incubators" class="card">
-    <h2>الحاضنات والمسرّعات</h2>
-    <form id="ibForm" class="row">
-      <input name="name" placeholder="اسم الحاضنة/المسرّعة" required>
-      <select name="kind"><option>حاضنة</option><option>مسرّعة</option></select>
-      <input name="ownerOrgId" placeholder="Org ID" required>
-      <button>إنشاء</button>
-    </form>
-    <table><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>الجهة</th></tr></thead>
-      <tbody id="ibTbody"></tbody></table>
-  </section>
-
-  <!-- التدقيق والسجلات -->
-  <section id="audit" class="card">
-    <h2>سجل التدقيق (Audit)</h2>
-    <table><thead><tr><th>الوقت</th><th>الكيان</th><th>الحدث</th><th>التفاصيل</th></tr></thead>
-      <tbody id="auTbody"></tbody></table>
-  </section>
-
-  <!-- نطاق النموذج -->
-  <section id="about" class="card">
-    <h2>حول هذا النموذج</h2>
-    <p class="muted">هذا ملف واحد للتجربة والتعليم. <strong>غير مناسب للإنتاج</strong>، ولا يشمل: نفاذ/SSO، RBAC خادمي، قاعدة بيانات/توقيع رقمي/تكاملات حكومية/بوابات دفع. جميعها موسومة داخل الكود كـ “قابلة للترقية”.</p>
-  </section>
-</main>
+<footer>© HASIF Demo — ملف واحد | يصلح كـ Prototype يعكس كل ما نوقش.</footer>
 
 <script>
-/* ===========================
-   بنية بيانات محلية + بذور
-=========================== */
-const LS_KEY='hasif:data:v1';
+/* =========================
+   بيانات، قوائم، RBAC واجهوي
+========================= */
+const LS_KEY='hasif:data:v2';
 const seed = {
   organizations:[
     {id:'org-gov-001',name:'وزارة التنمية',type:'gov',region:'الرياض'},
     {id:'org-priv-001',name:'شركة ألف',type:'private',region:'الرياض'},
     {id:'org-np-001',name:'جمعية بناء',type:'nonprofit',region:'الشرقية'},
     {id:'org-uni-001',name:'جامعة الملك المستقبل',type:'university',region:'مكة'},
-    {id:'org-donor-001',name:'صندوق الأثر الوطني',type:'donor',region:'الرياض'}
+    {id:'org-donor-001',name:'صندوق الأثر الوطني',type:'donor',region:'الرياض'},
+    {id:'org-region-001',name:'إمارة منطقة الرياض',type:'region',region:'الرياض'},
+    {id:'org-dev-001',name:'هيئة تطوير الرياض',type:'dev_auth',region:'الرياض'}
   ],
   challenges:[
     {id:'ch-001',ownerOrgId:'org-gov-001',title:'خفض فجوة المهارات الرقمية',domain:'تقنية',status:'open',createdAt:ts()},
@@ -304,10 +291,7 @@ const seed = {
     {id:'pr-002',ownerOrgId:'org-gov-001',visionGoal:'اقتصاد مزدهر',status:'funded',budget:400000,sourceSolution:'sol-001',createdAt:ts()}
   ],
   sponsorships:[{id:'sp-001',target:{type:'project',id:'pr-002'},donorOrgId:'org-donor-001',amount:200000,status:'approved'}],
-  wallets:[
-    {id:'w-1',orgId:'org-donor-001',balance:1000000},
-    {id:'w-2',orgId:'org-priv-001',balance:250000}
-  ],
+  wallets:[{id:'w-1',orgId:'org-donor-001',balance:1000000},{id:'w-2',orgId:'org-priv-001',balance:250000}],
   transactions:[
     {id:'tx-001',walletId:'w-1',type:'credit',amount:1000000,ref:'funding-topup',ts:ts()},
     {id:'tx-002',walletId:'w-1',type:'debit',amount:200000,ref:'sp-001',ts:ts()}
@@ -323,301 +307,274 @@ const seed = {
   kpi:[{id:'kpi-001',entityType:'project',entityId:'pr-001',kpiKey:'beneficiaries',value:5000,period:'2025-Q4'}],
   audit:[]
 };
-function ts(){ return new Date().toISOString(); }
-function datePlus(d){ const x=new Date(); x.setDate(x.getDate()+d); return x.toISOString().slice(0,10); }
-
-function load(){ const raw=localStorage.getItem(LS_KEY); if(!raw){ save(seed); return {...seed}; } try{ return JSON.parse(raw);}catch{ save(seed); return {...seed}; } }
-function save(db){ localStorage.setItem(LS_KEY, JSON.stringify(db)); }
-function addAudit(entity, action, details){ const db=load(); db.audit.push({id:rand('au'), ts:ts(), entity, action, details}); save(db); }
-function rand(pref){ return pref+'-'+Math.random().toString(36).slice(2,8); }
-
-/* ===========================
-   i18n (مفاتيح أساسية)
-=========================== */
-let currentLang='ar';
-function t(k){ const L=dict[currentLang]; return (k.split('.').reduce((o,i)=>o?o[i]:null, L))||k; }
-const dict={
-  ar:{ common:{save:'حفظ',delete:'حذف',status:'الحالة'} },
-  en:{ common:{save:'Save',delete:'Delete',status:'Status'} }
+const menus = {
+  government:["لوحة المؤشرات","التحديات","الحلول","المشاريع","الشراكات/الاتفاقيات","الفعاليات","المؤشرات/الرؤية","التقارير"],
+  development_authority:["لوحة هيئة التطوير","خارطة المشاريع الإستراتيجية","التصاريح التنموية","الحاضنات/المسرعات","المؤشرات الإقليمية","التقارير"],
+  region:["لوحة المنطقة","المشاريع المناطقية","التصاريح","الرعايات الرسمية","المؤشرات المحلية","التقارير"],
+  private:["لوحة CSR","المشاريع الممولة","الرعايات","الفعاليات","الاستشارات","المرافق","المحفظة","التقارير"],
+  nonprofit:["لوحة المبادرات","المشاريع","التطوع","الفعاليات","التمويل/الرعايات","المحفظة","التقارير"],
+  university:["لوحة الجامعة","التعزيز العلمي","التدريب","التدريب التعاوني","الاستشارات","البرامج","التقارير"],
+  donor:["لوحة المانح","المحفظة","المشاريع المرشحة","التمويلات/الرعايات","الأثر","التقارير المالية"],
+  individual:["ملفي","تقديم حل","فرص التطوع","التدريب","التحدث/التدريب","الوظائف","شهاداتي"],
+  admin:["لوحة النظام","الحسابات والصلاحيات","الإشعارات","الدعم الفني","التدقيق","التقارير المجمعة","الإعدادات"]
 };
-document.getElementById('langBtn').onclick=()=>{
+const RBAC = {
+  government:["challenges","solutions","projects","events","agreements","kpi","audit","finance","media","incubators"],
+  development_authority:["projects","events","kpi","agreements","incubators","media","audit","finance"],
+  region:["projects","kpi","media","audit"],
+  private:["solutions","events","engagements","finance","media"],
+  nonprofit:["solutions","projects","events","engagements","finance","media"],
+  university:["solutions","events","engagements","incubators","media"],
+  donor:["projects","finance","kpi"],
+  individual:["solutions","engagements"],
+  admin:["*"]
+};
+function ts(){return new Date().toISOString()}
+function datePlus(d){const x=new Date();x.setDate(x.getDate()+d);return x.toISOString().slice(0,10)}
+function dbLoad(){const raw=localStorage.getItem(LS_KEY); if(!raw){ dbSave(seed); return JSON.parse(JSON.stringify(seed)); } try{ return JSON.parse(raw);}catch{ dbSave(seed); return JSON.parse(JSON.stringify(seed)); }}
+function dbSave(d){localStorage.setItem(LS_KEY, JSON.stringify(d));}
+function audit(entity,action,details){const d=dbLoad(); d.audit.push({id:id('au'),ts:ts(),entity,action,details}); dbSave(d);}
+function id(p){return p+'-'+Math.random().toString(36).slice(2,8)}
+const Q = sel => document.querySelector(sel);
+const QA = sel => [...document.querySelectorAll(sel)];
+
+/* =========================
+   تبديل اللغة RTL/LTR (واجهوي)
+========================= */
+let lang='ar';
+Q('#langBtn').onclick=()=>{
   const html=document.documentElement;
-  if(currentLang==='ar'){ currentLang='en'; html.lang='en'; html.dir='ltr'; document.getElementById('langBtn').textContent='العربية'; }
-  else{ currentLang='ar'; html.lang='ar'; html.dir='rtl'; document.getElementById('langBtn').textContent='English'; }
-  renderAll();
+  if(lang==='ar'){lang='en'; html.lang='en'; html.dir='ltr'; Q('#langBtn').textContent='العربية';}
+  else{lang='ar'; html.lang='ar'; html.dir='rtl'; Q('#langBtn').textContent='English';}
 };
 
-/* ===========================
-   تصدير/استيراد
-=========================== */
-document.getElementById('exportBtn').onclick=()=>{
+/* =========================
+   استيراد/تصدير/Seed/Reset
+========================= */
+Q('#exportBtn').onclick=()=>{
   const blob=new Blob([localStorage.getItem(LS_KEY)||'{}'],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hasif_data.json'; a.click(); URL.revokeObjectURL(a.href);
 };
-document.getElementById('importBtn').onclick=()=> document.getElementById('importFile').click();
-document.getElementById('importFile').onchange=(e)=>{
-  const f=e.target.files[0]; if(!f) return;
-  f.text().then(txt=>{ try{ const o=JSON.parse(txt); save(o); renderAll(); }catch(err){ alert('ملف غير صالح'); } });
-};
+Q('#importBtn').onclick=()=>Q('#importFile').click();
+Q('#importFile').onchange=(e)=>{const f=e.target.files[0]; if(!f) return; f.text().then(txt=>{try{dbSave(JSON.parse(txt)); renderAll();}catch{alert('ملف غير صالح');}})};
+Q('#seedBtn').onclick=()=>{dbSave(seed); audit('system','seed',{}); renderAll();};
+Q('#resetBtn').onclick=()=>{ if(confirm('مسح جميع البيانات؟')){ localStorage.removeItem(LS_KEY); dbSave(seed); audit('system','reset',{}); renderAll(); } };
 
-/* ===========================
-   لوحات المؤشرات
-=========================== */
+/* =========================
+   بناء القائمة الجانبية حسب الدور (RBAC)
+========================= */
+const roleSel=Q('#roleSel'), sideNav=Q('#sideNav'), roleLabel=Q('#roleLabel');
+roleSel.onchange=()=>{ buildSide(); filterSections(); renderAll(); };
+function buildSide(){
+  const role=roleSel.value; roleLabel.textContent='الحساب: '+role;
+  const list=menus[role]||[];
+  sideNav.innerHTML='';
+  // أول عنصر دائمًا لوحة المؤشرات
+  const aDash=document.createElement('a'); aDash.textContent='لوحة المؤشرات'; aDash.href="#sec-dashboard"; aDash.classList.add('active'); sideNav.appendChild(aDash);
+  list.forEach((label,i)=>{
+    const anchor=document.createElement('a');
+    anchor.textContent=label;
+    // تخطيط سهل: خريطة التسميات إلى أقسام
+    const map = {
+      "التحديات":"challenges","الحلول":"solutions","المشاريع":"projects","المؤشرات/الرؤية":"kpi",
+      "الشراكات/الاتفاقيات":"agreements","الفعاليات":"events","التقارير":"audit",
+      "لوحة هيئة التطوير":"kpi", "خارطة المشاريع الإستراتيجية":"projects", "التصاريح التنموية":"agreements",
+      "الحاضنات/المسرعات":"incubators", "المؤشرات الإقليمية":"kpi",
+      "المشاريع المناطقية":"projects", "التصاريح":"agreements","الرعايات الرسمية":"finance","المؤشرات المحلية":"kpi",
+      "لوحة CSR":"kpi","المشاريع الممولة":"projects","الرعايات":"finance","الاستشارات":"engagements","المرافق":"media","المحفظة":"finance",
+      "لوحة المبادرات":"kpi","التطوع":"engagements","التمويل/الرعايات":"finance",
+      "لوحة الجامعة":"kpi","التعزيز العلمي":"solutions","التدريب":"engagements","التدريب التعاوني":"engagements","الاستشارات":"engagements","البرامج":"events",
+      "لوحة المانح":"kpi","المشاريع المرشحة":"projects","التمويلات/الرعايات":"finance","الأثر":"kpi","التقارير المالية":"audit",
+      "ملفي":"kpi","تقديم حل":"solutions","فرص التطوع":"engagements","التدريب":"engagements","التحدث/التدريب":"events","الوظائف":"media","شهاداتي":"agreements",
+      "لوحة النظام":"kpi","الحسابات والصلاحيات":"media","الإشعارات":"media","الدعم الفني":"media","التدقيق":"audit","التقارير المجمعة":"audit","الإعدادات":"media"
+    };
+    const secId = 'sec-'+(map[label]||'kpi');
+    anchor.href='#'+secId;
+    anchor.onclick = (e)=>{ QA('nav a').forEach(x=>x.classList.remove('active')); e.target.classList.add('active'); };
+    sideNav.appendChild(anchor);
+  });
+}
+function filterSections(){
+  const role=roleSel.value;
+  const allowed = RBAC[role]||[];
+  QA('.sec').forEach(sec=>{
+    const tags = (sec.getAttribute('data-tags')||'').split(/\s+/);
+    const show = allowed.includes('*') || tags.some(t=>allowed.includes(mapTag(t)));
+    sec.style.display = show ? '' : 'none';
+  });
+  function mapTag(t){ // تحويل أسماء منطقية داخل RBAC
+    return t
+      .replace('agreements','agreements')
+      .replace('engagements','engagements')
+      .replace('finance','finance')
+      .replace('incubators','incubators')
+      .replace('media','media')
+      .replace('events','events')
+      .replace('projects','projects')
+      .replace('solutions','solutions')
+      .replace('government','government')
+      .replace('development_authority','development_authority')
+  }
+}
+
+/* =========================
+   مؤشرات (KPIs)
+========================= */
 function renderKPIs(){
-  const db=load(); const role=document.getElementById('roleSel').value;
-  const projects = db.projects.filter(p=> role==='admin'? true : true); // (يمكن تخصيصها حسب الدور)
-  const funded = projects.filter(p=>['funded','completed'].includes(p.status)).length;
-  const totalBudget = projects.reduce((s,p)=>s+(+p.budget||0),0);
-  const challenges = db.challenges.length;
-  const solutions = db.solutions.length;
-  const engagements = db.engagements.length;
-
+  const d=dbLoad();
+  const totalProjects=d.projects.length;
+  const funded=d.projects.filter(p=>['funded','completed'].includes(p.status)).length;
+  const budget = d.projects.reduce((s,p)=>s+(+p.budget||0),0);
+  const challenges=d.challenges.length;
+  const solutions=d.solutions.length;
+  const engagements=d.engagements.length;
   const items=[
-    {t:'إجمالي المشاريع / Projects',v:projects.length},
+    {t:'المشاريع Projects',v:totalProjects},
     {t:'ممول/مكتمل Funded/Completed',v:funded},
-    {t:'الميزانية الكلية SAR',v:totalBudget.toLocaleString()},
+    {t:'الميزانية الكلية SAR',v:budget.toLocaleString()},
     {t:'التحديات',v:challenges},
     {t:'الحلول',v:solutions},
     {t:'Engagements',v:engagements}
   ];
-  const k=document.getElementById('kpis'); k.innerHTML='';
+  const el=Q('#kpis'); el.innerHTML='';
   items.forEach(it=>{
-    const c=document.createElement('div'); c.className='card';
-    c.innerHTML=`<div class="kv">
-      <svg width="24" height="24" viewBox="0 0 24 24"><path fill="${'#0a4d2c'}" d="M9 16.2 5.5 12.7 4 14.2 9 19l11-11-1.5-1.5"/></svg>
-      <div><strong>${it.t}</strong><div style="font-size:24px;font-weight:800">${it.v}</div></div>
-    </div>`;
-    k.appendChild(c);
-  })
+    const c=document.createElement('div'); c.className='card kpi';
+    c.innerHTML=`<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#0a4d2c" d="M9 16.2 5.5 12.7 4 14.2 9 19l11-11-1.5-1.5"/></svg>
+      <div><div style="font-weight:700">${it.t}</div><div class="v">${it.v}</div></div>`;
+    el.appendChild(c);
+  });
 }
 
-/* ===========================
-   جداول وقوائم (CRUD مبسّط)
-=========================== */
+/* =========================
+   CRUD مبسّط للأقسام
+========================= */
 function renderChallenges(){
-  const db=load(); const tb=document.getElementById('chTbody'); tb.innerHTML='';
-  db.challenges.forEach(ch=>{
+  const d=dbLoad(), tb=Q('#chT'); tb.innerHTML='';
+  d.challenges.forEach(ch=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${ch.title}</td><td>${ch.domain}</td><td>${ch.ownerOrgId}</td><td>${ch.status}</td>
     <td><button class="btn-ghost" data-id="${ch.id}">إغلاق</button></td>`;
-    tr.querySelector('button').onclick=()=>{ ch.status='closed'; save(db); addAudit('challenge','close',{id:ch.id}); renderChallenges(); renderKPIs(); };
+    tr.querySelector('button').onclick=()=>{ ch.status='closed'; dbSave(d); audit('challenge','close',{id:ch.id}); renderChallenges(); renderKPIs(); };
     tb.appendChild(tr);
   });
 }
-document.getElementById('chForm').onsubmit=(e)=>{
-  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
-  const ch={id:rand('ch'), status:'open', createdAt:ts(), ...f}; db.challenges.push(ch); save(db); addAudit('challenge','create',ch); e.target.reset(); renderChallenges(); renderKPIs();
-};
+Q('#chForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const ch={id:id('ch'),status:'open',createdAt:ts(),...f}; d.challenges.push(ch); dbSave(d); audit('challenge','create',ch); e.target.reset(); renderChallenges(); renderKPIs();};
 
 function renderSolutions(){
-  const db=load(); const tb=document.getElementById('soTbody'); tb.innerHTML='';
-  db.solutions.forEach(so=>{
+  const d=dbLoad(), tb=Q('#soT'); tb.innerHTML='';
+  d.solutions.forEach(so=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${so.summary}</td><td>${so.challengeId}</td><td>${so.proposerOrgId}</td>
-    <td><input type="number" style="width:80px" value="${so.score||0}" min="0" max="5"></td>`;
-    tr.querySelector('input').onchange=(ev)=>{ so.score=+ev.target.value; save(db); addAudit('solution','score',{id:so.id,score:so.score}); };
+      <td><input type="number" min="0" max="5" value="${so.score||0}" style="width:80px"></td>`;
+    tr.querySelector('input').onchange=(ev)=>{ so.score=+ev.target.value; dbSave(d); audit('solution','score',{id:so.id,score:so.score});};
     tb.appendChild(tr);
   });
 }
-document.getElementById('soForm').onsubmit=(e)=>{
-  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
-  const so={id:rand('sol'), ...f, score:0}; db.solutions.push(so); save(db); addAudit('solution','create',so); e.target.reset(); renderSolutions(); renderKPIs();
-};
+Q('#soForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const so={id:id('sol'),score:0,...f}; d.solutions.push(so); dbSave(d); audit('solution','create',so); e.target.reset(); renderSolutions(); renderKPIs();};
 
 function renderProjects(){
-  const db=load(); const tb=document.getElementById('prTbody'); tb.innerHTML='';
-  db.projects.forEach(pr=>{
+  const d=dbLoad(), tb=Q('#prT'); tb.innerHTML='';
+  d.projects.forEach(pr=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`<td>${pr.id}</td><td>${pr.ownerOrgId}</td><td>${pr.visionGoal}</td><td>${(+pr.budget||0).toLocaleString()}</td><td>${pr.status}</td>
-    <td>
-      <select data-id="${pr.id}">
-        <option value="pending" ${pr.status==='pending'?'selected':''}>قيد التقييم</option>
-        <option value="in_progress" ${pr.status==='in_progress'?'selected':''}>قيد التنفيذ</option>
-        <option value="funded" ${pr.status==='funded'?'selected':''}>ممول</option>
-        <option value="completed" ${pr.status==='completed'?'selected':''}>مكتمل</option>
-      </select>
-    </td>`;
-    tr.querySelector('select').onchange=(ev)=>{ pr.status=ev.target.value; save(db); addAudit('project','status',{id:pr.id,status:pr.status}); renderProjects(); renderKPIs(); };
+    <td><select data-id="${pr.id}">
+      <option value="pending" ${pr.status==='pending'?'selected':''}>قيد التقييم</option>
+      <option value="in_progress" ${pr.status==='in_progress'?'selected':''}>قيد التنفيذ</option>
+      <option value="funded" ${pr.status==='funded'?'selected':''}>ممول</option>
+      <option value="completed" ${pr.status==='completed'?'selected':''}>مكتمل</option>
+    </select></td>`;
+    tr.querySelector('select').onchange=(ev)=>{ pr.status=ev.target.value; dbSave(d); audit('project','status',{id:pr.id,status:pr.status}); renderProjects(); renderKPIs(); };
     tb.appendChild(tr);
   });
 }
-document.getElementById('prForm').onsubmit=(e)=>{
-  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
-  const pr={id:rand('pr'), status:'pending', createdAt:ts(), budget:+f.budget||0, ...f}; db.projects.push(pr); save(db); addAudit('project','create',pr); e.target.reset(); renderProjects(); renderKPIs();
-};
+Q('#prForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const pr={id:id('pr'),status:'pending',createdAt:ts(),budget:+f.budget||0,...f}; d.projects.push(pr); dbSave(d); audit('project','create',pr); e.target.reset(); renderProjects(); renderKPIs();};
 
-function renderWallet(){
-  const db=load(); const org=document.getElementById('walletOrg').value.trim(); const view=document.getElementById('walletView');
-  const w = db.wallets.find(x=>x.orgId===org) || {orgId:org, balance:0};
-  view.innerHTML = `<div class="card"><strong>Org:</strong> ${org||'—'} — <strong>Balance:</strong> ${(w.balance||0).toLocaleString()}</div>`;
-}
-document.getElementById('walletLoad').onclick=renderWallet;
-document.getElementById('txDo').onclick=()=>{
-  const db=load(); const org=document.getElementById('walletOrg').value.trim();
-  if(!org) return alert('أدخل Org ID');
-  let w=db.wallets.find(x=>x.orgId===org); if(!w){ w={id:rand('w'), orgId:org, balance:0}; db.wallets.push(w); }
-  const type=document.getElementById('txType').value; const amount=+document.getElementById('txAmount').value||0; const ref=document.getElementById('txRef').value||'-';
-  if(type==='credit') w.balance += amount; else w.balance -= amount;
-  const tx={id:rand('tx'), walletId:w.id, type, amount, ref, ts:ts()}; db.transactions.push(tx); save(db); addAudit('wallet','tx',tx); renderWallet(); renderKPIs();
+/* محفظة ورعايات */
+function walletView(){ const d=dbLoad(); const org=Q('#walletOrg').value.trim(); const v=Q('#walletView');
+  const w=d.wallets.find(x=>x.orgId===org)||{orgId:org,balance:0}; v.textContent=`Org: ${org||'—'} — Balance: ${(w.balance||0).toLocaleString()}`;}
+Q('#walletLoad').onclick=walletView;
+Q('#txDo').onclick=()=>{const d=dbLoad(); const org=Q('#walletOrg').value.trim(); if(!org) return alert('أدخل Org ID');
+  let w=d.wallets.find(x=>x.orgId===org); if(!w){w={id:id('w'),orgId:org,balance:0}; d.wallets.push(w);}
+  const type=Q('#txType').value, amount=+(Q('#txAmount').value||0), ref=Q('#txRef').value||'-';
+  if(type==='credit') w.balance+=amount; else w.balance-=amount;
+  const tx={id:id('tx'),walletId:w.id,type,amount,ref,ts:ts()}; d.transactions.push(tx); dbSave(d); audit('wallet','tx',tx); walletView(); renderKPIs();
 };
+function renderSponsorships(){const d=dbLoad(), tb=Q('#spT'); tb.innerHTML='';
+  d.sponsorships.forEach((sp,i)=>{const tr=document.createElement('tr'); const t=(sp.target?.type+':'+sp.target?.id)||'-';
+    tr.innerHTML=`<td>${i+1}</td><td>${t}</td><td>${sp.donorOrgId}</td><td>${(+sp.amount||0).toLocaleString()}</td><td>${sp.status||'approved'}</td>`; tb.appendChild(tr);});}
+Q('#spForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const sp={id:id('sp'),target:{type:Q('#spTarget').value,id:f.targetId},donorOrgId:f.donorOrgId,amount:+f.amount||0,status:'approved'}; d.sponsorships.push(sp);
+  dbSave(d); audit('sponsorship','approve',sp); e.target.reset(); renderSponsorships(); renderKPIs();};
 
-function renderSponsorships(){
-  const db=load(); const tb=document.getElementById('spTbody'); tb.innerHTML='';
-  db.sponsorships.forEach((sp,i)=>{
-    const t = sp.target?.type + ':' + sp.target?.id;
-    const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${t||'-'}</td><td>${sp.donorOrgId}</td><td>${(+sp.amount||0).toLocaleString()}</td><td>${sp.status||'approved'}</td>`;
-    tb.appendChild(tr);
-  });
-}
-document.getElementById('spForm').onsubmit=(e)=>{
-  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
-  const sp={id:rand('sp'), target:{type:document.getElementById('spTarget').value, id:f.targetId}, donorOrgId:f.donorOrgId, amount:+f.amount||0, status:'approved'};
-  db.sponsorships.push(sp); save(db); addAudit('sponsorship','approve',sp); e.target.reset(); renderSponsorships(); renderKPIs();
-};
+/* فعاليات */
+function renderEvents(){const d=dbLoad(),tb=Q('#evT'); tb.innerHTML='';
+  d.events.forEach(ev=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${ev.id}</td><td>${ev.title}</td><td>${ev.date}</td><td>${ev.orgId}</td><td>${(ev.speakers||[]).join(', ')}</td>`; tb.appendChild(tr);});}
+Q('#evForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const ev={id:id('ev'),orgId:f.orgId,title:f.title,date:f.date,speakers:(f.speakers||'').split(',').map(s=>s.trim()).filter(Boolean),approvals:[]};
+  d.events.push(ev); dbSave(d); audit('event','create',ev); e.target.reset(); renderEvents(); renderKPIs();};
 
-function renderEvents(){
-  const db=load(); const tb=document.getElementById('evTbody'); tb.innerHTML='';
-  db.events.forEach(ev=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${ev.id}</td><td>${ev.title}</td><td>${ev.date}</td><td>${ev.orgId}</td><td>${(ev.speakers||[]).join(', ')}</td>`;
-    tb.appendChild(tr);
-  });
-}
-document.getElementById('evForm').onsubmit=(e)=>{
-  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
-  const ev={id:rand('ev'), orgId:f.orgId, title:f.title, date:f.date, speakers:(f.speakers||'').split(',').map(s=>s.trim()).filter(Boolean), approvals:[]};
-  db.events.push(ev); save(db); addAudit('event','create',ev); e.target.reset(); renderEvents(); renderKPIs();
-};
+/* التطوع/التدريب/الاستشارات */
+function renderEngagements(){const d=dbLoad(),tb=Q('#enT'); tb.innerHTML='';
+  d.engagements.forEach(en=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${en.id}</td><td>${en.type}</td><td>${en.orgId}</td><td>${en.hours||'-'}</td><td>${en.fee||'-'}</td>`; tb.appendChild(tr);});}
+Q('#enForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const en={id:id('en'),...f,hours:+(f.hours||0)||undefined,fee:+(f.fee||0)||undefined}; d.engagements.push(en); dbSave(d); audit('engagement','create',en); e.target.reset(); renderEngagements(); renderKPIs();};
 
-function renderEngagements(){
-  const db=load(); const tb=document.getElementById('enTbody'); tb.innerHTML='';
-  db.engagements.forEach(en=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${en.id}</td><td>${en.type}</td><td>${en.orgId}</td><td>${en.hours||'-'}</td><td>${en.fee||'-'}</td>`;
-    tb.appendChild(tr);
-  });
-}
-document.getElementById('enForm').onsubmit=(e)=>{
-  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
-  const en={id:rand('en'), ...f, hours:+(f.hours||0) || undefined, fee:+(f.fee||0) || undefined};
-  db.engagements.push(en); save(db); addAudit('engagement','create',en); e.target.reset(); renderEngagements(); renderKPIs();
-};
-
-/* ===========================
-   اتفاقيات وشهادات (طباعة)
-=========================== */
-function printableAgreement({partyA,partyB,title}){
-  const id=rand('agr'); const dt=new Date().toISOString().slice(0,10);
-  const html=`
-  <div style="font-family:system-ui; width:800px; margin:0 auto">
+/* اتفاقيات وشهادات (طباعة) */
+function printableAgreement({partyA,partyB,title}){const vId=id('agr'),dt=new Date().toISOString().slice(0,10);
+  const html=`<div style="font-family:system-ui;width:800px;margin:0 auto">
     <div style="background:#0b5b34;color:#fff;padding:16px;border-bottom:4px solid #c9a227">
-      <h2 style="margin:0">اتفاقية رقمية | Digital Agreement</h2>
-      <div>HASIF Platform — Demo</div>
-    </div>
+      <h2 style="margin:0">اتفاقية رقمية | Digital Agreement</h2><div>HASIF — Demo</div></div>
     <div style="padding:16px;border:1px solid #eee;border-top:none">
-      <p><strong>العنوان:</strong> ${title}</p>
-      <p><strong>الأطراف:</strong> ${partyA} — ${partyB}</p>
-      <ol>
-        <li>الامتثال والحوكمة الوطنية.</li>
-        <li>حماية البيانات واستخدامها للأغراض التنموية فقط.</li>
-        <li>صلاحيات الوصول وفق الدور والالتزام بالمراجعة.</li>
-        <li>قياس الأثر والتقارير الدورية.</li>
-      </ol>
-      <p><strong>التاريخ:</strong> ${dt} — <strong>المعرّف:</strong> ${id}</p>
-      <div style="display:flex;gap:16px;align-items:center">
-        <div class="qrbox">QR</div>
-        <div class="muted">التحقق: https://hasif.example/verify/${id}</div>
-      </div>
-      <div style="margin-top:28px;display:flex;gap:40px">
-        <div>توقيع الطرف الأول: __________</div>
-        <div>توقيع الطرف الثاني: __________</div>
-      </div>
-    </div>
-  </div>`;
-  return {id, html};
+      <p><strong>العنوان:</strong> ${title}</p><p><strong>الأطراف:</strong> ${partyA} — ${partyB}</p>
+      <ol><li>الامتثال والحوكمة الوطنية.</li><li>خصوصية البيانات.</li><li>الصلاحيات وفق الدور.</li><li>قياس الأثر والتقارير.</li></ol>
+      <p><strong>التاريخ:</strong> ${dt} — <strong>المعرّف:</strong> ${vId}</p>
+      <div style="display:flex;gap:16px;align-items:center"><div class="qr">QR</div><div class="muted">التحقق: https://hasif.example/verify/${vId}</div></div>
+      <div style="margin-top:28px;display:flex;gap:40px"><div>توقيع الطرف الأول: ________</div><div>توقيع الطرف الثاني: ________</div></div>
+    </div></div>`;
+  return {id:vId,html};
 }
-document.getElementById('agForm').onsubmit=(e)=>{
-  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
-  const {id,html}=printableAgreement(f); document.getElementById('agOut').innerHTML=`<div class="card">${html}<div class="row" style="margin-top:10px"><button onclick="printSection(this.closest('.card'))">طباعة</button></div></div>`;
-  addAudit('agreement','render',{id, parties:[f.partyA,f.partyB]});
+Q('#agForm').onsubmit=(e)=>{e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  const {id:vid,html}=printableAgreement(f); Q('#agOut').innerHTML=`<div class="card">${html}<div class="hr"></div><button onclick="printNode(this.closest('.card'))">طباعة</button></div>`;
+  audit('agreement','render',{id:vid,parties:[f.partyA,f.partyB]});
 };
-function printableCertificate({name,org,kind,hours}){
-  const id=rand('cert'); const dt=new Date().toISOString().slice(0,10);
-  const html=`
-  <div style="font-family:system-ui; width:800px; margin:0 auto">
+function printableCertificate({name,org,kind,hours}){const vId=id('cert'),dt=new Date().toISOString().slice(0,10);
+  const html=`<div style="font-family:system-ui;width:800px;margin:0 auto">
     <div style="background:#0b5b34;color:#fff;padding:16px;border-bottom:4px solid #c9a227">
-      <h2 style="margin:0">شهادة مشاركة/Training/Consulting</h2><div>HASIF Platform — Demo</div>
-    </div>
+      <h2 style="margin:0">شهادة ${kind}</h2><div>HASIF — Demo</div></div>
     <div style="padding:16px;border:1px solid #eee;border-top:none">
       <p>تشهد منصة حصيف بأن <strong>${name}</strong> قد شارك عبر <strong>${kind}</strong> لدى <strong>${org}</strong>.</p>
-      <p>المدة/الساعات: <strong>${hours||'-'}</strong> — التاريخ: <strong>${dt}</strong> — المعرّف: <strong>${id}</strong></p>
-      <div style="display:flex;gap:16px;align-items:center">
-        <div class="qrbox">QR</div>
-        <div class="muted">التحقق: https://hasif.example/verify/${id}</div>
-      </div>
-    </div>
-  </div>`;
-  return {id, html};
+      <p>المدة/الساعات: <strong>${hours||'-'}</strong> — التاريخ: <strong>${dt}</strong> — المعرّف: <strong>${vId}</strong></p>
+      <div style="display:flex;gap:16px;align-items:center"><div class="qr">QR</div><div class="muted">التحقق: https://hasif.example/verify/${vId}</div></div>
+    </div></div>`;
+  return {id:vId,html};
 }
-document.getElementById('certForm').onsubmit=(e)=>{
-  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
-  const {id,html}=printableCertificate(f); document.getElementById('certOut').innerHTML=`<div class="card">${html}<div class="row" style="margin-top:10px"><button onclick="printSection(this.closest('.card'))">طباعة</button></div></div>`;
-  addAudit('certificate','render',{id, name:f.name, org:f.org, kind:f.kind});
+Q('#certForm').onsubmit=(e)=>{e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  const {id:vid,html}=printableCertificate(f); Q('#certOut').innerHTML=`<div class="card">${html}<div class="hr"></div><button onclick="printNode(this.closest('.card'))">طباعة</button></div>`;
+  audit('certificate','render',{id:vid,name:f.name,org:f.org,kind:f.kind});
 };
-function printSection(node){
-  const w=window.open('','_blank'); w.document.write(`<!doctype html><meta charset="utf-8"><title>Print</title>${node.innerHTML}`); w.document.close(); w.focus(); w.print();
-}
+function printNode(node){const w=open('','_blank'); w.document.write(`<!doctype html><meta charset="utf-8"><title>Print</title>${node.innerHTML}`); w.document.close(); w.focus(); w.print();}
 
-/* ===========================
-   الإعلام، الحاضنات، التدقيق
-=========================== */
-function renderMedia(){
-  const db=load(); const tb=document.getElementById('mdTbody'); tb.innerHTML='';
-  db.media.forEach((m,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${i+1}</td><td>${m.targetType}:${m.targetId||'-'}</td><td>${m.headline||'-'}</td>
-    <td>${m.url?`<a href="${m.url}" target="_blank">رابط</a>`:'—'}</td>`;
-    tb.appendChild(tr);
-  });
-}
-document.getElementById('mdForm').onsubmit=(e)=>{
-  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
-  const item={id:rand('md'), ...f}; db.media.push(item); save(db); addAudit('media','add',item); e.target.reset(); renderMedia();
-};
+/* إعلام/حاضنات/تدقيق */
+function renderMedia(){const d=dbLoad(),tb=Q('#mdT'); tb.innerHTML='';
+  d.media.forEach((m,i)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${m.targetType}:${m.targetId||'-'}</td><td>${m.headline||'-'}</td><td>${m.url?`<a target="_blank" href="${m.url}">رابط</a>`:'—'}</td>`; tb.appendChild(tr);});}
+Q('#mdForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const item={id:id('md'),...f}; d.media.push(item); dbSave(d); audit('media','add',item); e.target.reset(); renderMedia();};
 
-function renderIncubators(){
-  const db=load(); const tb=document.getElementById('ibTbody'); tb.innerHTML='';
-  db.incubators.forEach((ib,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${i+1}</td><td>${ib.name}</td><td>${ib.kind}</td><td>${ib.ownerOrgId}</td>`;
-    tb.appendChild(tr);
-  });
-}
-document.getElementById('ibForm').onsubmit=(e)=>{
-  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
-  const ib={id:rand('ib'), ...f}; db.incubators.push(ib); save(db); addAudit('incubator','create',ib); e.target.reset(); renderIncubators();
-};
+function renderIncubators(){const d=dbLoad(),tb=Q('#ibT'); tb.innerHTML='';
+  d.incubators.forEach((ib,i)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${ib.name}</td><td>${ib.kind}</td><td>${ib.ownerOrgId}</td>`; tb.appendChild(tr);});}
+Q('#ibForm').onsubmit=(e)=>{e.preventDefault(); const d=dbLoad(); const f=Object.fromEntries(new FormData(e.target));
+  const ib={id:id('ib'),...f}; d.incubators.push(ib); dbSave(d); audit('incubator','create',ib); e.target.reset(); renderIncubators();};
 
-function renderAudit(){
-  const db=load(); const tb=document.getElementById('auTbody'); tb.innerHTML='';
-  db.audit.slice(-200).reverse().forEach(a=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${a.ts}</td><td>${a.entity}</td><td>${a.action}</td><td class="muted"><pre style="white-space:pre-wrap">${safe(JSON.stringify(a.details,null,2))}</pre></td>`;
-    tb.appendChild(tr);
-  });
-}
-function safe(s){ return (s||'').replace(/[<>&]/g, m=>({ '<':'&lt;','>':'&gt;','&':'&amp;' }[m])); }
+function renderAudit(){const d=dbLoad(),tb=Q('#auT'); tb.innerHTML='';
+  d.audit.slice(-300).reverse().forEach(a=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${a.ts}</td><td>${a.entity}</td><td>${a.action}</td><td class="muted"><pre style="white-space:pre-wrap;margin:0">${escapeHTML(JSON.stringify(a.details,null,2))}</pre></td>`; tb.appendChild(tr);});}
+function escapeHTML(s){return (s||'').replace(/[<>&]/g,m=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[m]))}
 
-/* ===========================
-   أزرار النظام
-=========================== */
-document.getElementById('seedBtn').onclick=()=>{ save(seed); addAudit('system','seed',{}); renderAll(); };
-document.getElementById('resetBtn').onclick=()=>{ if(confirm('مسح جميع البيانات؟')){ localStorage.removeItem(LS_KEY); save(seed); addAudit('system','reset',{}); renderAll(); } };
-document.getElementById('roleSel').onchange=()=>{ renderAll(); };
-
-/* ===========================
-   التجسيد
-=========================== */
+/* =========================
+   تشغيل أولي
+========================= */
 function renderAll(){
   renderKPIs();
   renderChallenges();
@@ -629,10 +586,9 @@ function renderAll(){
   renderMedia();
   renderIncubators();
   renderAudit();
-  // (إظهار/إخفاء حسب الدور يمكن توسيعه هنا)
 }
-if(!localStorage.getItem(LS_KEY)) save(seed);
-renderAll();
+if(!localStorage.getItem(LS_KEY)) dbSave(seed);
+buildSide(); filterSections(); renderAll();
 </script>
 </body>
 </html>
