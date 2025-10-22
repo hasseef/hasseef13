@@ -1,1290 +1,862 @@
-#!/usr/bin/env bash
-set -e
-
-ROOT="hasif"
-echo "Scaffolding $ROOT (with Swagger + Full Auth) ..."
-mkdir -p "$ROOT"/{apps/api,apps/web,packages/{ui,tsconfig},scripts}
-
-############################################
-# 0) .env + Docker + README
-############################################
-cat > "$ROOT/.env.example" << 'EOF'
-DATABASE_URL="postgresql://hasif:hasif@localhost:5432/hasif?schema=public"
-
-# API
-JWT_SECRET="super-strong-secret"
-JWT_REFRESH_SECRET="another-super-strong-secret"
-APP_PORT=3001
-APP_ORIGIN="http://localhost:3000"
-ACCESS_TOKEN_TTL="15m"
-REFRESH_TOKEN_TTL="7d"
-
-# WEB
-NEXT_PUBLIC_API_BASE="http://localhost:3001"
-EOF
-
-cat > "$ROOT/docker-compose.yml" << 'EOF'
-version: "3.9"
-services:
-  db:
-    image: postgres:16
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: hasif
-      POSTGRES_PASSWORD: hasif
-      POSTGRES_DB: hasif
-    ports: ["5432:5432"]
-    volumes: [db_data:/var/lib/postgresql/data]
-
-  pgadmin:
-    image: dpage/pgadmin4:8
-    restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@hasif.local
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports: ["8081:80"]
-    depends_on: [db]
-volumes:
-  db_data:
-EOF
-
-cat > "$ROOT/README.md" << 'EOF'
-# HASIF Starter Kit (Swagger + Auth)
-- API: NestJS + Prisma (PostgreSQL) + JWT (Access/Refresh) + RBAC + Swagger
-- Web: Next.js 14
-- CSV Export (أساس جاهز)
-- Analytics/regions
-## التشغيل السريع
-1) docker compose -f hasif/docker-compose.yml up -d
-2) cd hasif/apps/api && npm i && npx prisma generate && npx prisma migrate dev --name init && npm run seed && npm run start:dev
-3) cd hasif/apps/web && npm i && npm run dev
-Docs: http://localhost:3001/docs
-EOF
-
-############################################
-# 1) packages/tsconfig
-############################################
-mkdir -p "$ROOT/packages/tsconfig"
-cat > "$ROOT/packages/tsconfig/tsconfig.base.json" << 'EOF'
-{
-  "compilerOptions": {
-    "target": "ES2021",
-    "module": "CommonJS",
-    "lib": ["ES2021"],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>منصة حصيف — ملف واحد</title>
+<meta name="color-scheme" content="light only">
+<style>
+:root{
+  --ink:#0f172a;--muted:#64748b;--border:#e6e9ef;--bg:#ffffff;--brand:#0ea5e9;--brand2:#22c55e
 }
-EOF
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Naskh Arabic UI",Tahoma,sans-serif;color:var(--ink);background:#fff}
 
-############################################
-# 2) API (Nest-ish hand scaffold)
-############################################
-cat > "$ROOT/apps/api/package.json" << 'EOF'
-{
-  "name": "@hasif/api",
-  "version": "0.2.0",
-  "type": "commonjs",
-  "scripts": {
-    "start": "ts-node src/main.ts",
-    "start:dev": "ts-node-dev --respawn --transpile-only src/main.ts",
-    "build": "tsc -p tsconfig.json",
-    "seed": "ts-node --transpile-only src/seed.ts",
-    "prisma:studio": "prisma studio"
-  },
-  "dependencies": {
-    "@nestjs/common": "^10.0.0",
-    "@nestjs/core": "^10.0.0",
-    "@nestjs/platform-express": "^10.0.0",
-    "@nestjs/jwt": "^10.2.0",
-    "@nestjs/passport": "^10.0.3",
-    "@prisma/client": "^5.18.0",
-    "@nestjs/swagger": "^7.3.1",
-    "swagger-ui-express": "^5.0.1",
-    "bcryptjs": "^2.4.3",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.1",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^1.4.5-lts.1",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1"
-  },
-  "devDependencies": {
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.4.5",
-    "prisma": "^5.18.0"
-  }
+/* Header */
+header .topbar{display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:78px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;z-index:60}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;min-width:0}
+.brand .mark svg{display:block}
+.brand .word{font-weight:900;margin-top:2px}
+.brand .sub{font-size:11px;color:var(--muted);margin-top:0}
+.home-btn,.btn{display:inline-flex;align-items:center;gap:6px;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-size:13px;text-decoration:none;cursor:pointer}
+.btn.ghost{background:#fff;border:1px solid var(--border);color:var(--ink)}
+.left-box{margin-inline-start:auto;display:flex;align-items:center;gap:6px}
+.icon{width:18px;height:18px;vertical-align:-3px}
+.bell{position:relative;width:40px;height:40px;border:1px solid var(--border);border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center}
+.badge-dot{position:absolute;inset:auto auto 2px 2px;width:8px;height:8px;border-radius:99px;background:#ef4444}
+
+/* Layout */
+@media (min-width:980px){
+  .layout{display:grid;grid-template-columns:300px 1fr;gap:16px;padding:16px}
+  .mega-left{position:sticky;top:90px;align-self:start}
+  .mega-left details{border:1px solid var(--border);border-radius:12px;margin:8px 0;background:#fff;overflow:hidden}
+  .mega-left summary{list-style:none;cursor:pointer;padding:10px 12px;font-weight:700}
+  .mega-left summary::-webkit-details-marker{display:none}
+  .mega-left .group-body{padding:8px 10px;display:grid;gap:6px}
+  .mega-left a{padding:8px 10px;border-radius:10px;color:#334155;text-decoration:none;display:flex;align-items:center;gap:8px}
+  .mega-left a:hover{background:#f1f5f9}
 }
-EOF
+#view{padding:16px}
+.card{border:1px solid var(--border);border-radius:12px;background:#fff;padding:16px}
+.section-title{display:flex;align-items:center;gap:8px;margin:0 0 8px 0}
 
-cat > "$ROOT/apps/api/tsconfig.json" << 'EOF'
-{
-  "extends": "../../packages/tsconfig/tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "./dist",
-    "moduleResolution": "node",
-    "baseUrl": "./",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
-  },
-  "include": ["src/**/*"]
-}
-EOF
+/* Tabs & chips */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}
+.tab{padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;cursor:pointer;font-weight:600;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.tab[aria-selected="true"]{border-color:#0ea5e9;outline:2px solid rgba(14,165,233,.15)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi-card{border:1px solid var(--border);border-radius:12px;background:#fff;padding:12px;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.kpi-card:hover{box-shadow:0 8px 24px rgba(2,12,27,.08)}
+.kpi-icon{font-size:0;width:36px;height:36px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center}
+.kpi-value{font-weight:800;font-size:18px}
+.kpi-title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi-meta{display:flex;gap:10px;align-items:center;margin-top:4px;color:var(--muted);font-size:12px}
+.badge{padding:3px 8px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px}
+.badge.ok{color:#065f46;border-color:#bbf7d0;background:#ecfdf5}
+.badge.warn{color:#92400e;border-color:#fde68a;background:#fffbeb}
+.badge.bad{color:#991b1b;border-color:#fecaca;background:#fef2f2}
+.badge.info{color:#075985;border-color:#bae6fd;background:#eff6ff}
+.badge.tgt{color:#0369a1;border-color:#bae6fd;background:#eff6ff}
+.badge.unit{color:#334155;border-color:#e2e8f0;background:#fff}
+.table{width:100%;border-collapse:separate;border-spacing:0 8px}
+.table th{font-size:13px;color:var(--muted);padding:0 10px;cursor:pointer;user-select:none}
+.table td{background:#fff;border:1px solid var(--border);padding:10px}
+.table tr td:first-child{border-radius:12px 0 0 12px}
+.table tr td:last-child{border-radius:0 12px 12px 0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 12px}
+.input{border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;background:#fff}
+.services-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.service{border:1px solid var(--border);border-radius:12px;background:#fff;padding:12px}
+.service h4{margin:0 0 6px 0}
+.service p{margin:0;color:var(--muted);font-size:13px}
+.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.form-grid .field{display:flex;flex-direction:column;gap:6px}
+.form-grid .field input,.form-grid .field select{border:1px solid var(--border);border-radius:10px;padding:10px;background:#fff}
+.hint{font-size:12px;color:#64748b;margin-top:2px}
+.req:after{content:" *"; color:#ef4444; font-weight:700}
+.input.bad{border-color:#ef4444}
+.role-chip{padding:3px 8px;border:1px dashed #cbd5e1;border-radius:999px;font-size:12px;color:#475569;background:#f8fafc}
 
-mkdir -p "$ROOT/apps/api/prisma"
-cat > "$ROOT/apps/api/prisma/schema.prisma" << 'EOF'
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
-
-model Organization {
-  id        String   @id @default(cuid())
-  code      String   @unique
-  name      String
-  type      OrgType
-  region    String?
-  users     User[]
-  projects  Project[]
-  challenges Challenge[]
-  events    Event[]
-  incubators Incubator[]
-  wallet    Wallet?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-enum OrgType { gov private nonprofit university donor region dev_auth }
-
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  role      Role
-  orgId     String?
-  org       Organization? @relation(fields: [orgId], references: [id])
-  refreshTokenHash String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-enum Role { admin government development_authority region private nonprofit university donor individual }
-
-model Challenge {
-  id         String   @id @default(cuid())
-  code       String   @unique
-  title      String
-  domain     String
-  status     String   @default("open")
-  ownerOrgId String
-  ownerOrg   Organization @relation(fields: [ownerOrgId], references: [id])
-  solutions  Solution[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+/* Mobile */
+@media (max-width:979px){
+  .brand .word{font-size:18px}
+  .layout{display:block;padding:12px}
+  .mega-left{display:none}
+  .tabs,.toolbar{display:block}
+  .tabs>*{display:block;margin:6px 0}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .services-grid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .fab-home{position:fixed;right:14px;bottom:14px;z-index:9998;width:52px;height:52px;border-radius:999px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:#0ea5e9;color:#fff;font-size:22px;text-decoration:none;box-shadow:0 10px 30px rgba(2,12,27,.18)}
 }
 
-model Solution {
-  id            String   @id @default(cuid())
-  code          String   @unique
-  summary       String
-  score         Float?
-  challengeId   String
-  challenge     Challenge @relation(fields: [challengeId], references: [id])
-  proposerOrgId String
-  proposerOrg   Organization @relation(fields: [proposerOrgId], references: [id])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+/* A11y */
+a:focus,button:focus,input:focus,select:focus{outline:2px solid #0ea5e9;outline-offset:2px}
+
+/* Print */
+@media print{
+  header,.mega-left,.fab-home{display:none!important}
+  #view{padding:0}
+  .card{box-shadow:none;border:1px solid #ddd;border-radius:0}
 }
-
-model Project {
-  id           String   @id @default(cuid())
-  code         String   @unique
-  ownerOrgId   String
-  ownerOrg     Organization @relation(fields: [ownerOrgId], references: [id])
-  visionGoal   String
-  status       String   @default("pending")
-  budget       Int
-  sourceSolutionId String?
-  sourceSolution   Solution?   @relation(fields: [sourceSolutionId], references: [id])
-  kpis         Kpi[]
-  sponsorships Sponsorship[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Sponsorship {
-  id        String   @id @default(cuid())
-  targetType String
-  targetId  String
-  amount    Int
-  donorOrgId String
-  donorOrg   Organization @relation(fields: [donorOrgId], references: [id])
-  status     String @default("approved")
-  walletTx   Transaction?
-  createdAt DateTime @default(now())
-}
-
-model Wallet {
-  id        String   @id @default(cuid())
-  orgId     String   @unique
-  org       Organization @relation(fields: [orgId], references: [id])
-  balance   Int       @default(0)
-  txs       Transaction[]
-}
-
-model Transaction {
-  id        String   @id @default(cuid())
-  walletId  String
-  wallet    Wallet    @relation(fields: [walletId], references: [id])
-  type      TxType
-  amount    Int
-  ref       String?
-  createdAt DateTime  @default(now())
-}
-enum TxType { credit debit }
-
-model Event {
-  id        String  @id @default(cuid())
-  code      String  @unique
-  orgId     String
-  org       Organization @relation(fields: [orgId], references: [id])
-  title     String
-  date      DateTime
-  speakers  String[]
-  approvals String[]
-  createdAt DateTime @default(now())
-}
-
-model Engagement {
-  id        String  @id @default(cuid())
-  type      EngagementType
-  orgId     String
-  org       Organization @relation(fields: [orgId], references: [id])
-  hours     Int?
-  fee       Int?
-  createdAt DateTime @default(now())
-}
-enum EngagementType { volunteer training consulting }
-
-model Media {
-  id        String  @id @default(cuid())
-  targetType String
-  targetId  String
-  headline  String?
-  url       String?
-  mime      String?
-  storageKey String?
-  createdAt DateTime @default(now())
-}
-
-model Incubator {
-  id         String @id @default(cuid())
-  name       String
-  kind       String
-  ownerOrgId String
-  ownerOrg   Organization @relation(fields: [ownerOrgId], references: [id])
-  createdAt  DateTime @default(now())
-}
-
-model Kpi {
-  id          String @id @default(cuid())
-  entityType  String
-  entityId    String
-  kpiKey      String
-  value       Int
-  period      String
-  createdAt   DateTime @default(now())
-}
-
-model Audit {
-  id        String @id @default(cuid())
-  ts        DateTime @default(now())
-  entity    String
-  action    String
-  details   Json
-  userId    String?
-}
-EOF
-
-mkdir -p "$ROOT/apps/api/src/{auth,decorators,guards,modules/common,modules/challenges,modules/solutions,modules/projects,modules/finance,modules/events,modules/engagements,modules/media,modules/incubators,modules/analytics,dto}"
-############################################
-# API bootstrap + Swagger
-############################################
-cat > "$ROOT/apps/api/src/main.ts" << 'EOF'
-import 'dotenv/config';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as cors from 'cors';
-import { ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.use(cors({ origin: process.env.APP_ORIGIN || '*', credentials: true }));
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
-  const cfg = new DocumentBuilder()
-    .setTitle('HASIF API')
-    .setDescription('HASIF Platform API (Swagger + Auth)')
-    .setVersion('0.2.0')
-    .addBearerAuth()
-    .build();
-  const doc = SwaggerModule.createDocument(app, cfg);
-  SwaggerModule.setup('docs', app, doc, { swaggerOptions:{ persistAuthorization:true }});
-
-  const port = Number(process.env.APP_PORT || 3001);
-  await app.listen(port);
-  console.log(`API listening on ${port} — Docs: http://localhost:${port}/docs`);
-}
-bootstrap();
-EOF
-
-cat > "$ROOT/apps/api/src/app.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { PrismaService } from './modules/common/prisma.service';
-import { AuthModule } from './auth/auth.module';
-import { ChallengesModule } from './modules/challenges/challenges.module';
-import { SolutionsModule } from './modules/solutions/solutions.module';
-import { ProjectsModule } from './modules/projects/projects.module';
-import { FinanceModule } from './modules/finance/finance.module';
-import { EventsModule } from './modules/events/events.module';
-import { EngagementsModule } from './modules/engagements/engagements.module';
-import { MediaModule } from './modules/media/media.module';
-import { IncubatorsModule } from './modules/incubators/incubators.module';
-import { AnalyticsModule } from './modules/analytics/analytics.module';
-
-@Module({
-  imports: [AuthModule, ChallengesModule, SolutionsModule, ProjectsModule, FinanceModule, EventsModule, EngagementsModule, MediaModule, IncubatorsModule, AnalyticsModule],
-  providers: [PrismaService],
-})
-export class AppModule {}
-EOF
-
-############################################
-# Common services + CSV
-############################################
-cat > "$ROOT/apps/api/src/modules/common/prisma.service.ts" << 'EOF'
-import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-@Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit {
-  async onModuleInit() { await this.$connect(); }
-  async enableShutdownHooks(app: INestApplication) { this.$on('beforeExit', async () => { await app.close(); }); }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/common/csv.ts" << 'EOF'
-export function toCSV(rows:any[]):string{
-  if(!rows?.length) return '';
-  const headers = Array.from(new Set(rows.flatMap((r:any)=>Object.keys(r))));
-  const esc=(s:any)=>'"'+String(s??'').replace(/"/g,'""')+'"';
-  const lines=[headers.map(esc).join(',')];
-  rows.forEach(r=>lines.push(headers.map(h=>esc((r as any)[h])).join(',')));
-  return lines.join('\n');
-}
-EOF
-
-############################################
-# Auth (full): module, service, controller, guards
-############################################
-cat > "$ROOT/apps/api/src/decorators/current-user.decorator.ts" << 'EOF'
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-export const CurrentUser = createParamDecorator((data:unknown, ctx:ExecutionContext)=>{
-  const req = ctx.switchToHttp().getRequest();
-  return req.user;
-});
-EOF
-
-cat > "$ROOT/apps/api/src/guards/jwt.guard.ts" << 'EOF'
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
-
-@Injectable()
-export class JwtGuard implements CanActivate {
-  canActivate(ctx: ExecutionContext): boolean {
-    const req = ctx.switchToHttp().getRequest();
-    const h = req.headers['authorization'];
-    if (!h || !String(h).startsWith('Bearer ')) return false;
-    const token = String(h).slice(7);
-    try {
-      req.user = jwt.verify(token, process.env.JWT_SECRET || 'dev');
-      return true;
-    } catch { return false; }
-  }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/guards/roles.guard.ts" << 'EOF'
-import { CanActivate, ExecutionContext, Injectable, SetMetadata } from '@nestjs/common';
-export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
-@Injectable()
-export class RolesGuard implements CanActivate {
-  canActivate(ctx: ExecutionContext): boolean {
-    const handler = ctx.getHandler();
-    const need: string[] = Reflect.getMetadata('roles', handler) || [];
-    if (!need.length) return true;
-    const req = ctx.switchToHttp().getRequest();
-    const user = req.user;
-    return user && need.includes(user.role);
-  }
-}
-EOF
-
-# DTOs
-cat > "$ROOT/apps/api/src/dto/auth.dto.ts" << 'EOF'
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
-
-export class RegisterDto {
-  @ApiProperty() @IsEmail() email!: string;
-  @ApiProperty() @IsString() @MinLength(3) name!: string;
-  @ApiProperty() @IsString() @MinLength(6) password!: string;
-  @ApiProperty({required:false}) @IsOptional() @IsString() role?: string;
-  @ApiProperty({required:false, description:'Organization code'}) @IsOptional() @IsString() orgCode?: string;
-}
-
-export class LoginDto {
-  @ApiProperty() @IsEmail() email!: string;
-  @ApiProperty() @IsString() @MinLength(6) password!: string;
-}
-
-export class RefreshDto {
-  @ApiProperty() @IsString() refreshToken!: string;
-}
-EOF
-
-# Auth module/service/controller
-cat > "$ROOT/apps/api/src/auth/auth.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { PrismaService } from '../modules/common/prisma.service';
-
-@Module({
-  providers:[AuthService,PrismaService],
-  controllers:[AuthController],
-  exports:[AuthService]
-})
-export class AuthModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/auth/auth.service.ts" << 'EOF'
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../modules/common/prisma.service';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
-
-function signAccess(payload:any){
-  return jwt.sign(payload, process.env.JWT_SECRET || 'dev', { expiresIn: process.env.ACCESS_TOKEN_TTL || '15m' });
-}
-function signRefresh(payload:any){
-  return jwt.sign(payload, process.env.JWT_REFRESH_SECRET || 'dev2', { expiresIn: process.env.REFRESH_TOKEN_TTL || '7d' });
-}
-
-@Injectable()
-export class AuthService {
-  constructor(private prisma:PrismaService){}
-
-  async register({email,name,password,role,orgCode}:{email:string,name:string,password:string,role?:string,orgCode?:string}){
-    const hash = await bcrypt.hash(password, 10);
-    const org = orgCode ? await this.prisma.organization.findUnique({ where:{ code:orgCode }}) : null;
-    const user = await this.prisma.user.create({ data:{ email, name, password:hash, role:(role as any)||'individual', orgId: org?.id }});
-    const tokens = await this.issueTokens(user);
-    return { user: this.sanitize(user), ...tokens };
-  }
-
-  async validate(email:string, password:string){
-    const user = await this.prisma.user.findUnique({ where:{ email }});
-    if (!user) throw new UnauthorizedException('Invalid credentials');
-    const ok = await bcrypt.compare(password, user.password);
-    if (!ok) throw new UnauthorizedException('Invalid credentials');
-    return user;
-  }
-
-  async login(email:string,password:string){
-    const user = await this.validate(email,password);
-    const tokens = await this.issueTokens(user);
-    return { user: this.sanitize(user), ...tokens };
-  }
-
-  async refresh(userId:string, token:string){
-    const user = await this.prisma.user.findUnique({ where:{ id:userId }});
-    if(!user || !user.refreshTokenHash) throw new UnauthorizedException('No session');
-    const valid = await bcrypt.compare(token, user.refreshTokenHash);
-    if(!valid) throw new UnauthorizedException('Invalid refresh token');
-    const accessToken = signAccess({ sub:user.id, email:user.email, role:user.role, orgId:user.orgId });
-    return { accessToken };
-  }
-
-  private async issueTokens(user:any){
-    const accessToken = signAccess({ sub:user.id, email:user.email, role:user.role, orgId:user.orgId });
-    const refreshToken = signRefresh({ sub:user.id });
-    const rHash = await bcrypt.hash(refreshToken, 10);
-    await this.prisma.user.update({ where:{ id:user.id }, data:{ refreshTokenHash: rHash }});
-    return { accessToken, refreshToken };
-  }
-
-  sanitize(u:any){ const { password, refreshTokenHash, ...rest } = u; return rest; }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/auth/auth.controller.ts" << 'EOF'
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthService } from './auth.service';
-import { LoginDto, RefreshDto, RegisterDto } from '../dto/auth.dto';
-import { JwtGuard } from '../guards/jwt.guard';
-import { CurrentUser } from '../decorators/current-user.decorator';
-
-@ApiTags('auth')
-@Controller('auth')
-export class AuthController {
-  constructor(private svc:AuthService){}
-
-  @Post('register')
-  register(@Body() dto: RegisterDto){
-    return this.svc.register(dto);
-  }
-
-  @Post('login')
-  login(@Body() dto: LoginDto){
-    return this.svc.login(dto.email, dto.password);
-  }
-
-  @Post('refresh')
-  refresh(@Body() dto: RefreshDto, @CurrentUser() _u:any){
-    // ملاحظة: عادة نقرأ الـ userId من الـ refreshJWT نفسه، هنا نتحقق فقط بالتوكن المخزن
-    // لتبسيط الأمر: نفك التوكن ونجلب sub
-    const jwt = require('jsonwebtoken');
-    const payload = jwt.verify(dto.refreshToken, process.env.JWT_REFRESH_SECRET || 'dev2') as any;
-    return this.svc.refresh(payload.sub, dto.refreshToken);
-  }
-
-  @Get('me')
-  @UseGuards(JwtGuard)
-  @ApiBearerAuth()
-  me(@CurrentUser() u:any){ return u; }
-}
-EOF
-
-############################################
-# Seed (with hashed admin password)
-############################################
-cat > "$ROOT/apps/api/src/seed.ts" << 'EOF'
-import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
-const prisma = new PrismaClient();
-
-async function main(){
-  const orgs = [
-    { code:'org-gov-001', name:'وزارة التنمية', type:'gov', region:'الرياض' },
-    { code:'org-priv-001', name:'شركة ألف', type:'private', region:'الرياض' },
-    { code:'org-np-001', name:'جمعية بناء', type:'nonprofit', region:'الشرقية' },
-    { code:'org-uni-001', name:'جامعة الملك المستقبل', type:'university', region:'مكة' },
-    { code:'org-donor-001', name:'صندوق الأثر الوطني', type:'donor', region:'الرياض' },
-    { code:'org-region-001', name:'إمارة منطقة الرياض', type:'region', region:'الرياض' },
-    { code:'org-dev-001', name:'هيئة تطوير الرياض', type:'dev_auth', region:'الرياض' }
-  ];
-  for (const o of orgs) await prisma.organization.upsert({ where:{code:o.code}, update:o, create:o });
-
-  const adminPass = await bcrypt.hash('Admin#12345', 10);
-  await prisma.user.upsert({
-    where:{ email:'admin@hasif.local' },
-    update:{ password: adminPass, role:'admin' },
-    create:{ email:'admin@hasif.local', name:'Admin', password: adminPass, role:'admin' }
-  });
-
-  const gov = await prisma.organization.findUnique({ where:{ code:'org-gov-001' }});
-  const donor = await prisma.organization.findUnique({ where:{ code:'org-donor-001' }});
-  if (donor) {
-    const d = await prisma.wallet.findUnique({ where:{ orgId: donor.id }});
-    if(!d) await prisma.wallet.create({ data:{ orgId: donor.id, balance: 1_000_000 }});
-  }
-
-  if (gov) {
-    const ch1 = await prisma.challenge.upsert({ where:{ code:'ch-001' }, update:{}, create:{ code:'ch-001', title:'خفض فجوة المهارات الرقمية', domain:'تقنية', ownerOrgId: gov.id }});
-    await prisma.solution.upsert({ where:{ code:'sol-001' }, update:{}, create:{ code:'sol-001', summary:'مسار تدريبي معتمد + تدريب تعاوني', proposerOrgId: gov.id, challengeId: ch1.id, score:4.5 }});
-    await prisma.project.upsert({ where:{ code:'pr-001' }, update:{}, create:{ code:'pr-001', ownerOrgId: gov.id, visionGoal:'تحسين جودة الحياة', status:'in_progress', budget:250000 }});
-    await prisma.event.upsert({ where:{ code:'ev-001' }, update:{}, create:{ code:'ev-001', orgId: gov.id, title:'منتدى المسؤولية الاجتماعية', date: new Date(), speakers:['د. نهى','م. سالم'], approvals:[] }});
-  }
-
-  console.log('Seed done. Admin: admin@hasif.local / Admin#12345');
-}
-main().finally(()=>prisma.$disconnect());
-EOF
-
-############################################
-# Feature modules (reused from previous response) — shortened comments
-############################################
-cat > "$ROOT/apps/api/src/modules/challenges/challenges.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { ChallengesService } from './challenges.service';
-import { ChallengesController } from './challenges.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[ChallengesService,PrismaService], controllers:[ChallengesController]})
-export class ChallengesModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/challenges/challenges.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class ChallengesService {
-  constructor(private prisma:PrismaService){}
-  async create(dto:any){
-    const owner = await this.prisma.organization.findUnique({ where:{ code:dto.ownerCode || 'org-gov-001' }});
-    return this.prisma.challenge.create({ data: { code:dto.code, title:dto.title, domain:dto.domain, ownerOrgId: owner?.id! }});
-  }
-  async list(q:{search?:string}) {
-    const where = q.search ? { OR:[{ title:{ contains:q.search }},{ domain:{ contains:q.search }},{ code:{ contains:q.search }}] } : {};
-    return this.prisma.challenge.findMany({ where, orderBy:{ createdAt:'desc' }, include:{ ownerOrg:true }});
-  }
-  async close(id:string){ return this.prisma.challenge.update({ where:{ id }, data:{ status:'closed' } }); }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/challenges/challenges.controller.ts" << 'EOF'
-import { Controller, Get, Post, Body, Patch, Param, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { ChallengesService } from './challenges.service';
-import { toCSV } from '../common/csv';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { Roles, RolesGuard } from '../../guards/roles.guard';
-
-@ApiTags('challenges')
-@Controller('challenges')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
-export class ChallengesController {
-  constructor(private svc:ChallengesService){}
-  @Post() @Roles('government','development_authority','admin')
-  create(@Body() dto:any){ return this.svc.create(dto); }
-  @Get() findAll(@Query() q:{search?:string}){ return this.svc.list(q); }
-  @Patch(':id/close') @Roles('government','admin')
-  close(@Param('id') id:string){ return this.svc.close(id); }
-
-  @Post('/csv/export')
-  async exportCsv(@Res() res:any){
-    const rows = await this.svc.list({});
-    const csv = toCSV(rows.map(r=>({id:r.id,code:r.code,title:r.title,domain:r.domain,status:r.status,owner:r.ownerOrg?.code})));
-    res.setHeader('Content-Type','text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition','attachment; filename="challenges.csv"');
-    res.send(csv);
-  }
-}
-EOF
-
-# Solutions
-cat > "$ROOT/apps/api/src/modules/solutions/solutions.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { SolutionsService } from './solutions.service';
-import { SolutionsController } from './solutions.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[SolutionsService,PrismaService], controllers:[SolutionsController]})
-export class SolutionsModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/solutions/solutions.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class SolutionsService {
-  constructor(private prisma:PrismaService){}
-  async create(dto:any){
-    const proposer = await this.prisma.organization.findUnique({ where:{ code:dto.proposerCode || 'org-priv-001' }});
-    const challenge = await this.prisma.challenge.findUnique({ where:{ code:dto.challengeCode }});
-    return this.prisma.solution.create({ data:{
-      code:dto.code, summary:dto.summary, score: dto.score? Number(dto.score): null,
-      proposerOrgId: proposer?.id!, challengeId: challenge?.id!
-    }});
-  }
-  async list(q:{search?:string}){
-    const where = q.search ? { OR:[{ summary:{ contains:q.search }},{ code:{ contains:q.search }}] } : {};
-    return this.prisma.solution.findMany({ where, orderBy:{ createdAt:'desc' }, include:{ proposerOrg:true, challenge:true }});
-  }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/solutions/solutions.controller.ts" << 'EOF'
-import { Controller, Get, Post, Body, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { SolutionsService } from './solutions.service';
-import { toCSV } from '../common/csv';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { Roles, RolesGuard } from '../../guards/roles.guard';
-
-@ApiTags('solutions')
-@Controller('solutions')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
-export class SolutionsController {
-  constructor(private svc:SolutionsService){}
-  @Post() @Roles('private','nonprofit','university','individual','admin')
-  create(@Body() dto:any){ return this.svc.create(dto); }
-  @Get() findAll(@Query() q:{search?:string}){ return this.svc.list(q); }
-
-  @Post('/csv/export')
-  async exportCsv(@Res() res:any){
-    const rows = await this.svc.list({});
-    const csv = toCSV(rows.map(r=>({id:r.id,code:r.code,summary:r.summary,score:r.score,challenge:r.challenge?.code,proposer:r.proposerOrg?.code})));
-    res.setHeader('Content-Type','text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition','attachment; filename="solutions.csv"');
-    res.send(csv);
-  }
-}
-EOF
-
-# Projects
-cat > "$ROOT/apps/api/src/modules/projects/projects.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { ProjectsService } from './projects.service';
-import { ProjectsController } from './projects.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[ProjectsService,PrismaService], controllers:[ProjectsController]})
-export class ProjectsModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/projects/projects.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class ProjectsService {
-  constructor(private prisma:PrismaService){}
-  async create(dto:any){
-    const owner = await this.prisma.organization.findUnique({ where:{ code:dto.ownerCode || 'org-gov-001' }});
-    const src = dto.sourceSolutionCode ? await this.prisma.solution.findUnique({ where:{ code:dto.sourceSolutionCode }}) : null;
-    return this.prisma.project.create({ data:{
-      code:dto.code, ownerOrgId: owner?.id!, visionGoal:dto.visionGoal, budget: Number(dto.budget||0),
-      status: dto.status || 'pending', sourceSolutionId: src?.id || null
-    }});
-  }
-  async list(q:{search?:string}){
-    const where = q.search ? { OR:[{ code:{ contains:q.search }},{ visionGoal:{ contains:q.search }}] } : {};
-    return this.prisma.project.findMany({ where, include:{ ownerOrg:true, sourceSolution:true }, orderBy:{ createdAt:'desc' }});
-  }
-  async updateStatus(code:string,status:string){
-    return this.prisma.project.update({ where:{ code }, data:{ status }});
-  }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/projects/projects.controller.ts" << 'EOF'
-import { Controller, Get, Post, Patch, Param, Body, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { ProjectsService } from './projects.service';
-import { toCSV } from '../common/csv';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { Roles, RolesGuard } from '../../guards/roles.guard';
-
-@ApiTags('projects')
-@Controller('projects')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
-export class ProjectsController {
-  constructor(private svc:ProjectsService){}
-  @Post() @Roles('government','development_authority','admin')
-  create(@Body() dto:any){ return this.svc.create(dto); }
-  @Get() findAll(@Query() q:{search?:string}){ return this.svc.list(q); }
-  @Patch(':code/status') @Roles('government','development_authority','admin')
-  upd(@Param('code') code:string, @Body() b:{status:string}){ return this.svc.updateStatus(code,b.status); }
-
-  @Post('/csv/export')
-  async exportCsv(@Res() res:any){
-    const rows = await this.svc.list({});
-    const csv = toCSV(rows.map(r=>({code:r.code,owner:r.ownerOrg?.code,goal:r.visionGoal,budget:r.budget,status:r.status,source:r.sourceSolution?.code || ''})));
-    res.setHeader('Content-Type','text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition','attachment; filename="projects.csv"');
-    res.send(csv);
-  }
-}
-EOF
-
-# Finance (wallet+sponsorships)
-cat > "$ROOT/apps/api/src/modules/finance/finance.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { FinanceService } from './finance.service';
-import { FinanceController } from './finance.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[FinanceService,PrismaService], controllers:[FinanceController]})
-export class FinanceModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/finance/finance.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class FinanceService {
-  constructor(private prisma:PrismaService){}
-  async wallet(orgCode:string){
-    const org = await this.prisma.organization.findUnique({ where:{ code:orgCode }});
-    if (!org) return { balance:0 };
-    let w = await this.prisma.wallet.findUnique({ where:{ orgId: org.id }});
-    if(!w) w = await this.prisma.wallet.create({ data:{ orgId: org.id, balance:0 }});
-    return w;
-  }
-  async tx(orgCode:string, type:'credit'|'debit', amount:number, ref?:string){
-    const w = await this.wallet(orgCode);
-    const bal = type==='credit' ? w.balance+amount : w.balance-amount;
-    await this.prisma.wallet.update({ where:{ id:w.id }, data:{ balance: bal }});
-    return this.prisma.transaction.create({ data:{ walletId: w.id, type, amount, ref }});
-  }
-  async listSponsorships(){ return this.prisma.sponsorship.findMany({ orderBy:{ createdAt:'desc' }}) }
-  async addSponsorship(dto:any){
-    return this.prisma.sponsorship.create({ data:{
-      targetType:dto.targetType, targetId:dto.targetId, donorOrgId:(await this.prisma.organization.findUnique({ where:{ code:dto.donorCode }}))!.id,
-      amount:Number(dto.amount||0), status:'approved'
-    }});
-  }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/finance/finance.controller.ts" << 'EOF'
-import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { FinanceService } from './finance.service';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { Roles, RolesGuard } from '../../guards/roles.guard';
-
-@ApiTags('finance')
-@Controller('finance')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
-export class FinanceController {
-  constructor(private svc:FinanceService){}
-  @Get('wallet') @Roles('donor','private','nonprofit','government','development_authority','admin')
-  getWallet(@Query('org') org:string){ return this.svc.wallet(org); }
-  @Post('tx') @Roles('donor','admin')
-  tx(@Body() b:{org:string,type:'credit'|'debit',amount:number,ref?:string}){ return this.svc.tx(b.org,b.type,Number(b.amount),b.ref); }
-  @Get('sponsorships') @Roles('donor','government','development_authority','admin')
-  list(){ return this.svc.listSponsorships(); }
-  @Post('sponsorships') @Roles('donor','admin')
-  add(@Body() b:any){ return this.svc.addSponsorship(b); }
-}
-EOF
-
-# Events
-cat > "$ROOT/apps/api/src/modules/events/events.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { EventsService } from './events.service';
-import { EventsController } from './events.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[EventsService,PrismaService], controllers:[EventsController]})
-export class EventsModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/events/events.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class EventsService {
-  constructor(private prisma:PrismaService){}
-  async create(dto:any){
-    const org = await this.prisma.organization.findUnique({ where:{ code:dto.orgCode || 'org-priv-001' }});
-    return this.prisma.event.create({ data:{ code:dto.code, orgId: org?.id!, title:dto.title, date:new Date(dto.date), speakers: dto.speakers || [], approvals: [] }});
-  }
-  async list(q:{search?:string}) {
-    const where = q.search ? { OR:[ { title:{ contains:q.search }}, { code:{ contains:q.search }} ] } : {};
-    return this.prisma.event.findMany({ where, orderBy:{ date:'desc' }, include:{ org:true }});
-  }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/events/events.controller.ts" << 'EOF'
-import { Controller, Get, Post, Body, Query, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { EventsService } from './events.service';
-import { toCSV } from '../common/csv';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { Roles, RolesGuard } from '../../guards/roles.guard';
-
-@ApiTags('events')
-@Controller('events')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
-export class EventsController {
-  constructor(private svc:EventsService){}
-  @Post() @Roles('private','nonprofit','university','government','development_authority','admin')
-  create(@Body() dto:any){ return this.svc.create(dto); }
-  @Get() findAll(@Query() q:{search?:string}){ return this.svc.list(q); }
-
-  @Post('/csv/export')
-  async exportCsv(@Res() res:any){
-    const rows = await this.svc.list({});
-    const csv = toCSV(rows.map(r=>({code:r.code,title:r.title,date:r.date,org:r.org?.code,speakers:r.speakers?.join('|')})));
-    res.setHeader('Content-Type','text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition','attachment; filename="events.csv"');
-    res.send(csv);
-  }
-}
-EOF
-
-# Engagements
-cat > "$ROOT/apps/api/src/modules/engagements/engagements.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { EngagementsService } from './engagements.service';
-import { EngagementsController } from './engagements.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[EngagementsService,PrismaService], controllers:[EngagementsController]})
-export class EngagementsModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/engagements/engagements.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class EngagementsService {
-  constructor(private prisma:PrismaService){}
-  async create(dto:any){
-    const org = await this.prisma.organization.findUnique({ where:{ code:dto.orgCode || 'org-np-001' }});
-    return this.prisma.engagement.create({ data:{ type: dto.type, orgId: org?.id!, hours: dto.hours? Number(dto.hours): null, fee: dto.fee? Number(dto.fee): null }});
-  }
-  async list(){ return this.prisma.engagement.findMany({ orderBy:{ createdAt:'desc' }, include:{ org:true }}); }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/engagements/engagements.controller.ts" << 'EOF'
-import { Controller, Get, Post, Body, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { EngagementsService } from './engagements.service';
-import { toCSV } from '../common/csv';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { Roles, RolesGuard } from '../../guards/roles.guard';
-
-@ApiTags('engagements')
-@Controller('engagements')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
-export class EngagementsController {
-  constructor(private svc:EngagementsService){}
-  @Post() @Roles('nonprofit','university','private','individual','government','admin')
-  create(@Body() dto:any){ return this.svc.create(dto); }
-  @Get() findAll(){ return this.svc.list(); }
-
-  @Post('/csv/export')
-  async exportCsv(@Res() res:any){
-    const rows = await this.svc.list();
-    const csv = toCSV(rows.map(r=>({id:r.id,type:r.type,org:r.org?.code,hours:r.hours||'',fee:r.fee||''})));
-    res.setHeader('Content-Type','text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition','attachment; filename="engagements.csv"');
-    res.send(csv);
-  }
-}
-EOF
-
-# Media
-cat > "$ROOT/apps/api/src/modules/media/media.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { MediaService } from './media.service';
-import { MediaController } from './media.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[MediaService,PrismaService], controllers:[MediaController]})
-export class MediaModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/media/media.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class MediaService {
-  constructor(private prisma:PrismaService){}
-  async create(dto:any){
-    return this.prisma.media.create({ data:{
-      targetType:dto.targetType, targetId:dto.targetId, headline:dto.headline, url:dto.url, mime:dto.mime || null, storageKey: null
-    }});
-  }
-  async list(){ return this.prisma.media.findMany({ orderBy:{ createdAt:'desc' }}); }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/media/media.controller.ts" << 'EOF'
-import { Controller, Get, Post, Body, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { MediaService } from './media.service';
-import { toCSV } from '../common/csv';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { Roles, RolesGuard } from '../../guards/roles.guard';
-
-@ApiTags('media')
-@Controller('media')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
-export class MediaController {
-  constructor(private svc:MediaService){}
-  @Post() @Roles('government','private','nonprofit','university','development_authority','region','admin')
-  create(@Body() dto:any){ return this.svc.create(dto); }
-  @Get() list(){ return this.svc.list(); }
-
-  @Post('/csv/export')
-  async exportCsv(@Res() res:any){
-    const rows = await this.svc.list();
-    const csv = toCSV(rows.map(r=>({id:r.id,target:`${r.targetType}:${r.targetId}`,headline:r.headline||'',url:r.url||''})));
-    res.setHeader('Content-Type','text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition','attachment; filename="media.csv"');
-    res.send(csv);
-  }
-}
-EOF
-
-# Incubators
-cat > "$ROOT/apps/api/src/modules/incubators/incubators.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { IncubatorsService } from './incubators.service';
-import { IncubatorsController } from './incubators.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[IncubatorsService,PrismaService], controllers:[IncubatorsController]})
-export class IncubatorsModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/incubators/incubators.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class IncubatorsService {
-  constructor(private prisma:PrismaService){}
-  async create(dto:any){
-    const owner = await this.prisma.organization.findUnique({ where:{ code:dto.ownerCode || 'org-dev-001' }});
-    return this.prisma.incubator.create({ data:{ name:dto.name, kind:dto.kind, ownerOrgId: owner?.id! }});
-  }
-  async list(){ return this.prisma.incubator.findMany({ include:{ ownerOrg:true }, orderBy:{ createdAt:'desc' }}); }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/incubators/incubators.controller.ts" << 'EOF'
-import { Controller, Get, Post, Body, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { IncubatorsService } from './incubators.service';
-import { toCSV } from '../common/csv';
-import { JwtGuard } from '../../guards/jwt.guard';
-import { Roles, RolesGuard } from '../../guards/roles.guard';
-
-@ApiTags('incubators')
-@Controller('incubators')
-@UseGuards(JwtGuard, RolesGuard)
-@ApiBearerAuth()
-export class IncubatorsController {
-  constructor(private svc:IncubatorsService){}
-  @Post() @Roles('development_authority','university','private','nonprofit','admin')
-  create(@Body() dto:any){ return this.svc.create(dto); }
-  @Get() findAll(){ return this.svc.list(); }
-
-  @Post('/csv/export')
-  async exportCsv(@Res() res:any){
-    const rows = await this.svc.list();
-    const csv = toCSV(rows.map(r=>({id:r.id,name:r.name,kind:r.kind,owner:r.ownerOrg?.code})));
-    res.setHeader('Content-Type','text/csv; charset=utf-8');
-    res.setHeader('Content-Disposition','attachment; filename="incubators.csv"');
-    res.send(csv);
-  }
-}
-EOF
-
-# Analytics
-cat > "$ROOT/apps/api/src/modules/analytics/analytics.module.ts" << 'EOF'
-import { Module } from '@nestjs/common';
-import { AnalyticsService } from './analytics.service';
-import { AnalyticsController } from './analytics.controller';
-import { PrismaService } from '../common/prisma.service';
-@Module({ providers:[AnalyticsService,PrismaService], controllers:[AnalyticsController]})
-export class AnalyticsModule {}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/analytics/analytics.service.ts" << 'EOF'
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../common/prisma.service';
-@Injectable()
-export class AnalyticsService {
-  constructor(private prisma:PrismaService){}
-  async regions() {
-    const orgs = await this.prisma.organization.findMany();
-    const idx = new Map(orgs.map(o=>[o.id,o]));
-    const agg:any = {};
-    const getRegion=(orgId:string)=> idx.get(orgId)?.region || 'غير محدد';
-
-    const projs = await this.prisma.project.findMany();
-    projs.forEach(p=>{
-      const r=getRegion(p.ownerOrgId);
-      agg[r] ||= { projects:0,funded:0,budget:0,solutions:0,challenges:0,events:0,engagements:0 };
-      agg[r].projects++; agg[r].budget += p.budget||0; if(['funded','completed'].includes(p.status)) agg[r].funded++;
-    });
-
-    const chs = await this.prisma.challenge.findMany(); chs.forEach(c=>{ const r=getRegion(c.ownerOrgId); agg[r] ||= { projects:0,funded:0,budget:0,solutions:0,challenges:0,events:0,engagements:0 }; agg[r].challenges++; });
-    const sols = await this.prisma.solution.findMany({ include:{ proposerOrg:true }});
-    sols.forEach(s=>{ const r=s.proposerOrg?.region || 'غير محدد'; agg[r] ||= { projects:0,funded:0,budget:0,solutions:0,challenges:0,events:0,engagements:0 }; agg[r].solutions++; });
-    const evs = await this.prisma.event.findMany({ include:{ org:true }}); evs.forEach(e=>{ const r=e.org?.region || 'غير محدد'; agg[r] ||= { projects:0,funded:0,budget:0,solutions:0,challenges:0,events:0,engagements:0 }; agg[r].events++; });
-    const engs = await this.prisma.engagement.findMany({ include:{ org:true }}); engs.forEach(e=>{ const r=e.org?.region || 'غير محدد'; agg[r] ||= { projects:0,funded:0,budget:0,solutions:0,challenges:0,events:0,engagements:0 }; agg[r].engagements++; });
-    return agg;
-  }
-}
-EOF
-
-cat > "$ROOT/apps/api/src/modules/analytics/analytics.controller.ts" << 'EOF'
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AnalyticsService } from './analytics.service';
-import { JwtGuard } from '../../guards/jwt.guard';
-
-@ApiTags('analytics')
-@Controller('analytics')
-@UseGuards(JwtGuard)
-@ApiBearerAuth()
-export class AnalyticsController {
-  constructor(private svc:AnalyticsService){}
-  @Get('regions') get(){ return this.svc.regions(); }
-}
-EOF
-
-############################################
-# 3) WEB (Next.js minimal remains same)
-############################################
-cat > "$ROOT/apps/web/package.json" << 'EOF'
-{
-  "name": "@hasif/web",
-  "version": "0.2.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000"
-  },
-  "dependencies": {
-    "next": "14.2.5",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
-  },
-  "devDependencies": {
-    "typescript": "^5.4.5",
-    "@types/node": "^20.11.30",
-    "@types/react": "^18.2.66"
-  }
-}
-EOF
-
-cat > "$ROOT/apps/web/tsconfig.json" << 'EOF'
-{
-  "extends": "../../packages/tsconfig/tsconfig.base.json",
-  "compilerOptions": { "jsx": "preserve", "moduleResolution":"node", "baseUrl":"." },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
-}
-EOF
-
-cat > "$ROOT/apps/web/next.config.mjs" << 'EOF'
-/** @type {import('next').NextConfig} */
-const nextConfig = { reactStrictMode: true };
-export default nextConfig;
-EOF
-
-cat > "$ROOT/apps/web/next-env.d.ts" << 'EOF'
-/// <reference types="next" />
-/// <reference types="next/image-types/global" />
-EOF
-
-mkdir -p "$ROOT/apps/web/app"
-cat > "$ROOT/apps/web/app/layout.tsx" << 'EOF'
-export const metadata = { title: 'HASIF', description: 'HASIF Starter Web' };
-export default function RootLayout({children}:{children:React.ReactNode}) {
-  return (<html lang="ar" dir="rtl"><body style={{fontFamily:'system-ui',margin:0,background:'#f7f6f1'}}>
-    <header style={{background:'#0b5b34',color:'#fff',padding:'12px 16px',borderBottom:'4px solid #c9a227'}}>
-      <strong>منصة حصيف — واجهة مبدئية</strong>
-      <a href="http://localhost:3001/docs" target="_blank" style={{float:'left',color:'#fff'}}>Swagger</a>
-    </header>
-    <main style={{maxWidth:1100,margin:'0 auto',padding:16}}>{children}</main>
-  </body></html>);
-}
-EOF
-
-cat > "$ROOT/apps/web/app/page.tsx" << 'EOF'
-'use client';
-import { useEffect, useState } from 'react';
-const API = process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:3001';
-
-export default function Home(){
-  const [projects,setProjects]=useState<any[]>([]);
-  const [regions,setRegions]=useState<any>({});
-  const [q,setQ]=useState('');
-  const [token,setToken]=useState<string>('');
-
-  useEffect(()=>{
-    // تسجيل دخول افتراضي لتجربة الحماية
-    (async()=>{
-      const r=await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:'admin@hasif.local',password:'Admin#12345'})});
-      const data=await r.json(); setToken(data.accessToken);
-    })();
-  },[]);
-
-  useEffect(()=>{ if(!token) return; fetch(`${API}/projects?search=${encodeURIComponent(q)}`,{headers:{Authorization:`Bearer ${token}`}}).then(r=>r.json()).then(setProjects); },[q,token]);
-  useEffect(()=>{ if(!token) return; fetch(`${API}/analytics/regions`,{headers:{Authorization:`Bearer ${token}`}}).then(r=>r.json()).then(setRegions); },[token]);
-
-  return (
-    <div>
-      <h1 style={{fontSize:22,fontWeight:800}}>لوحة مختصرة</h1>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
-        <div style={{background:'#fff',border:'1px solid #e5e7eb',borderRadius:12,padding:12}}>
-          <h3>المشاريع</h3>
-          <input placeholder="بحث..." value={q} onChange={e=>setQ(e.target.value)} style={{padding:8,border:'1px solid #e5e7eb',borderRadius:8,marginBottom:8}}/>
-          <table style={{width:'100%',borderCollapse:'collapse'}}>
-            <thead><tr><th>المعرّف</th><th>الجهة</th><th>الهدف</th><th>الميزانية</th><th>الحالة</th></tr></thead>
-            <tbody>
-              {projects.map((p:any)=>(
-                <tr key={p.id} style={{borderTop:'1px solid #e5e7eb'}}>
-                  <td>{p.code}</td><td>{p.ownerOrg?.code}</td><td>{p.visionGoal}</td><td>{p.budget?.toLocaleString?.()}</td><td>{p.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div style={{marginTop:8}}>
-            <a href={`${API}/projects/csv/export`} target="_blank" style={{border:'1px solid #0b5b34',padding:'6px 10px',borderRadius:8}}>تصدير CSV</a>
-          </div>
-        </div>
-        <div style={{background:'#fff',border:'1px solid #e5e7eb',borderRadius:12,padding:12}}>
-          <h3>مقارنة المناطق</h3>
-          <ul>
-            {Object.keys(regions).map(k=>(
-              <li key={k}>{k}: مشاريع {regions[k].projects} — ممول {regions[k].funded} — ميزانية {(regions[k].budget/1000|0)} ألف</li>
-            ))}
-          </ul>
-        </div>
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand" onclick="location.hash='#/overview'" role="link" tabindex="0" aria-label="العودة للرئيسية">
+      <div class="mark">
+        <!-- شعار حصيف (SVG أنيق وخفيف) -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 200 200" aria-label="شعار حصيف">
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#0ea5e9"/><stop offset="100%" stop-color="#22c55e"/>
+          </linearGradient></defs>
+          <rect x="30" y="30" width="140" height="140" rx="28" fill="url(#g1)" opacity=".15"/>
+          <path d="M60 120c20-40 60-40 80 0" fill="none" stroke="#0ea5e9" stroke-width="10" stroke-linecap="round"/>
+          <circle cx="100" cy="80" r="18" fill="#22c55e"/>
+        </svg>
+      </div>
+      <div>
+        <div class="word">منصة حصيف</div>
+        <div class="sub">منظومة ذكية لإدارة المعرفة والأداء</div>
       </div>
     </div>
-  );
+    <a class="home-btn" href="#/overview">الرئيسية</a>
+    <button class="btn ghost" id="globalSearchBtn">بحث موحّد</button>
+    <button class="btn ghost" id="desktopLoginBtn">دخول</button>
+    <button class="btn ghost" id="mobileMenuBtn">القائمة ☰</button>
+    <div class="left-box">
+      <button id="bell" class="bell" aria-label="الإشعارات">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 0 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5"/>
+          <path d="M10 21a2 2 0 0 0 4 0"/>
+        </svg>
+        <span class="badge-dot"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- أيقونات قابلة لإعادة الاستخدام -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="ico-knowledge" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h8"/></symbol>
+  <symbol id="ico-kpi" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l3-3 2 2 5-5"/></symbol>
+  <symbol id="ico-ops" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></symbol>
+  <symbol id="ico-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/></symbol>
+  <symbol id="ico-integr" viewBox="0 0 24 24"><path d="M3 12h6l3-3 3 6 3-3h3"/><path d="M3 6h6M15 18h6"/></symbol>
+  <symbol id="ico-govern" viewBox="0 0 24 24"><path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10z"/></symbol>
+  <symbol id="ico-module" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+</svg>
+
+<div class="layout">
+  <aside class="mega-left" aria-label="القائمة الرئيسية">
+    <details open><summary>البدء السريع</summary><div class="group-body">
+      <a href="#/overview"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg> نظرة عامة</a>
+      <a href="#/intro"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-knowledge"/></svg> من نحن</a>
+      <a href="#/library"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-doc"/></svg> مكتبة المعرفة</a>
+    </div></details>
+
+    <details><summary>الوحدات</summary><div class="group-body">
+      <a href="#/mod/insights"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-kpi"/></svg> الذكاء المؤسسي</a>
+      <a href="#/mod/quality"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-govern"/></svg> الجودة والامتثال</a>
+      <a href="#/mod/process"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-ops"/></svg> العمليات والتحسين</a>
+      <a href="#/mod/learning"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-knowledge"/></svg> التعلم المؤسسي</a>
+      <a href="#/mod/partners"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-integr"/></svg> الشراكات والتكامل</a>
+      <a href="#/mod/governance"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-govern"/></svg> الحوكمة والبيانات</a>
+    </div></details>
+
+    <details><summary>التشغيل والتقارير</summary><div class="group-body">
+      <a href="#/ops"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-ops"/></svg> التشغيل</a>
+      <a href="#/kpi"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-kpi"/></svg> مؤشرات KPI</a>
+      <a href="#/reports"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-doc"/></svg> التقارير</a>
+    </div></details>
+
+    <details><summary>التكامل</summary><div class="group-body">
+      <a href="#/integration"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-integr"/></svg> تكامل الشركاء</a>
+    </div></details>
+
+    <details><summary>الدعم والجودة</summary><div class="group-body">
+      <a href="#/support"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-govern"/></svg> الدعم الفني</a>
+      <a href="#/policies"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-doc"/></svg> الأدلة والسياسات</a>
+      <a href="#/contact"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-integr"/></svg> اتصل بنا</a>
+    </div></details>
+  </aside>
+
+  <section id="view" class="content">
+    <div class="card"><h2 class="section-title">مرحبًا بك في منصة حصيف</h2>
+      <p>منصة مرنة لإدارة المعرفة، المؤشرات، العمليات، والتكامل بين الشركاء — في ملف واحد سريع.</p>
+    </div>
+    <div class="kpi-grid" id="kpiHome" style="margin-top:12px"></div>
+  </section>
+</div>
+
+<a class="fab-home" href="#/overview" aria-label="الرئيسية" style="display:none">⌂</a>
+
+<!-- حوار الدخول -->
+<div id="loginBackdrop" style="position:fixed;inset:0;background:rgba(2,12,27,.45);display:none;z-index:10000"></div>
+<div id="loginWrap" style="position:fixed;inset:0;display:none;place-items:center;z-index:10001">
+  <div id="loginCard" role="dialog" aria-modal="true" aria-labelledby="loginTitle" style="width:min(92vw,720px);background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 20px 60px rgba(2,12,27,.25)">
+    <h3 id="loginTitle">تسجيل الدخول</h3>
+    <div class="login-grid">
+      <div class="login-row" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label>اسم المستخدم</label><input id="lg_user" class="input" value="HASSEE F" autocomplete="username"></div>
+        <div><label>كلمة المرور</label><input id="lg_pass" class="input" type="password" value="1234" autocomplete="current-password"></div>
+      </div>
+      <div><label>الوحدة/القسم</label>
+        <select id="lg_mod" class="input">
+          <option value="insights">الذكاء المؤسسي</option>
+          <option value="quality">الجودة والامتثال</option>
+          <option value="process">العمليات والتحسين</option>
+          <option value="learning">التعلم المؤسسي</option>
+          <option value="partners">الشراكات والتكامل</option>
+          <option value="governance">الحوكمة والبيانات</option>
+        </select>
+      </div>
+      <div><label>الدور/الصلاحية</label>
+        <select id="lg_role" class="input">
+          <option value="viewer">عارض</option>
+          <option value="kpi">مشرف مؤشرات</option>
+          <option value="ops">محرر عمليات</option>
+          <option value="report">منسق تقارير</option>
+          <option value="owner">مالك الوحدة</option>
+        </select>
+      </div>
+      <div class="login-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px">
+        <button id="lg_cancel" class="btn ghost">إلغاء</button>
+        <button id="lg_ok" class="btn">دخول</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- بحث موحّد -->
+<div id="globalSearchBackdrop" style="position:fixed;inset:0;background:rgba(2,12,27,.45);display:none;z-index:10000"></div>
+<div id="globalSearchWrap" style="position:fixed;inset:0;display:none;place-items:center;z-index:10001">
+  <div style="width:min(92vw,820px);max-height:80vh;overflow:auto;background:#fff;border:1px solid #e6e9ef;border-radius:16px;padding:16px;box-shadow:0 20px 60px rgba(2,12,27,.25)">
+    <h3>بحث موحّد في الخدمات</h3>
+    <div style="display:flex;gap:8px;margin:8px 0 12px">
+      <input id="gs_q" class="input" placeholder="ابحث باسم خدمة/وحدة/مؤشر...">
+      <button class="btn" id="gs_go">بحث</button>
+      <button class="btn ghost" id="gs_close">إغلاق</button>
+    </div>
+    <div id="gs_results" class="services-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $$=(s,root=document)=>Array.from(root.querySelectorAll(s));
+const $=(s,root=document)=>root.querySelector(s);
+const isMobile = ()=> window.matchMedia && matchMedia("(max-width:979px)").matches;
+
+/* ===== KPI schema: units + thresholds (per indicator) ===== */
+const KPI_SCHEMA = {
+  "نسبة": (v)=>({unit:"%", value:v, grade: v>=90?"ok": v>=75?"warn":"bad", target:"≥90%"}),
+  "دقيقة": (v)=>({unit:"د", value:v, grade: v<=10?"ok": v<=20?"warn":"bad", target:"≤10د"}),
+  "مؤشر": (v)=>({unit:"نقطة", value:v, grade: v>=85?"ok": v>=70?"warn":"bad", target:"≥85"})
+};
+function inferKPI(indTitle){
+  if(/انتظار|زمن|د\)/.test(indTitle)) return "دقيقة";
+  if(/رضا|التزام|تغطية|تحقق|جاهزية|حضور|نجاح|شفافية/.test(indTitle)) return "نسبة";
+  return "مؤشر";
 }
-EOF
+function makeKPIRow(title){
+  const kind = inferKPI(title);
+  const raw = kind==="دقيقة" ? (4 + Math.floor(Math.random()*18)) : (75 + Math.floor(Math.random()*20));
+  const calc = KPI_SCHEMA[kind](raw);
+  const trend = (Math.random()>.5?"+":"-") + (Math.random()*5|0) + "%";
+  return {title, value: calc.value + (calc.unit==="%"?"%":"") + (calc.unit==="د"?"د":""), unit:calc.unit, grade:calc.grade, trend, target: calc.target};
+}
 
-echo "Scaffold complete at $ROOT/"
-cat << 'TXT'
+/* OFFICIAL KPIs per module */
+const OFFICIAL_KPIS = {
+  insights: [
+    {title:"تغطية مصادر البيانات", kind:"نسبة", target:"≥90%"},
+    {title:"صلاحية البيانات المستخدمة", kind:"نسبة", target:"≥92%"},
+    {title:"زمن إعداد لوحة أسبوعية", kind:"دقيقة", target:"≤10د"},
+    {title:"رضا صناع القرار", kind:"نسبة", target:"≥88%"}
+  ],
+  quality: [
+    {title:"مؤشرات الامتثال الفصلي", kind:"نسبة", target:"≥90%"},
+    {title:"تكرار أخطاء البيانات", kind:"نسبة", target:"≤10%"},
+    {title:"زمن معالجة الملاحظة", kind:"دقيقة", target:"≤15د"},
+    {title:"نضج الحوكمة", kind:"مؤشر", target:"≥85"}
+  ],
+  process: [
+    {title:"إغلاق التحسينات خلال المدة", kind:"نسبة", target:"≥85%"},
+    {title:"زمن دورة الإجراء", kind:"دقيقة", target:"≤12د"},
+    {title:"تنفيذ الخطط التصحيحية", kind:"نسبة", target:"≥80%"}
+  ],
+  learning: [
+    {title:"إتمام المسارات التدريبية", kind:"نسبة", target:"≥75%"},
+    {title:"رضا المتدربين", kind:"نسبة", target:"≥85%"},
+    {title:"تحسن ما بعد التدريب", kind:"نسبة", target:"≥60%"}
+  ],
+  partners: [
+    {title:"اتفاقيات تكامل نشطة", kind:"نسبة", target:"≥70%"},
+    {title:"تبادل بيانات ناجح", kind:"نسبة", target:"≥90%"},
+    {title:"زمن معالجة الربط", kind:"دقيقة", target:"≤10د"}
+  ],
+  governance: [
+    {title:"امتثال سياسات البيانات", kind:"نسبة", target:"≥95%"},
+    {title:"تحديث السجلات الوصفية", kind:"نسبة", target:"≥90%"},
+    {title:"استجابة طلبات الوصول", kind:"دقيقة", target:"≤8د"}
+  ]
+};
 
-==============================
-تشغيل سريع (بعد إنشاء الملفات)
-==============================
-1) قاعدة البيانات:
-   docker compose -f hasif/docker-compose.yml up -d
+function makeKPIsForModule(key){
+  const list = OFFICIAL_KPIS[key];
+  if (!list) return [];
+  return list.map(item=>{
+    let base;
+    if (item.kind === "نسبة") {
+      const tgt = parseInt(item.target.replace(/\D/g,'')) || 85;
+      // لو الهدف ≤ نسبة (مثل ≤10% للأخطاء) سنعكس التوليد
+      if (/≤/.test(item.target)) base = Math.max(2, Math.floor(tgt - 2 + Math.random()*6)); // قريب من السقف المنخفض
+      else base = Math.max(tgt - 8, 60) + Math.floor(Math.random()*12);
+    } else if (item.kind === "دقيقة") {
+      const lim = parseInt(item.target.replace(/\D/g,'')) || 10;
+      base = Math.max(3, lim - 2) + Math.floor(Math.random()*6);
+    } else {
+      base = 80 + Math.floor(Math.random()*15);
+    }
+    const calc = KPI_SCHEMA[item.kind](base);
+    const trend = (Math.random()>.5?"+":"-") + (Math.random()*4|0) + "%";
+    return {title:item.title, value:calc.value + (calc.unit==="%"?"%":"") + (calc.unit==="د"?"د":""), unit:calc.unit, grade:calc.grade, target:item.target||calc.target, trend};
+  });
+}
 
-2) API:
-   cd hasif/apps/api
-   cp ../../.env.example .env
-   npm i
-   npx prisma generate
-   npx prisma migrate dev --name init
-   npm run seed
-   npm run start:dev
-   -> Swagger: http://localhost:3001/docs
+/* DATA: خدمات ونماذج */
+const MODULES = {
+  insights: {
+    name:"الذكاء المؤسسي", icon:"#ico-kpi",
+    services:{
+      "لوحات ومؤشرات":["لوحة القيادة التنفيذية","لوحة الأداء الأسبوعية","لوحة الأثر"],
+      "تحليلات متقدمة":["التنبؤ بالطلب","تحليل الاتجاهات","تقسيم الشرائح"],
+      "نماذج وحقول (تجريبية)":[
+        {form:"طلب لوحة جديدة", fields:["اسم اللوحة","القطاع","المستهلك","تاريخ التسليم","ملاحظات"]},
+        {form:"نشر تقرير تحليلي", fields:["العنوان","الدورية","الفئة المستهدفة","ملف مرفق","ملاحظات"]}
+      ]
+    },
+    ops:["مزامنة مصدر جديد","مراجعة جودة القياس","تحسين أداء الاستعلامات"]
+  },
+  quality: {
+    name:"الجودة والامتثال", icon:"#ico-govern",
+    services:{
+      "إدارة الملاحظات":["تسجيل ملاحظة جودة","تحليل السبب الجذري","خطة تصحيح"],
+      "الامتثال والسياسات":["فحوص الامتثال الدورية","مصفوفة التقييم","تقارير الاعتمادية"],
+      "نماذج وحقول (تجريبية)":[
+        {form:"رفع ملاحظة جودة", fields:["الوحدة","النوع","الأولوية","الوصف","المعالجة المتوقعة"]},
+        {form:"اعتماد سياسة", fields:["اسم السياسة","الجهة المعتمدة","تاريخ السريان","مرفق","ملاحظات"]}
+      ]
+    },
+    ops:["جولة امتثال ربع سنوية","تحديث سجل السياسات","معالجة ملاحظات حرجة"]
+  },
+  process: {
+    name:"العمليات والتحسين", icon:"#ico-ops",
+    services:{
+      "إدارة الإجراءات":["خرائط العمليات","مؤقتات SLA","إشعارات التأخير"],
+      "التحسين المستمر":["كايدزن أسبوعي","لوحة عنق الزجاجة","اقتراحات الفريق"],
+      "نماذج وحقول (تجريبية)":[
+        {form:"طلب تحسين عملية", fields:["اسم العملية","المالك","الوصف","الأثر المتوقع","الزمن المستهدف"]},
+        {form:"توثيق إجراء", fields:["العنوان","الإصدار","نطاق التطبيق","مرفقات","ملاحظات"]}
+      ]
+    },
+    ops:["تحسين سير عمل الدعم","تقليل زمن الدورة","أتمتة إشعارات الإنجاز"]
+  },
+  learning: {
+    name:"التعلم المؤسسي", icon:"#ico-knowledge",
+    services:{
+      "أكاديمية داخلية":["مسارات تعلم","محتوى تفاعلي","شهادات رقمية"],
+      "إدارة المعرفة":["قواعد المعرفة","مقالات أفضل الممارسات","جلسات تبادل خبرات"],
+      "نماذج وحقول (تجريبية)":[
+        {form:"دورة جديدة", fields:["العنوان","المدرب","المدّة","المخرجات","المواعيد"]},
+        {form:"مقال معرفة", fields:["العنوان","الكلمات المفتاحية","الملخص","المحتوى","مرفق"]}
+      ]
+    },
+    ops:["نشر مسار تعلم","مراجعة مقالات","فعالية تبادل الخبرات"]
+  },
+  partners: {
+    name:"الشراكات والتكامل", icon:"#ico-integr",
+    services:{
+      "التكامل التقني":["واجهات API","بوابة المطور","بيئات اختبار"],
+      "إدارة الشراكات":["اتفاقيات مستوى الخدمة","متابعة الالتزامات","لوحة المؤشرات المشتركة"],
+      "نماذج وحقول (تجريبية)":[
+        {form:"طلب تكامل", fields:["اسم الشريك","نطاق البيانات","دورية التبادل","نقطة الاتصال","ملاحظات"]},
+        {form:"اتفاقية مستوى خدمة", fields:["الشريك","العقد","SLA %","الفترة","مرفقات"]}
+      ]
+    },
+    ops:["إطلاق ربط جديد","تدقيق أمن المعلومات","مراجعة SLA"]
+  },
+  governance: {
+    name:"الحوكمة والبيانات", icon:"#ico-govern",
+    services:{
+      "حوكمة البيانات":["كتالوج البيانات","معرّفات موحدة","ضوابط الوصول"],
+      "إدارة الهوية والصلاحيات":["أدوار دقيقة","سجلات監 Audit","مراجعات دورية"],
+      "نماذج وحقول (تجريبية)":[
+        {form:"طلب وصول", fields:["اسم المستخدم","الوحدة","مستوى الوصول","مدة الوصول","مبرر"]},
+        {form:"تسجيل أصل بيانات", fields:["الاسم","المالك","التصنيف","الدورية","المصدر"]}
+      ]
+    },
+    ops:["تحديث كتالوج","تدقيق صلاحيات","مراجعة سياسات الخصوصية"]
+  }
+};
 
-3) الواجهة:
-   cd ../../web
-   cp ../../.env.example .env
-   npm i
-   npm run dev
-   -> http://localhost:3000
+/* Util */
+function toast(msg){
+  const t=document.createElement('div'); t.textContent=msg;
+  t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);top:16px;background:#0ea5e9;color:#fff;padding:8px 12px;border-radius:10px;z-index:9999';
+  document.body.appendChild(t); setTimeout(()=>{ t.style.opacity='0'; t.style.transition='.2s'; setTimeout(()=> t.remove(), 180); }, 1200);
+}
+function clearNode(el){ while(el.firstChild) el.removeChild(el.firstChild); }
+function KPIIcon(){ return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l3-3 2 2 5-5"/></svg>'; }
 
-بيانات دخول تجريبية:
-  email: admin@hasif.local
-  pass : Admin#12345
+/* Excel + Print */
+function rowsToXLS(name, rows){
+  const esc = (s)=> String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const shRows = rows.map(r=> '<Row>'+ r.map(c=> `<Cell><Data ss:Type="String">${esc(c)}</Data></Cell>`).join('') +'</Row>').join('');
+  const xml = `<?xml version="1.0"?>
+  <Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+    xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:x="urn:schemas-microsoft-com:office:excel"
+    xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+    <Worksheet ss:Name="${esc(name)}"><Table>${shRows}</Table></Worksheet>
+  </Workbook>`;
+  const blob = new Blob([xml], {type:'application/vnd.ms-excel'});
+  const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download=name+'.xls';
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 100);
+}
+function printSection(){ window.print(); }
 
-ملاحظات:
-- Refresh Token يُعاد من /auth/login ويُخزَّن هاشه في User.refreshTokenHash.
-- لتجديد التوكن: POST /auth/refresh { refreshToken } -> accessToken جديد.
-- الحماية عبر @UseGuards(JwtGuard, RolesGuard) ومسارات مقيّدة بـ @Roles(...).
-- يمكنك تعديل سياسات الأدوار لكل وحدة حسب الحاجة.
-TXT
+/* Forms: validation + local save */
+function formKey(mod, title){ return `haseef.form.${mod}.${title}`; }
+function formCollect(card){
+  const inputs = $$('.input', card);
+  const data = {}; let ok = true;
+  inputs.forEach((inp)=>{
+    const label = inp.parentElement.querySelector('label')?.textContent?.replace('*','').trim()||'';
+    const req = inp.dataset.required==='1';
+    if(req && !inp.value.trim()){ ok=false; inp.classList.add('bad'); }
+    else { inp.classList.remove('bad'); }
+    data[label] = inp.value;
+  });
+  return {ok, data};
+}
+function saveFormDraft(btn, mod, title){
+  const card = btn.closest('[data-form-title]');
+  const {data} = formCollect(card);
+  try{ localStorage.setItem(formKey(mod,title), JSON.stringify({data, draft:true, ts:Date.now()})); toast('تم حفظ المسودة'); }catch(_){ toast('تعذر الحفظ'); }
+  return false;
+}
+function saveFormFinal(btn, mod, title){
+  const card = btn.closest('[data-form-title]');
+  const res = formCollect(card);
+  if(!res.ok){ toast('الرجاء تعبئة الحقول الإلزامية'); return false; }
+  try{ localStorage.setItem(formKey(mod,title), JSON.stringify({data:res.data, draft:false, ts:Date.now()})); toast('تم الحفظ'); }catch(_){ toast('تعذر الحفظ'); }
+  return false;
+}
+function loadForm(btn, mod, title){
+  const card = btn.closest('[data-form-title]');
+  const raw = localStorage.getItem(formKey(mod,title)); if(!raw){ toast('لا توجد بيانات'); return false; }
+  try { const {data} = JSON.parse(raw); $$('.input', card).forEach(inp=>{
+    const label = inp.parentElement.querySelector('label')?.textContent?.replace('*','').trim()||'';
+    if(data[label]!=null) inp.value = data[label];
+  }); toast('تم الاسترجاع'); } catch(_){ toast('تعذر الاسترجاع'); }
+  return false;
+}
+function clearForm(btn, mod, title){
+  const card = btn.closest('[data-form-title]');
+  $$('.input', card).forEach(inp=> inp.value='');
+  try{ localStorage.removeItem(formKey(mod,title)); }catch(_){}
+  toast('تم التفريغ');
+  return false;
+}
+function formCard(title, fields, modKey){
+  return `<div class="card" style="margin-top:8px" data-form-title="${title}">
+    <div style="display:flex;align-items:center;gap:8px"><svg class="icon" viewBox="0 0 24 24"><use href="#ico-doc"/></svg><b>${title}</b></div>
+    <div class="form-grid" style="margin-top:8px">
+      ${fields.map((f,i)=>{
+        const isReq = /^(الاسم|العنوان|الجهة|الأولوية|نوع|التاريخ)$/u.test(f) || i<2;
+        return `<div class='field'><label class='${isReq?'req':''}'>${f}</label><input class='input' placeholder='${f}' data-required='${isReq?1:0}'></div>`;
+      }).join('')}
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn ghost" onclick="return saveFormDraft(this,'${modKey||''}','${title||''}')">مسودة</button>
+      <button class="btn" onclick="return saveFormFinal(this,'${modKey||''}','${title||''}')">حفظ</button>
+      <button class="btn ghost" onclick="return loadForm(this,'${modKey||''}','${title||''}')">استرجاع</button>
+      <button class="btn ghost" onclick="return clearForm(this,'${modKey||''}','${title||''}')">تفريغ</button>
+    </div>
+    <div class="hint">الحفظ محليًا على جهازك (تجريبي).</div>
+  </div>`;
+}
+
+/* Roles */
+function getRole(){ try{ return JSON.parse(localStorage.getItem('haseef_auth')||'{}').role || 'viewer'; }catch(_){ return 'viewer'; } }
+function enforceRole(ctx){
+  const role = getRole();
+  const chip = document.getElementById('roleChip'); if(chip){ chip.textContent = {'viewer':'عارض','kpi':'مشرف مؤشرات','ops':'محرر عمليات','report':'منسق تقارير','owner':'مالك الوحدة'}[role]||role; }
+  if(ctx==='services'){ $$('#modContent .btn').forEach(b=>{ if(/حفظ|مسودة|استرجاع|تفريغ/.test(b.textContent)) b.disabled = (role==='viewer'); }); }
+  if(ctx==='ops'){ const canEdit = (role==='ops'||role==='owner'); const addBtn = $('#modContent [id^=addOp_]'); if(addBtn) addBtn.disabled = !canEdit; $$('#modContent .card button').forEach(b=>{ if(b.textContent==='تم') b.disabled = !canEdit; }); }
+}
+
+/* Header actions */
+document.getElementById('bell').onclick = (e)=>{ e.preventDefault(); toast('لا إشعارات جديدة.'); };
+document.getElementById('mobileMenuBtn').onclick = (e)=>{ e.preventDefault(); openMobileMenu(); };
+document.getElementById('desktopLoginBtn').onclick = (e)=>{ e.preventDefault(); showLogin(); };
+
+/* Mobile menu sheet */
+function openMobileMenu(){
+  if (!isMobile()) return;
+  if (document.getElementById('mobileMenuSheet')) return;
+  const sheet = document.createElement('div');
+  sheet.id='mobileMenuSheet';
+  sheet.style.cssText='position:fixed;inset:auto 0 0 0;background:#fff;border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -12px 30px rgba(2,12,27,.15);z-index:9999;max-height:65vh;overflow:auto;padding:12px;transform:translateY(16px);opacity:0;transition:.2s';
+  sheet.innerHTML = document.querySelector('.mega-left').innerHTML;
+  sheet.querySelectorAll('a').forEach(a=> a.addEventListener('click', ev=>{ ev.preventDefault(); location.hash=a.getAttribute('href'); close(); }));
+  document.body.appendChild(sheet);
+  requestAnimationFrame(()=>{ sheet.style.transform='translateY(0)'; sheet.style.opacity='1'; });
+  function close(){ sheet.style.transform='translateY(16px)'; sheet.style.opacity='0'; setTimeout(()=> sheet.remove(), 180); }
+  document.addEventListener('click', (ev)=>{ if(!sheet.contains(ev.target)) close(); }, {once:true});
+}
+
+/* Login dialog */
+const loginBackdrop = document.getElementById('loginBackdrop');
+const loginWrap = document.getElementById('loginWrap');
+function showLogin(pref){
+  if (pref) $('#lg_mod').value = pref;
+  loginBackdrop.style.display='block'; loginWrap.style.display='grid'; setTimeout(()=> $('#lg_user').focus(), 0);
+}
+function hideLogin(){ loginBackdrop.style.display='none'; loginWrap.style.display='none'; }
+$('#lg_cancel').onclick = hideLogin;
+$('#lg_ok').onclick = ()=>{
+  const u = $('#lg_user').value.trim(), p = $('#lg_pass').value.trim(), m = $('#lg_mod').value, r = $('#lg_role').value;
+  if (!u || !p || !m){ toast('اكمل الحقول'); return; }
+  localStorage.setItem('haseef_auth', JSON.stringify({user:u, mod:m, role:r}));
+  hideLogin(); location.hash = `#/mod/${m}?tab=summary`;
+};
+
+/* Routing */
+function parseRoute(){
+  const h = location.hash || "";
+  if (!h || h==="#" || h==="#/") return {type:"overview"};
+  if (h==="#/overview") return {type:"overview"};
+  if (h==="#/intro") return {type:"intro"};
+  if (h==="#/library") return {type:"library"};
+  if (h==="#/ops") return {type:"ops"};
+  if (h==="#/kpi") return {type:"kpi"};
+  if (h==="#/reports") return {type:"reports"};
+  if (h==="#/integration") return {type:"integration"};
+  if (h==="#/support") return {type:"support"};
+  if (h==="#/policies") return {type:"policies"};
+  if (h==="#/contact") return {type:"contact"};
+  const m = h.match(/^#\/mod\/([^?]+)(?:\?tab=([a-z]+))?/);
+  if (m) return {type:"mod", key:m[1], tab:m[2]||"summary"};
+  return {type:"unknown"};
+}
+function applyTitle(){
+  const h = location.hash;
+  const MAP={"#/overview":"نظرة عامة – حصيف","#/intro":"من نحن – حصيف","#/library":"مكتبة المعرفة – حصيف","#/ops":"التشغيل – حصيف","#/kpi":"المؤشرات – حصيف","#/reports":"التقارير – حصيف","#/integration":"التكامل – حصيف","#/support":"الدعم – حصيف","#/policies":"السياسات – حصيف","#/contact":"اتصل بنا – حصيف"};
+  if (MAP[h]) document.title = MAP[h];
+  if (/^#\/mod\//.test(h)) document.title = "وحدة – حصيف";
+}
+function route(){
+  applyTitle();
+  const r = parseRoute();
+  if (r.type==="overview") return renderOverview();
+  if (r.type==="intro") return renderIntro();
+  if (r.type==="library") return renderLibrary();
+  if (r.type==="ops") return renderOps();
+  if (r.type==="kpi") return renderKpi();
+  if (r.type==="reports") return renderReports();
+  if (r.type==="integration") return renderIntegration();
+  if (r.type==="support") return renderSupport();
+  if (r.type==="policies") return renderPolicies();
+  if (r.type==="contact") return renderContact();
+  if (r.type==="mod") return renderModule(r.key, r.tab);
+  render404();
+}
+window.addEventListener('hashchange', route);
+
+/* Overview */
+function renderOverview(){
+  const mount = $('#kpiHome'); clearNode(mount);
+  const demo = ["نضج المعرفة","تغطية المحتوى","رضا المستخدمين","الامتثال","سرعة التقارير","تكامل الشركاء","الأثر المعرفي","تحسين مستمر"].slice(0,8)
+    .map(makeKPIRow);
+  const frag = document.createDocumentFragment();
+  demo.forEach(k=>{ const div=document.createElement('div'); div.className='kpi-card'; div.innerHTML = `
+    <div class="kpi-icon">${KPIIcon()}</div>
+    <div><div class="kpi-title">${k.title}</div>
+      <div class="kpi-meta"><span class="kpi-value">${k.value}</span>
+        <span class="badge ${k.grade}">${k.grade==="ok"?"جيد":k.grade==="warn"?"تحذير":"حرِج"}</span>
+        <span class="badge info">${k.trend}</span></div>
+    </div>`; frag.appendChild(div); });
+  mount.appendChild(frag);
+  $('#view').prepend(Object.assign(document.createElement('div'),{className:'card',innerHTML:'<b>تلميح:</b> استخدم زر <i>بحث موحّد</i> للعثور سريعًا على أي خدمة أو مؤشر.'}));
+}
+
+/* Simple pages */
+function renderIntro(){ $('#view').innerHTML = `
+  <div class="card">
+    <h2 class="section-title">من نحن</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="card" style="border-style:dashed"><b>الرؤية</b><br>تمكين المعرفة واتخاذ القرار بسرعة وموثوقية.</div>
+      <div class="card" style="border-style:dashed"><b>الرسالة</b><br>تقديم أدوات عملية لإدارة المحتوى، المؤشرات، التشغيل، والتكامل.</div>
+    </div>
+    <div class="card" style="margin-top:12px"><b>الأهداف</b>
+      <ul style="margin:8px 0 0 0;padding-inline-start:18px">
+        <li>رفع جودة المعرفة وإتاحتها.</li>
+        <li>تعزيز الامتثال وحوكمة البيانات.</li>
+        <li>تسريع اتخاذ القرار بالتقارير الذكية.</li>
+        <li>توسيع التكامل مع الشركاء.</li>
+      </ul>
+    </div>
+  </div>`; }
+function renderLibrary(){ $('#view').innerHTML = `
+  <div class="card"><h2>مكتبة المعرفة</h2>
+    <div class="toolbar"><input class="input" placeholder="بحث عن مقال/وثيقة..."><button class="btn ghost">مسح</button></div>
+    <div class="services-grid">
+      ${["دليل الحوكمة","أفضل الممارسات","قوالب التقارير","وثائق API","مكتبة التدريب"].map(t=>`<div class="service"><h4>${t}</h4><p>وصف مختصر.</p></div>`).join('')}
+    </div>
+  </div>`; }
+function renderOps(){ location.hash = '#/mod/process?tab=operations'; }
+function renderKpi(){ location.hash = '#/mod/insights?tab=indicators'; }
+function renderReports(){ $('#view').innerHTML = `
+  <div class="services-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+    ${["الأداء الشهري","الامتثال والجودة","التكامل والشراكات","إدارة المعرفة","التعلم المؤسسي","تحسين العمليات"].map(t=>`
+      <a class="service" href="#" onclick="return false" style="text-decoration:none">
+        <h4>تقرير ${t}</h4><p>PDF · آخر إصدار</p>
+      </a>`).join('')}
+  </div>`; }
+function renderSupport(){ $('#view').innerHTML = `<div class="card"><h2>الدعم الفني</h2><p>تجريبي: support@haseef.sa</p></div>`; }
+function renderPolicies(){ $('#view').innerHTML = `<div class="card"><h2>الأدلة والسياسات</h2><p>إرشادات الحوكمة والخصوصية والامتثال.</p></div>`; }
+function renderContact(){ $('#view').innerHTML = `<div class="card"><h2>اتصل بنا</h2><p>نموذج تواصل بسيط (تجريبي).</p></div>`; }
+function renderIntegration(){ $('#view').innerHTML = `
+  <div class="card"><h2>تكامل الشركاء</h2>
+    <p>واجهات تجريبية (Mock) — عند الانتقال للإصدار الفعلي تُستبدل بنقاط نهاية حقيقية.</p>
+    <div class="card" style="margin-top:8px"><b>نماذج نقاط نهاية</b>
+      <ul style="margin:8px 0 0 0;padding-inline-start:18px">
+        <li><code>POST /api/v1/knowledge</code> — إنشاء/تحديث عنصر معرفة.</li>
+        <li><code>GET /api/v1/kpi?module=insights</code> — مؤشرات محدثة حسب الوحدة.</li>
+        <li><code>POST /api/v1/ops</code> — إضافة عملية/مهمة.</li>
+        <li><code>PUT /api/v1/policy/:id</code> — تحديث سياسة.</li>
+      </ul>
+    </div>
+    <div class="card" style="margin-top:8px"><b>قاموس بيانات مختصر</b>
+      <div class="services-grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+        <div class="service"><h4>المعرفات</h4><p>content_id, kpi_id, op_id</p></div>
+        <div class="service"><h4>الوصف</h4><p>title, summary, owner, tags</p></div>
+        <div class="service"><h4>المقاييس</h4><p>value, unit, target, grade</p></div>
+        <div class="service"><h4>الميتاداتا</h4><p>source_system, created_at, updated_at</p></div>
+      </div>
+    </div>
+  </div>`; }
+
+/* Module view */
+const TABS = [
+  {key:"summary",label:"الملخص"},
+  {key:"services",label:"الخدمات"},
+  {key:"operations",label:"العمليات"},
+  {key:"indicators",label:"المؤشرات"},
+  {key:"reports",label:"التقارير"},
+  {key:"resources",label:"الموارد"},
+  {key:"governance",label:"الحوكمة"}
+];
+function renderModule(modKey, tabKey){
+  const pack = MODULES[modKey]; if(!pack) return render404();
+  const current = tabKey || "summary";
+  const view = $('#view'); clearNode(view);
+
+  const header=document.createElement('div'); header.className='card'; header.style.display='flex'; header.style.justifyContent='space-between'; header.style.alignItems='center'; header.style.gap='10px';
+  header.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="kpi-icon"><svg class="icon" viewBox="0 0 24 24"><use href="${pack.icon}"/></svg></div>
+      <div><div style="font-weight:800">${pack.name}</div>
+        <div style="color:#64748b;font-size:13px">وحدة · تبويب: <b>${(TABS.find(t=>t.key===current)||{}).label||""}</b> <span id='roleChip' class='role-chip' style='margin-inline-start:8px'></span></div>
+      </div>
+    </div>
+    <a class="btn ghost" href="#/library">مكتبة المعرفة</a>`;
+  view.appendChild(header);
+
+  const nav=document.createElement('nav'); nav.className='tabs'; nav.setAttribute('role','tablist'); nav.setAttribute('aria-label','تبويبات الوحدة');
+  nav.innerHTML = TABS.map(t=>`<a class="tab" role="tab" aria-selected="${t.key===current}" href="#/mod/${modKey}?tab=${t.key}">
+        <svg class="icon" viewBox="0 0 24 24"><use href="${pack.icon}"/></svg>${t.label}</a>`).join('');
+  view.appendChild(nav);
+
+  const mount=document.createElement('div'); mount.id='modContent'; view.appendChild(mount);
+
+  if (current==="summary"){
+    const data = makeKPIsForModule(modKey);
+    mount.innerHTML = `<div class="kpi-grid">${data.map(k=>`
+      <div class="kpi-card">
+        <div class="kpi-icon">${KPIIcon()}</div>
+        <div><div class="kpi-title">${k.title}</div>
+          <div class="kpi-meta"><span class="kpi-value">${k.value}</span>
+            <span class="badge ${k.grade}">${k.grade==="ok"?"جيد":k.grade==="warn"?"تحذير":"حرِج"}</span>
+            <span class="badge tgt">${k.target}</span>
+            <span class="badge info">${k.trend}</span>
+          </div>
+        </div>
+      </div>`).join('')}</div>`;
+  }
+
+  if (current==="services"){
+    const grouped = (pack.services)||{};
+    let blocks = ''; Object.entries(grouped).forEach(([group,items])=>{
+      if (!items.length) return;
+      if (typeof items[0] === 'string'){
+        blocks += `<div class="card" style="margin:8px 0"><b>${group}</b>
+          <div class="services-grid">${items.map(it=>`<div class="service"><h4>${it}</h4><p>تفاصيل قابلة للتخصيص.</p></div>`).join('')}</div>
+        </div>`;
+      } else {
+        blocks += `<div class="card" style="margin:8px 0"><b>${group}</b>` + items.map(f=> formCard(f.form, f.fields, modKey)).join('') + `</div>`;
+      }
+    });
+    mount.innerHTML = blocks || `<div class="card">لا توجد خدمات.</div>`; enforceRole('services');
+  }
+
+  if (current==="operations"){
+    const ops = (pack.ops||[]).slice();
+    mount.innerHTML = `<div class="card">
+      <div style='display:flex;align-items:center;justify-content:space-between'>
+        <b>العمليات الجارية</b><button class='btn ghost' id='ops_export_${modKey}'>تصدير Excel</button>
+      </div>
+      <div id="opList_${modKey}">${ops.map(v=>`<div class="card" style="margin-top:8px"><div style="display:flex;justify-content:space-between;gap:8px"><span>${v}</span><button class="btn ghost">تم</button></div></div>`).join('')}</div>
+      <div class="toolbar" style="margin-top:10px"><input id="newOp_${modKey}" class="input" placeholder="أضف مهمة تشغيلية..."><button class="btn" id="addOp_${modKey}">إضافة</button></div>
+    </div>`;
+    const list = document.getElementById('opList_'+modKey);
+    document.getElementById('addOp_'+modKey).onclick = ()=>{
+      const inp = document.getElementById('newOp_'+modKey); const v = inp.value.trim(); if(!v) return;
+      const row = document.createElement('div'); row.className='card'; row.style.marginTop='8px';
+      row.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px"><span>${v}</span><button class="btn ghost">تم</button></div>`;
+      row.querySelector('button').onclick = ()=> row.remove();
+      list.appendChild(row); inp.value='';
+    };
+    document.getElementById('ops_export_'+modKey).onclick = ()=>{
+      const rows = [['المهمة']].concat(Array.from(list.querySelectorAll('.card span')).map(s=>[s.textContent.trim()]));
+      rowsToXLS('operations_'+modKey, rows);
+    };
+    enforceRole('ops');
+  }
+
+  if (current==="indicators"){
+    const data = makeKPIsForModule(modKey);
+    mount.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <b>جدول المؤشرات</b><div style="display:flex;gap:6px">
+        <button class="btn ghost" id="kpi_print">طباعة/PDF</button>
+        <button class="btn ghost" id="kpi_export_${modKey}">تصدير Excel</button>
+      </div></div>
+      <table class="table"><thead><tr>
+        <th data-k="title">المؤشر</th><th data-k="value">القيمة</th>
+        <th data-k="grade">التقييم</th><th>الهدف</th><th data-k="trend">الاتجاه</th><th>آخر تحديث</th>
+      </tr></thead>
+      <tbody>${data.map(k=>`
+        <tr>
+          <td>${k.title}</td>
+          <td><b>${k.value}</b></td>
+          <td><span class="badge ${k.grade}">${k.grade==="ok"?"جيد":k.grade==="warn"?"تحذير":"حرِج"}</span></td>
+          <td><span class="badge tgt">${k.target||"-"}</span></td>
+          <td><span class="badge info">${k.trend}</span></td>
+          <td><span class="badge">اليوم</span></td>
+        </tr>`).join('')}</tbody></table>`;
+    $$('#modContent th[data-k]').forEach(th=>{
+      let asc=true; th.addEventListener('click', ()=>{
+        const idx = {title:0,value:1,grade:2,trend:4}[th.dataset.k];
+        const rows = Array.from(document.querySelectorAll('#modContent tbody tr'));
+        rows.sort((a,b)=>{
+          const A=a.children[idx].textContent.trim(), B=b.children[idx].textContent.trim();
+          return asc ? A.localeCompare(B,'ar') : B.localeCompare(A,'ar');
+        }).forEach(r=> r.parentNode.appendChild(r)); asc=!asc;
+      });
+    });
+    const expBtn = document.getElementById('kpi_export_'+modKey); if(expBtn){ expBtn.onclick = ()=>{ 
+      const head = ["المؤشر","القيمة","التقييم","الهدف","الاتجاه","آخر تحديث"];
+      const rows = [head].concat(data.map(k=>[k.title,k.value,({"ok":"جيد","warn":"تحذير","bad":"حرِج"}[k.grade]||k.grade),k.target,k.trend,"اليوم"]));
+      rowsToXLS('kpi_'+modKey, rows);
+    } }
+    const pr = document.getElementById('kpi_print'); if(pr){ pr.onclick = ()=> printSection(); }
+  }
+
+  if (current==="reports"){
+    mount.innerHTML = `<div class="services-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      ${["الأداء الشهري","الامتثال والجودة","التكامل والشراكات","إدارة المعرفة","التعلم المؤسسي","تحسين العمليات"].map(t=>`
+        <a class="service" href="#" onclick="return false" style="text-decoration:none">
+          <h4>تقرير ${t}</h4><p>PDF · آخر إصدار</p>
+        </a>`).join('')}
+    </div>`;
+  }
+
+  if (current==="resources"){
+    mount.innerHTML = `<div class="card"><b>الموارد</b>
+      <ul style="margin:8px 0 0 0;padding-inline-start:18px">
+        <li><a href="#/policies">الأدلة والسياسات</a></li>
+        <li><a href="#/support">الدعم الفني</a></li>
+        <li><a href="#/contact">اتصل بنا</a></li>
+      </ul></div>`;
+  }
+
+  if (current==="governance"){
+    mount.innerHTML = `<div class="card"><b>الحوكمة والأدوار</b>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="card" style="border-style:dashed"><b>الأدوار</b>
+          <ul style="margin:6px 0 0 0;padding-inline-start:18px">
+            <li>مالك الوحدة</li><li>مشرف مؤشرات</li><li>منسق تقارير</li><li>محرر عمليات</li><li>عارض</li>
+          </ul></div>
+        <div class="card" style="border-style:dashed"><b>سياسات البيانات</b>
+          <ul style="margin:6px 0 0 0;padding-inline-start:18px">
+            <li>أقل صلاحية</li><li>إخفاء الهوية</li><li>تدقيق الدخول والتغييرات</li>
+          </ul></div>
+      </div></div>`;
+  }
+}
+
+/* Global search */
+(function(){
+  const btn = document.getElementById('globalSearchBtn');
+  if(btn){ btn.onclick = ()=>{ $('#globalSearchBackdrop').style.display='block'; $('#globalSearchWrap').style.display='grid'; setTimeout(()=> $('#gs_q').focus(),0); }; }
+  const close = ()=>{ $('#globalSearchBackdrop').style.display='none'; $('#globalSearchWrap').style.display='none'; };
+  $('#gs_close').onclick = close;
+  $('#globalSearchBackdrop').onclick = close;
+  $('#gs_go').onclick = ()=>{
+    const q = ($('#gs_q').value||'').trim();
+    const grid = $('#gs_results'); grid.innerHTML='';
+    if(!q){ grid.innerHTML='<div class="card">أدخل عبارة للبحث.</div>'; return; }
+    // ابحث في جميع عناوين الخدمات لكل الوحدات
+    const res=[];
+    Object.entries(MODULES).forEach(([key, pack])=>{
+      const groups = pack.services||{};
+      Object.entries(groups).forEach(([g, items])=>{
+        if(!items || !items.length) return;
+        if(typeof items[0]==='string'){
+          items.forEach(it=>{
+            const hay = (it + ' ' + g + ' ' + (pack.name||key));
+            if(hay.includes(q)) res.push({mod:key, title: it, group: g});
+          });
+        }
+      });
+    });
+    if(!res.length){ grid.innerHTML='<div class="card">لا توجد نتائج.</div>'; return; }
+    const frag = document.createDocumentFragment();
+    res.slice(0,40).forEach(r=>{
+      const a = document.createElement('a');
+      a.className='service'; a.href = `#/mod/${r.mod}?tab=services`; a.onclick=(ev)=>{ev.preventDefault(); close(); location.hash=a.getAttribute('href');};
+      a.innerHTML = `<h4>${r.title}</h4><p>${(MODULES[r.mod]?.name||r.mod)} — ${r.group}</p>`;
+      frag.appendChild(a);
+    });
+    grid.appendChild(frag);
+  };
+})();
+
+/* Start */
+window.addEventListener('load', ()=>{
+  document.querySelectorAll('details').forEach(d=> d.addEventListener('toggle', ()=>{ if(d.open) document.querySelectorAll('details').forEach(x=> x!==d && (x.open=false)); }));
+  if (!location.hash || location.hash==="#" || location.hash==="#/") location.hash = '#/overview';
+  route();
+  const fab=document.querySelector('.fab-home'); if(fab) fab.style.display = isMobile() ? 'flex' : 'none'; if(isMobile()) fab.href = '#/overview';
+});
+document.addEventListener('keydown', (e)=>{
+  const inInput=/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName||''); if(inInput) return;
+  if((e.altKey&&(e.key==='h'||e.key==='H'))||(e.key==='h'||e.key==='H')){ e.preventDefault(); location.hash='#/overview'; }
+});
+</script>
+</body>
+</html>
