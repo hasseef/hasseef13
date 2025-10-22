@@ -1,855 +1,638 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>منصة حصيف | Hasif Platform</title>
-  <meta name="description" content="منصة حصيف - نموذج تشغيلي أحادي الملف (index.html) للاختبار والشرح" />
-  <style>
-    :root{
-      /* Governmental, professional palette (KSA-inspired) */
-      --green-700:#0b5b34; /* main */
-      --green-800:#0a4c2c; /* darker */
-      --green-600:#106e3f; /* hover */
-      --gold-500:#c9a227;  /* accent */
-      --sand-100:#f3f2ee;  /* background */
-      --sand-200:#e8e6e0;  /* subtle lines */
-      --ink-900:#0e141b;   /* text */
-      --ink-600:#3b4651;   /* secondary text */
-      --ink-300:#a1aab3;   /* placeholders */
-      --white:#ffffff;
-      --danger:#b3261e;     
-      --success:#0f7b3a;
-      --focus:#2563eb;
-      --radius-xl:18px;
-      --radius-lg:14px;
-      --radius-md:10px;
-      --shadow-1: 0 8px 28px rgba(0,0,0,.08);
-      --shadow-2: 0 10px 40px rgba(0,0,0,.12);
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Noto Kufi Arabic",Tahoma,Arial,sans-serif;background:var(--sand-100);color:var(--ink-900)}
-    a{color:var(--green-700);text-decoration:none}
-    a:hover{color:var(--green-600)}
-    .container{max-width:1200px;margin-inline:auto;padding:24px}
-    header{position:sticky;top:0;background:var(--white);border-bottom:1px solid var(--sand-200);z-index:50}
-    .nav{display:flex;align-items:center;gap:16px;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800}
-    .brand svg{width:32px;height:32px}
-    .nav-links{display:flex;gap:12px;flex-wrap:wrap}
-    .nav-links a{padding:10px 12px;border-radius:10px}
-    .nav-links a:hover{background:var(--sand-200)}
-    .actions{display:flex;gap:10px;align-items:center}
-    .btn{appearance:none;border:none;cursor:pointer;border-radius:12px;padding:12px 16px;background:var(--green-700);color:var(--white);font-weight:700;box-shadow:var(--shadow-1)}
-    .btn:hover{background:var(--green-600)}
-    .btn-ghost{background:transparent;color:var(--green-700);border:1px solid var(--green-700)}
-    .btn-ghost:hover{background:var(--sand-200)}
-    .btn-gold{background:var(--gold-500);color:var(--ink-900)}
-
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;padding-block:24px}
-    .card{background:var(--white);border:1px solid var(--sand-200);border-radius:var(--radius-xl);padding:20px;box-shadow:var(--shadow-1)}
-    .badge{display:inline-flex;gap:8px;align-items:center;font-size:12px;background:var(--sand-200);border-radius:999px;padding:6px 10px;color:var(--ink-600)}
-
-    h1{font-size:28px;margin:0 0 8px}
-    h2{font-size:24px;margin:24px 0 10px}
-    h3{font-size:18px;margin:18px 0 8px}
-    p{color:var(--ink-600);line-height:1.7}
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-    .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-
-    .icon{width:22px;height:22px;flex:0 0 22px}
-    .kv{display:flex;gap:10px;align-items:flex-start}
-
-    /* Forms */
-    label{display:block;margin-bottom:6px;color:var(--ink-600);font-weight:600}
-    input,select,textarea{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--sand-200);background:var(--white)}
-    input:focus,select:focus,textarea:focus{outline:2px solid var(--focus);border-color:var(--focus)}
-    .form-row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .helper{font-size:12px;color:var(--ink-600)}
-    .error{color:var(--danger);font-size:12px;margin-top:6px}
-    .success{color:var(--success);font-size:12px;margin-top:6px}
-
-    /* Tabs */
-    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-    .tab{padding:10px 14px;border:1px solid var(--sand-200);border-radius:999px;background:var(--white);cursor:pointer}
-    .tab[aria-selected="true"]{background:var(--green-700);color:var(--white);border-color:var(--green-700)}
-
-    /* Pricing */
-    .price{font-size:28px;font-weight:900}
-    .feature{display:flex;gap:8px;align-items:flex-start}
-
-    /* Modals */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4);padding:16px;z-index:100}
-    .modal .sheet{max-width:760px;width:100%;background:var(--white);border-radius:var(--radius-xl);box-shadow:var(--shadow-2);padding:20px}
-    .modal.show{display:flex}
-
-    /* Footer */
-    footer{margin-top:40px;border-top:1px solid var(--sand-200);background:var(--white)}
-
-    /* Utilities */
-    .muted{color:var(--ink-300)}
-    .row{display:flex;gap:10px;align-items:center}
-    .space{height:8px}
-    .divider{height:1px;background:var(--sand-200);margin:12px 0}
-
-    /* Responsive */
-    @media (max-width: 980px){
-      .hero{grid-template-columns:1fr}
-      .form-row{grid-template-columns:1fr}
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>منصة حصيف — نموذج شامل أحادي الملف</title>
+<style>
+  :root{
+    --green:#0b5b34; --green-700:#0a4d2c; --gold:#c9a227; --sand:#f7f6f1; --ink:#111827; --muted:#6b7280;
+    --bd:#e5e7eb; --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui, -apple-system, Segoe UI, Roboto, "Noto Naskh Arabic UI", Arial; color:var(--ink); background:var(--sand)}
+  header{background:var(--green); color:#fff; border-bottom:4px solid var(--gold)}
+  header .wrap{max-width:1200px;margin:0 auto;padding:16px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between}
+  h1{margin:0;font-size:20px}
+  nav a{color:#fff;text-decoration:none;margin-inline:10px;font-weight:700}
+  .wrap{max-width:1200px;margin:0 auto;padding:20px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
+  .row{display:flex;flex-wrap:wrap;gap:8px}
+  input,select,textarea,button{padding:9px;border:1px solid var(--bd);border-radius:10px;font:inherit}
+  button{background:var(--green);color:#fff;border:none;cursor:pointer}
+  .btn-ghost{background:#fff;color:var(--green);border:1px solid var(--green)}
+  .toolbar{display:flex;gap:8px;align-items:center}
+  table{width:100%;border-collapse:collapse}
+  th,td{border-top:1px solid var(--bd);padding:8px;text-align:start}
+  .muted{color:var(--muted);font-size:12px}
+  .divider{height:1px;background:var(--bd);margin:12px 0}
+  .pill{display:inline-flex;align-items:center;gap:6px;background:#f0fdf4;color:#065f46;border:1px solid #bbf7d0;padding:4px 8px;border-radius:999px;font-size:12px}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tabs .tab{background:#fff;color:var(--ink);border:1px solid var(--bd)}
+  .tabs .tab[aria-selected="true"]{background:#ecfdf5;border-color:#10b981}
+  .kv{display:flex;gap:10px;align-items:flex-start}
+  .qrbox{border:1px dashed var(--ink);width:92px;height:92px;display:flex;align-items:center;justify-content:center;font-size:11px}
+  .sticky-tools{position:sticky;top:10px;z-index:10;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:10px}
+  .badge{background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;padding:2px 6px;border-radius:7px;font-size:12px}
+  .warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:8px}
+  @media (max-width:900px){ .grid-3{grid-template-columns:1fr} .grid-2{grid-template-columns:1fr} header .wrap{flex-direction:column; align-items:flex-start}}
+</style>
 </head>
 <body>
-  <header>
-    <div class="container nav">
-      <div class="brand" id="brand">
-        <!-- Monochrome governmental crest-like SVG -->
-        <svg viewBox="0 0 64 64" aria-hidden="true" role="img">
-          <path fill="var(--green-700)" d="M32 2c8 8 14 12 30 12-2 10-10 20-30 20S6 24 4 14C20 14 24 10 32 2z"/>
-          <path fill="var(--gold-500)" d="M12 50c6-6 10-8 20-8s14 2 20 8l-6 6c-4-4-8-6-14-6s-10 2-14 6l-6-6z"/>
-        </svg>
-        <span>منصة حصيف</span>
-      </div>
-      <nav class="nav-links" id="navLinks">
-        <a href="#home" data-i18n="nav.home">الرئيسية</a>
-        <a href="#about" data-i18n="nav.about">من نحن</a>
-        <a href="#value" data-i18n="nav.value">القيمة المضافة الحكومية</a>
-        <a href="#accounts" data-i18n="nav.accounts">الحسابات</a>
-        <a href="#pricing" data-i18n="nav.pricing">الباقات</a>
-        <a href="#sponsorship" data-i18n="nav.sponsorship">فئات الرعاية</a>
-        <a href="#support" data-i18n="nav.support">الدعم الفني</a>
-        <a href="#policies" data-i18n="nav.policies">السياسات والشروط</a>
-        <a href="#contact" data-i18n="nav.contact">اتصل بنا</a>
+<header>
+  <div class="wrap">
+    <div>
+      <h1>منصة حصيف — نموذج شامل أحادي الملف (Demo)</h1>
+      <div class="muted">حلول صائبة يُقترح فعلها — نسخة متصفح للتجربة والتعليم فقط</div>
+    </div>
+    <div class="toolbar">
+      <select id="roleSel" title="الدور">
+        <option value="government">القطاع الحكومي</option>
+        <option value="private">القطاع الخاص</option>
+        <option value="nonprofit">القطاع غير الربحي</option>
+        <option value="university">الجامعات</option>
+        <option value="donor">المانح</option>
+        <option value="individual">الأفراد</option>
+        <option value="region">إمارة المنطقة</option>
+        <option value="admin">إدارة المنصة</option>
+      </select>
+      <button id="langBtn" class="btn-ghost">English</button>
+      <button id="exportBtn" class="btn-ghost">تصدير JSON</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none">
+      <button id="importBtn" class="btn-ghost">استيراد JSON</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid-3">
+    <aside class="sticky-tools">
+      <h3>المحتوى</h3>
+      <nav id="toc" class="row" style="gap:6px">
+        <a class="pill" href="#dash">لوحة المؤشرات</a>
+        <a class="pill" href="#challenges">التحديات</a>
+        <a class="pill" href="#solutions">الحلول</a>
+        <a class="pill" href="#projects">المشاريع</a>
+        <a class="pill" href="#finance">التمويل/الرعايات/المحفظة</a>
+        <a class="pill" href="#events">الفعاليات والمتحدثون</a>
+        <a class="pill" href="#engage">التطوع/التدريب/الاستشارات</a>
+        <a class="pill" href="#agreements">الاتفاقيات والشهادات</a>
+        <a class="pill" href="#media">الإعلام والتوثيق</a>
+        <a class="pill" href="#incubators">الحاضنات والمسرعات</a>
+        <a class="pill" href="#audit">التدقيق والسجلات</a>
+        <a class="pill" href="#about">نطاق النموذج</a>
       </nav>
-      <div class="actions">
-        <button class="btn-ghost" id="langToggle" aria-label="Language">EN</button>
-        <button class="btn" onclick="scrollToId('register')" data-i18n="cta.start">ابدأ الآن</button>
+      <div class="divider"></div>
+      <div class="warn">
+        <strong>تنبيه:</strong> هذا نموذج متصفح فقط (بدون خادم/توقيع/تكاملات). كل البيانات محفوظة محليًا.
       </div>
-    </div>
-  </header>
+    </aside>
 
-  <main class="container" id="home">
-    <section class="hero">
-      <div class="card">
-        <span class="badge" id="badge"><svg class="icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5 20l2-7L1.9 9h7z"/></svg><span data-i18n="hero.badge">تكامل تنموي يقيس الأثر</span></span>
-        <h1 data-i18n="hero.title">حصيف — حلول صائبة يُقترح فعلها</h1>
-        <p data-i18n="hero.subtitle">منصة وطنية تربط القطاع الحكومي والخاص وغير الربحي والجامعات والأفراد، وتُمكّن المسؤولية الاجتماعية، وتُسهل الاستثمار والتبرع والاشتراك في المشاريع المتوافقة مع مستهدفات رؤية 2030.</p>
-        <div class="grid-3">
-          <div class="kv">
-            <svg class="icon" viewBox="0 0 24 24"><path fill="var(--green-700)" d="M12 7l9 5-9 5-9-5 9-5m0-5l-12 7 12 7 12-7-12-7m0 12l-5-2.9V18l5 3 5-3v-3.9L12 14z"/></svg>
-            <div>
-              <strong data-i18n="hero.kpi1.title">شفافية مؤشرات الأداء</strong>
-              <p data-i18n="hero.kpi1.desc">لوحات بيانات لقياس الأثر وربط المشاريع بأهداف الرؤية وبرامجها.</p>
-            </div>
-          </div>
-          <div class="kv">
-            <svg class="icon" viewBox="0 0 24 24"><path fill="var(--green-700)" d="M12 1l3 6 6 .9-4.5 4.2 1 6L12 15l-5.5 3.1 1-6L3 7.9 9 7z"/></svg>
-            <div>
-              <strong data-i18n="hero.kpi2.title">حوكمة واتفاقيات رقمية</strong>
-              <p data-i18n="hero.kpi2.desc">نماذج موافقة إلكترونية لكل حساب مع سجل تدقيق.</p>
-            </div>
-          </div>
-          <div class="kv">
-            <svg class="icon" viewBox="0 0 24 24"><path fill="var(--green-700)" d="M3 4h18v2H3V4m0 4h18v2H3V8m0 4h12v2H3v-2m0 4h8v2H3v-2z"/></svg>
-            <div>
-              <strong data-i18n="hero.kpi3.title">تكامل رقمي ذكي</strong>
-              <p data-i18n="hero.kpi3.desc">جاهزية ربط مع الجامعات والقطاعات عبر نماذج البيانات الموحدة.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <h3 data-i18n="hero.form.title">تجربة سريعة</h3>
-        <p class="helper" data-i18n="hero.form.helper">أدخل بيانات تجريبية وشاهد حفظها محليًا عبر LocalStorage.</p>
-        <form id="quickForm">
-          <div class="form-row">
-            <div>
-              <label for="qName" data-i18n="form.name">الاسم</label>
-              <input id="qName" name="name" required placeholder="مثال: محمد" />
-            </div>
-            <div>
-              <label for="qEmail" data-i18n="form.email">البريد الإلكتروني</label>
-              <input id="qEmail" name="email" type="email" required placeholder="you@example.com" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div>
-              <label for="qAccount" data-i18n="form.account">نوع الحساب</label>
-              <select id="qAccount" name="account">
-                <option value="individual" data-i18n="acc.individual">أفراد</option>
-                <option value="private" data-i18n="acc.private">القطاع الخاص</option>
-                <option value="nonprofit" data-i18n="acc.nonprofit">القطاع غير الربحي</option>
-                <option value="university" data-i18n="acc.university">الجامعات</option>
-                <option value="donor" data-i18n="acc.donor">المانح</option>
-                <option value="government" data-i18n="acc.government">القطاع الحكومي</option>
-              </select>
-            </div>
-            <div>
-              <label for="qRegion" data-i18n="form.region">المنطقة</label>
-              <input id="qRegion" name="region" placeholder="مثال: حائل" />
-            </div>
-          </div>
-          <div class="space"></div>
-          <div class="row">
-            <button type="submit" class="btn" data-i18n="form.save">حفظ محلي</button>
-            <button type="button" class="btn-ghost" id="resetQuick" data-i18n="form.reset">إعادة تعيين</button>
-          </div>
-          <div id="quickMsg" class="success" style="display:none"></div>
-        </form>
-      </div>
-    </section>
-
-    <section id="about" class="card">
-      <h2 data-i18n="about.title">عن حصيف</h2>
-      <p data-i18n="about.desc">منصة حصيف هي أحد حلول مبادرة تلبية، تمكّن التكامل بين القطاعات عبر نماذج تشغيلية موحدة، وتتيح فرص التمويل والاستثمار والتبرع والاشتراك، وتربط المشاريع بأهداف رؤية 2030، وتقدم تقارير قياس أثر شفافة.</p>
-    </section>
-
-    <section id="value" class="card">
-      <h2 data-i18n="value.title">القيمة المضافة للحكومة</h2>
-      <div class="grid-auto">
-        <div class="card">
-          <h3 data-i18n="value.k1.t">تعزيز فاعلية الحكومة</h3>
-          <ul>
-            <li data-i18n="value.k1.i1">بوابة احتياجات الجهات وربطها بالحلول والممولين.</li>
-            <li data-i18n="value.k1.i2">حوكمة الموافقات والاتفاقيات الرقمية وسجل تدقيق.</li>
-            <li data-i18n="value.k1.i3">تقارير فورية عن المبادرات والإنفاق والأثر.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3 data-i18n="value.k2.t">تمكين المسؤولية الاجتماعية</h3>
-          <ul>
-            <li data-i18n="value.k2.i1">فرص منح ورعايات مرتبطة بأولويات المناطق.</li>
-            <li data-i18n="value.k2.i2">إبراز الشركات الأكثر دعماً ومؤشرات المشاركة.</li>
-            <li data-i18n="value.k2.i3">واجهات تقارير متقدمة للجهات المشرفة.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3 data-i18n="value.k3.t">تنمية وتنويع الاقتصاد</h3>
-          <ul>
-            <li data-i18n="value.k3.i1">جذب الاستثمار والاشتراكات عبر محفظة رقمية موحدة.</li>
-            <li data-i18n="value.k3.i2">تسويق الفرص للمستثمرين محلياً وإقليمياً.</li>
-            <li data-i18n="value.k3.i3">زيادة كفاءة الإنفاق برفع جودة المشاريع.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3 data-i18n="value.k4.t">تمكين حياة عامرة وصحية</h3>
-          <ul>
-            <li data-i18n="value.k4.i1">ربط مشاريع الصحة والتعليم والهوية الوطنية بالممولين.</li>
-            <li data-i18n="value.k4.i2">لوحات آثار اجتماعية وصحية قابلة للقياس.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="accounts" class="card">
-      <h2 data-i18n="accounts.title">الحسابات وخدماتها</h2>
-      <div class="tabs" role="tablist" aria-label="Accounts">
-        <button class="tab" role="tab" aria-selected="true" data-acc="individual" data-i18n="acc.individual">أفراد</button>
-        <button class="tab" role="tab" data-acc="private" data-i18n="acc.private">القطاع الخاص</button>
-        <button class="tab" role="tab" data-acc="nonprofit" data-i18n="acc.nonprofit">غير الربحي</button>
-        <button class="tab" role="tab" data-acc="university" data-i18n="acc.university">الجامعات</button>
-        <button class="tab" role="tab" data-acc="donor" data-i18n="acc.donor">المانح</button>
-        <button class="tab" role="tab" data-acc="government" data-i18n="acc.government">الحكومي</button>
-      </div>
-      <div id="accContent" class="grid-auto"></div>
-    </section>
-
-    <section id="register" class="card">
-      <h2 data-i18n="register.title">تسجيل حساب جديد</h2>
-      <p class="helper" data-i18n="register.helper">لن يتم إرسال أي بيانات للخادم — يتم الحفظ محليًا لغرض الاختبار فقط.</p>
-      <form id="regForm">
-        <div class="form-row">
-          <div>
-            <label for="rName" data-i18n="form.name">الاسم</label>
-            <input id="rName" name="name" required />
-          </div>
-          <div>
-            <label for="rEmail" data-i18n="form.email">البريد الإلكتروني</label>
-            <input id="rEmail" name="email" type="email" required />
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label for="rMobile" data-i18n="form.mobile">الجوال</label>
-            <input id="rMobile" name="mobile" placeholder="05xxxxxxxx" pattern="^[0-9]{9,15}$" />
-            <div class="helper" data-i18n="form.mobileHelp">أرقام فقط.</div>
-          </div>
-          <div>
-            <label for="rAccount" data-i18n="form.account">نوع الحساب</label>
-            <select id="rAccount" name="account" required>
-              <option value="" disabled selected data-i18n="form.choose">اختر...</option>
-              <option value="individual" data-i18n="acc.individual">أفراد</option>
-              <option value="private" data-i18n="acc.private">القطاع الخاص</option>
-              <option value="nonprofit" data-i18n="acc.nonprofit">غير الربحي</option>
-              <option value="university" data-i18n="acc.university">الجامعات</option>
-              <option value="donor" data-i18n="acc.donor">المانح</option>
-              <option value="government" data-i18n="acc.government">الحكومي</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label for="rOrg" data-i18n="form.org">المنشأة/الجهة (إن وجدت)</label>
-          <input id="rOrg" name="org" placeholder="الاسم القانوني" />
-        </div>
-        <div class="divider"></div>
-        <div class="row">
-          <input id="agreeChk" type="checkbox" required />
-          <label for="agreeChk" class="helper"><span data-i18n="register.agree1">أوافق على</span> <a href="#" id="openAgreement" data-i18n="register.agree2">الاتفاقية الرقمية</a></label>
-        </div>
-        <div class="space"></div>
-        <div class="row">
-          <button type="submit" class="btn" data-i18n="register.submit">إنشاء الحساب التجريبي</button>
-          <button type="button" class="btn-ghost" id="openLogin" data-i18n="login.open">لدي حساب</button>
-        </div>
-        <div id="regMsg" class="success" style="display:none"></div>
-      </form>
-    </section>
-
-    <section id="pricing" class="card">
-      <h2 data-i18n="pricing.title">باقات الاشتراك</h2>
-      <div class="grid-3">
-        <div class="card">
-          <h3 data-i18n="pricing.basic.t">أساسية</h3>
-          <div class="price">49 SAR</div>
-          <ul>
-            <li data-i18n="pricing.basic.f1">ملف حساب أساسي</li>
-            <li data-i18n="pricing.basic.f2">إدراج مشروعين</li>
-            <li data-i18n="pricing.basic.f3">تقارير مبسطة</li>
-          </ul>
-          <button class="btn" data-plan="basic" onclick="openCheckout(event)" data-i18n="pricing.cta">اشترك</button>
-        </div>
-        <div class="card" style="border-color:var(--gold-500)">
-          <h3 data-i18n="pricing.pro.t">احترافية</h3>
-          <div class="price">199 SAR</div>
-          <ul>
-            <li data-i18n="pricing.pro.f1">كل مزايا الأساسية</li>
-            <li data-i18n="pricing.pro.f2">إدراج 10 مشاريع</li>
-            <li data-i18n="pricing.pro.f3">لوحات أثر متقدمة</li>
-          </ul>
-          <button class="btn btn-gold" data-plan="pro" onclick="openCheckout(event)" data-i18n="pricing.cta">اشترك</button>
-        </div>
-        <div class="card">
-          <h3 data-i18n="pricing.gov.t">حكومية</h3>
-          <div class="price">—</div>
-          <ul>
-            <li data-i18n="pricing.gov.f1">واجهات تحكم إشرافية</li>
-            <li data-i18n="pricing.gov.f2">تقارير المناطق والجهات</li>
-            <li data-i18n="pricing.gov.f3">تكامل مع أنظمة الجهة</li>
-          </ul>
-          <button class="btn" data-plan="gov" onclick="openCheckout(event)" data-i18n="pricing.contact">تواصل معنا</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="sponsorship" class="card">
-      <h2 data-i18n="sponsor.title">فئات رعاية المنصة</h2>
-      <div class="grid-3">
-        <div class="card">
-          <h3 data-i18n="sponsor.bronze.t">برونزية</h3>
-          <ul>
-            <li data-i18n="sponsor.bronze.f1">ذكر شعار الراعي</li>
-            <li data-i18n="sponsor.bronze.f2">تقارير ربع سنوية</li>
-          </ul>
-          <button class="btn" data-tier="bronze" onclick="openSponsorship(event)" data-i18n="sponsor.cta">طلب رعاية</button>
-        </div>
-        <div class="card">
-          <h3 data-i18n="sponsor.silver.t">فضية</h3>
-          <ul>
-            <li data-i18n="sponsor.silver.f1">شعار وحضور في الفعاليات</li>
-            <li data-i18n="sponsor.silver.f2">تقارير شهرية</li>
-          </ul>
-          <button class="btn" data-tier="silver" onclick="openSponsorship(event)" data-i18n="sponsor.cta">طلب رعاية</button>
-        </div>
-        <div class="card" style="border-color:var(--gold-500)">
-          <h3 data-i18n="sponsor.gold.t">ذهبية</h3>
-          <ul>
-            <li data-i18n="sponsor.gold.f1">شريك استراتيجي للمنصة</li>
-            <li data-i18n="sponsor.gold.f2">تقارير أثر مخصصة</li>
-          </ul>
-          <button class="btn btn-gold" data-tier="gold" onclick="openSponsorship(event)" data-i18n="sponsor.cta">طلب رعاية</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="support" class="card">
-      <h2 data-i18n="support.title">الدعم الفني</h2>
-      <form id="supportForm">
-        <div class="form-row">
-          <div>
-            <label for="sEmail" data-i18n="form.email">البريد الإلكتروني</label>
-            <input id="sEmail" type="email" required />
-          </div>
-          <div>
-            <label for="sType" data-i18n="support.type">نوع الطلب</label>
-            <select id="sType">
-              <option data-i18n="support.t1" value="tech">دعم تقني</option>
-              <option data-i18n="support.t2" value="billing">فواتير</option>
-              <option data-i18n="support.t3" value="other">أخرى</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <label for="sMsg" data-i18n="support.msg">وصف الطلب</label>
-          <textarea id="sMsg" rows="4" required></textarea>
-        </div>
-        <div class="space"></div>
-        <button class="btn" type="submit" data-i18n="support.submit">إرسال</button>
-        <div id="supportMsg" class="success" style="display:none"></div>
-      </form>
-    </section>
-
-    <section id="policies" class="card">
-      <h2 data-i18n="policies.title">السياسات والشروط</h2>
-      <div class="grid-2">
-        <div>
-          <h3 data-i18n="policies.terms">شروط الاستخدام</h3>
-          <p data-i18n="policies.termsDesc">باستخدامك للمنصة فأنت توافق على الشروط والأحكام وسياسات الخصوصية، وتوافق على الالتزام بالأنظمة المعمول بها داخل المملكة.</p>
-        </div>
-        <div>
-          <h3 data-i18n="policies.privacy">الخصوصية</h3>
-          <p data-i18n="policies.privacyDesc">لا يتم جمع بياناتك في هذا النموذج التجريبي. النسخة النهائية سترتبط بسياسات خصوصية متوافقة مع اللوائح.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="contact" class="card">
-      <h2 data-i18n="contact.title">اتصل بنا</h2>
-      <div class="grid-2">
-        <div>
-          <form id="contactForm">
-            <div class="form-row">
-              <div>
-                <label for="cName" data-i18n="form.name">الاسم</label>
-                <input id="cName" required />
-              </div>
-              <div>
-                <label for="cEmail" data-i18n="form.email">البريد الإلكتروني</label>
-                <input id="cEmail" type="email" required />
-              </div>
-            </div>
-            <div>
-              <label for="cMsg" data-i18n="contact.msg">رسالتك</label>
-              <textarea id="cMsg" rows="4" required></textarea>
-            </div>
-            <div class="space"></div>
-            <button class="btn" type="submit" data-i18n="contact.submit">إرسال الرسالة</button>
-            <div id="contactMsg" class="success" style="display:none"></div>
-          </form>
-        </div>
-        <div>
-          <div class="card">
-            <h3 data-i18n="contact.info">معلومات التواصل</h3>
-            <p><strong data-i18n="contact.email">البريد:</strong> support@hasif.example</p>
-            <p><strong data-i18n="contact.phone">الهاتف:</strong> +966 5 0000 0000</p>
-            <p class="muted" data-i18n="contact.note">هذه بيانات لأغراض العرض فقط.</p>
-          </div>
-          <div class="card" style="margin-top:12px">
-            <h3 data-i18n="tools.title">لوحة الاختبار</h3>
-            <div class="row">
-              <button class="btn-ghost" id="dumpStorage" data-i18n="tools.dump">عرض البيانات المخزنة</button>
-              <button class="btn-ghost" id="clearStorage" data-i18n="tools.clear">مسح جميع البيانات</button>
-            </div>
-            <pre id="storageOut" style="max-height:200px;overflow:auto"></pre>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container row" style="justify-content:space-between;flex-wrap:wrap">
-      <div>© <span id="year"></span> <span data-i18n="footer.rights">جميع الحقوق محفوظة — منصة حصيف</span></div>
+    <section class="card" id="dash" style="grid-column:span 2">
+      <h2>لوحة مؤشرات سريعة</h2>
+      <div id="kpis" class="grid-auto"></div>
+      <div class="divider"></div>
       <div class="row">
-        <a href="#policies" class="muted" data-i18n="footer.terms">الشروط</a>
-        <span class="muted">•</span>
-        <a href="#policies" class="muted" data-i18n="footer.privacy">الخصوصية</a>
+        <button class="btn-ghost" id="seedBtn">إدخال عينات</button>
+        <button class="btn-ghost" id="resetBtn">مسح جميع البيانات</button>
       </div>
-    </div>
-  </footer>
-
-  <!-- Agreement Modal -->
-  <div class="modal" id="agreementModal" role="dialog" aria-modal="true" aria-labelledby="agreementTitle">
-    <div class="sheet">
-      <div class="row" style="justify-content:space-between">
-        <h3 id="agreementTitle" data-i18n="agreement.title">الاتفاقية الرقمية</h3>
-        <button class="btn-ghost" onclick="closeAgreement()">✕</button>
-      </div>
-      <p class="helper" data-i18n="agreement.desc">هذه نسخة توضيحية للاختبار. المحتوى يختلف حسب نوع الحساب.</p>
-      <div id="agreementBody" style="max-height:50vh;overflow:auto"></div>
-      <div class="space"></div>
-      <button class="btn" onclick="closeAgreement()" data-i18n="agreement.close">إغلاق</button>
-    </div>
+    </section>
   </div>
 
-  <!-- Checkout Modal -->
-  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
-    <div class="sheet">
-      <div class="row" style="justify-content:space-between">
-        <h3 id="checkoutTitle" data-i18n="checkout.title">تأكيد الاشتراك</h3>
-        <button class="btn-ghost" onclick="closeCheckout()">✕</button>
+  <!-- تحديات -->
+  <section id="challenges" class="card">
+    <h2>التحديات (Government → Society)</h2>
+    <form id="chForm" class="row">
+      <input name="ownerOrgId" placeholder="Org ID (مثال org-gov-001)" required>
+      <input name="title" placeholder="عنوان التحدي" required>
+      <input name="domain" placeholder="المجال (تقنية/صحة/ثقافة)" required>
+      <button>إضافة</button>
+    </form>
+    <table><thead><tr><th>العنوان</th><th>المجال</th><th>الجهة</th><th>الحالة</th><th>إغلاق</th></tr></thead>
+      <tbody id="chTbody"></tbody></table>
+  </section>
+
+  <!-- حلول -->
+  <section id="solutions" class="card">
+    <h2>الحلول (Private/Nonprofit/Universities/Individuals)</h2>
+    <form id="soForm" class="row">
+      <input name="challengeId" placeholder="Challenge ID (ch-001)" required>
+      <input name="proposerOrgId" placeholder="Org ID (خاص/جامعة/غير ربحي/أفراد)" required>
+      <input name="summary" placeholder="ملخص الحل" required>
+      <button>تقديم</button>
+    </form>
+    <table><thead><tr><th>الحل</th><th>للتحدي</th><th>المُقدّم</th><th>تقييم</th></tr></thead>
+      <tbody id="soTbody"></tbody></table>
+  </section>
+
+  <!-- مشاريع -->
+  <section id="projects" class="card">
+    <h2>المشاريع (Solution → Project)</h2>
+    <form id="prForm" class="row">
+      <input name="ownerOrgId" placeholder="Org ID" required>
+      <input name="visionGoal" placeholder="هدف الرؤية" required>
+      <input name="budget" type="number" placeholder="الميزانية" required>
+      <input name="sourceSolution" placeholder="Solution ID (اختياري)">
+      <button>إضافة</button>
+    </form>
+    <table><thead><tr><th>المعرف</th><th>الجهة</th><th>الهدف</th><th>الميزانية</th><th>الحالة</th><th>تحديث الحالة</th></tr></thead>
+      <tbody id="prTbody"></tbody></table>
+  </section>
+
+  <!-- تمويل / رعاية / محفظة -->
+  <section id="finance" class="card">
+    <h2>التمويل والرعايات والمحفظة</h2>
+    <div class="grid-2">
+      <div>
+        <h3>المحفظة</h3>
+        <div class="row"><input id="walletOrg" placeholder="Org ID"><button id="walletLoad" class="btn-ghost">عرض الرصيد</button></div>
+        <div id="walletView" class="muted">—</div>
+        <div class="row" style="margin-top:8px">
+          <select id="txType"><option value="credit">إيداع</option><option value="debit">سحب</option></select>
+          <input id="txAmount" type="number" placeholder="المبلغ">
+          <input id="txRef" placeholder="المرجع">
+          <button id="txDo">تنفيذ</button>
+        </div>
       </div>
-      <p id="checkoutPlan"></p>
-      <form id="checkoutForm">
-        <div class="form-row">
-          <div>
-            <label data-i18n="checkout.card">رقم البطاقة</label>
-            <input required placeholder="0000 0000 0000 0000" />
-          </div>
-          <div>
-            <label data-i18n="checkout.exp">الانتهاء</label>
-            <input required placeholder="MM/YY" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label>CVV</label>
-            <input required placeholder="***" />
-          </div>
-          <div>
-            <label data-i18n="checkout.name">اسم حامل البطاقة</label>
-            <input required />
-          </div>
-        </div>
-        <div class="space"></div>
-        <button class="btn" type="submit" data-i18n="checkout.pay">دفع تجريبي</button>
-        <div id="checkoutMsg" class="success" style="display:none"></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Sponsorship Modal -->
-  <div class="modal" id="sponsorModal" role="dialog" aria-modal="true" aria-labelledby="sponsorTitle">
-    <div class="sheet">
-      <div class="row" style="justify-content:space-between">
-        <h3 id="sponsorTitle" data-i18n="sponsor.modalTitle">طلب رعاية</h3>
-        <button class="btn-ghost" onclick="closeSponsor()">✕</button>
+      <div>
+        <h3>الرعاية</h3>
+        <form id="spForm" class="row">
+          <select id="spTarget">
+            <option value="project">Project</option>
+            <option value="event">Event</option>
+          </select>
+          <input name="targetId" placeholder="معرّف الهدف (pr-*/ev-*)" required>
+          <input name="donorOrgId" placeholder="Org Donor (org-donor-001)" required>
+          <input name="amount" type="number" placeholder="المبلغ" required>
+          <button>اعتماد رعاية</button>
+        </form>
+        <table><thead><tr><th>#</th><th>الهدف</th><th>المانح</th><th>المبلغ</th><th>الحالة</th></tr></thead>
+          <tbody id="spTbody"></tbody></table>
       </div>
-      <p id="sponsorTier"></p>
-      <form id="sponsorForm">
-        <div class="form-row">
-          <div>
-            <label data-i18n="form.org">الجهة</label>
-            <input required />
-          </div>
-          <div>
-            <label data-i18n="form.email">البريد الإلكتروني</label>
-            <input type="email" required />
-          </div>
-        </div>
-        <div>
-          <label data-i18n="sponsor.objective">هدف الرعاية</label>
-          <textarea rows="3" required></textarea>
-        </div>
-        <div class="space"></div>
-        <button class="btn" type="submit" data-i18n="sponsor.send">إرسال الطلب</button>
-        <div id="sponsorMsg" class="success" style="display:none"></div>
-      </form>
     </div>
-  </div>
+  </section>
 
-  <script>
-    // === Bilingual strings (AR/EN) ===
-    const i18n = {
-      ar:{
-        'nav.home':'الرئيسية','nav.about':'من نحن','nav.value':'القيمة المضافة الحكومية','nav.accounts':'الحسابات','nav.pricing':'الباقات','nav.sponsorship':'فئات الرعاية','nav.support':'الدعم الفني','nav.policies':'السياسات والشروط','nav.contact':'اتصل بنا',
-        'cta.start':'ابدأ الآن',
-        'hero.badge':'تكامل تنموي يقيس الأثر','hero.title':'حصيف — حلول صائبة يُقترح فعلها','hero.subtitle':'منصة وطنية تربط القطاع الحكومي والخاص وغير الربحي والجامعات والأفراد، وتُمكّن المسؤولية الاجتماعية، وتُسهل الاستثمار والتبرع والاشتراك في المشاريع المتوافقة مع مستهدفات رؤية 2030.',
-        'hero.kpi1.title':'شفافية مؤشرات الأداء','hero.kpi1.desc':'لوحات بيانات لقياس الأثر وربط المشاريع بأهداف الرؤية وبرامجها.',
-        'hero.kpi2.title':'حوكمة واتفاقيات رقمية','hero.kpi2.desc':'نماذج موافقة إلكترونية لكل حساب مع سجل تدقيق.',
-        'hero.kpi3.title':'تكامل رقمي ذكي','hero.kpi3.desc':'جاهزية ربط مع الجامعات والقطاعات عبر نماذج البيانات الموحدة.',
-        'hero.form.title':'تجربة سريعة','hero.form.helper':'أدخل بيانات تجريبية وشاهد حفظها محليًا عبر LocalStorage.',
-        'form.name':'الاسم','form.email':'البريد الإلكتروني','form.account':'نوع الحساب','form.region':'المنطقة','form.save':'حفظ محلي','form.reset':'إعادة تعيين','form.mobile':'الجوال','form.mobileHelp':'أرقام فقط.','form.choose':'اختر...','form.org':'المنشأة/الجهة (إن وجدت)',
-        'acc.individual':'أفراد','acc.private':'القطاع الخاص','acc.nonprofit':'القطاع غير الربحي','acc.university':'الجامعات','acc.donor':'المانح','acc.government':'القطاع الحكومي',
-        'about.title':'عن حصيف','about.desc':'منصة حصيف هي أحد حلول مبادرة تلبية، تمكّن التكامل بين القطاعات عبر نماذج تشغيلية موحدة، وتتيح فرص التمويل والاستثمار والتبرع والاشتراك، وتربط المشاريع بأهداف رؤية 2030، وتقدم تقارير قياس أثر شفافة.',
-        'value.title':'القيمة المضافة للحكومة',
-        'value.k1.t':'تعزيز فاعلية الحكومة','value.k1.i1':'بوابة احتياجات الجهات وربطها بالحلول والممولين.','value.k1.i2':'حوكمة الموافقات والاتفاقيات الرقمية وسجل تدقيق.','value.k1.i3':'تقارير فورية عن المبادرات والإنفاق والأثر.',
-        'value.k2.t':'تمكين المسؤولية الاجتماعية','value.k2.i1':'فرص منح ورعايات مرتبطة بأولويات المناطق.','value.k2.i2':'إبراز الشركات الأكثر دعماً ومؤشرات المشاركة.','value.k2.i3':'واجهات تقارير متقدمة للجهات المشرفة.',
-        'value.k3.t':'تنمية وتنويع الاقتصاد','value.k3.i1':'جذب الاستثمار والاشتراكات عبر محفظة رقمية موحدة.','value.k3.i2':'تسويق الفرص للمستثمرين محلياً وإقليمياً.','value.k3.i3':'زيادة كفاءة الإنفاق برفع جودة المشاريع.',
-        'value.k4.t':'تمكين حياة عامرة وصحية','value.k4.i1':'ربط مشاريع الصحة والتعليم والهوية الوطنية بالممولين.','value.k4.i2':'لوحات آثار اجتماعية وصحية قابلة للقياس.',
-        'accounts.title':'الحسابات وخدماتها',
-        'register.title':'تسجيل حساب جديد','register.helper':'لن يتم إرسال أي بيانات للخادم — يتم الحفظ محليًا لغرض الاختبار فقط.','register.agree1':'أوافق على','register.agree2':'الاتفاقية الرقمية','register.submit':'إنشاء الحساب التجريبي',
-        'login.open':'لدي حساب',
-        'pricing.title':'باقات الاشتراك','pricing.basic.t':'أساسية','pricing.basic.f1':'ملف حساب أساسي','pricing.basic.f2':'إدراج مشروعين','pricing.basic.f3':'تقارير مبسطة','pricing.pro.t':'احترافية','pricing.pro.f1':'كل مزايا الأساسية','pricing.pro.f2':'إدراج 10 مشاريع','pricing.pro.f3':'لوحات أثر متقدمة','pricing.gov.t':'حكومية','pricing.gov.f1':'واجهات تحكم إشرافية','pricing.gov.f2':'تقارير المناطق والجهات','pricing.gov.f3':'تكامل مع أنظمة الجهة','pricing.cta':'اشترك','pricing.contact':'تواصل معنا',
-        'sponsor.title':'فئات رعاية المنصة','sponsor.cta':'طلب رعاية','sponsor.bronze.t':'برونزية','sponsor.bronze.f1':'ذكر شعار الراعي','sponsor.bronze.f2':'تقارير ربع سنوية','sponsor.silver.t':'فضية','sponsor.silver.f1':'شعار وحضور في الفعاليات','sponsor.silver.f2':'تقارير شهرية','sponsor.gold.t':'ذهبية','sponsor.gold.f1':'شريك استراتيجي للمنصة','sponsor.gold.f2':'تقارير أثر مخصصة','sponsor.modalTitle':'طلب رعاية','sponsor.objective':'هدف الرعاية','sponsor.send':'إرسال الطلب',
-        'support.title':'الدعم الفني','support.type':'نوع الطلب','support.t1':'دعم تقني','support.t2':'فواتير','support.t3':'أخرى','support.msg':'وصف الطلب','support.submit':'إرسال',
-        'policies.title':'السياسات والشروط','policies.terms':'شروط الاستخدام','policies.termsDesc':'باستخدامك للمنصة فأنت توافق على الشروط والأحكام وسياسات الخصوصية، وتوافق على الالتزام بالأنظمة المعمول بها داخل المملكة.','policies.privacy':'الخصوصية','policies.privacyDesc':'لا يتم جمع بياناتك في هذا النموذج التجريبي. النسخة النهائية سترتبط بسياسات خصوصية متوافقة مع اللوائح.',
-        'contact.title':'اتصل بنا','contact.msg':'رسالتك','contact.submit':'إرسال الرسالة','contact.info':'معلومات التواصل','contact.email':'البريد:','contact.phone':'الهاتف:','contact.note':'هذه بيانات لأغراض العرض فقط.',
-        'tools.title':'لوحة الاختبار','tools.dump':'عرض البيانات المخزنة','tools.clear':'مسح جميع البيانات',
-        'footer.rights':'جميع الحقوق محفوظة — منصة حصيف','footer.terms':'الشروط','footer.privacy':'الخصوصية',
-        'agreement.title':'الاتفاقية الرقمية','agreement.desc':'هذه نسخة توضيحية للاختبار. المحتوى يختلف حسب نوع الحساب.','agreement.close':'إغلاق',
-        'checkout.title':'تأكيد الاشتراك','checkout.card':'رقم البطاقة','checkout.exp':'الانتهاء','checkout.name':'اسم حامل البطاقة','checkout.pay':'دفع تجريبي'
-      },
-      en:{
-        'nav.home':'Home','nav.about':'About','nav.value':'Government Value','nav.accounts':'Accounts','nav.pricing':'Plans','nav.sponsorship':'Sponsorship','nav.support':'Support','nav.policies':'Policies','nav.contact':'Contact',
-        'cta.start':'Get Started',
-        'hero.badge':'Impact-tracking integration','hero.title':'Hasif — Right Solutions to Act On','hero.subtitle':'A national platform connecting government, private, nonprofit, universities, and individuals. It enables CSR, and streamlines investing, donating, and subscribing to projects aligned with Vision 2030.',
-        'hero.kpi1.title':'Performance Transparency','hero.kpi1.desc':'Impact dashboards linking projects to Vision programs.',
-        'hero.kpi2.title':'Governance & e-Agreements','hero.kpi2.desc':'Digital consent per account with audit trail.',
-        'hero.kpi3.title':'Smart Digital Integration','hero.kpi3.desc':'Ready for interop via unified data models.',
-        'hero.form.title':'Quick Try','hero.form.helper':'Enter sample data; it saves locally via LocalStorage.',
-        'form.name':'Name','form.email':'Email','form.account':'Account Type','form.region':'Region','form.save':'Save Locally','form.reset':'Reset','form.mobile':'Mobile','form.mobileHelp':'Digits only.','form.choose':'Select...','form.org':'Organization (optional)',
-        'acc.individual':'Individuals','acc.private':'Private Sector','acc.nonprofit':'Nonprofit','acc.university':'Universities','acc.donor':'Donor','acc.government':'Government',
-        'about.title':'About Hasif','about.desc':'Hasif is a solution by the Talabiya Initiative enabling cross-sector integration via unified operating models. It offers funding, investment, donations, and subscriptions, linking projects to Vision 2030 goals with transparent impact reporting.',
-        'value.title':'Government Value',
-        'value.k1.t':'Government Effectiveness','value.k1.i1':'Needs gateway linking to solutions & funders.','value.k1.i2':'Governance of approvals and e-agreements with auditing.','value.k1.i3':'Real-time reports on initiatives, spending, and impact.',
-        'value.k2.t':'CSR Enablement','value.k2.i1':'Grant/sponsorship opportunities aligned to regional priorities.','value.k2.i2':'Showcase top-contributing companies & participation KPIs.','value.k2.i3':'Advanced supervisory reporting UIs.',
-        'value.k3.t':'Economic Growth & Diversification','value.k3.i1':'Attract investment/subscriptions via unified wallet.','value.k3.i2':'Market opportunities to investors locally & regionally.','value.k3.i3':'Improve spending efficiency via higher project quality.',
-        'value.k4.t':'Prosperous, Healthy Life','value.k4.i1':'Connect health, education, identity projects to funders.','value.k4.i2':'Measurable social & health impact dashboards.',
-        'accounts.title':'Accounts & Services',
-        'register.title':'Create New Account','register.helper':'Nothing is sent to a server — local-only for testing.','register.agree1':'I agree to the','register.agree2':'Digital Agreement','register.submit':'Create Test Account',
-        'login.open':'I already have an account',
-        'pricing.title':'Subscription Plans','pricing.basic.t':'Basic','pricing.basic.f1':'Basic account profile','pricing.basic.f2':'List 2 projects','pricing.basic.f3':'Simple reports','pricing.pro.t':'Pro','pricing.pro.f1':'Everything in Basic','pricing.pro.f2':'List 10 projects','pricing.pro.f3':'Advanced impact dashboards','pricing.gov.t':'Government','pricing.gov.f1':'Supervisory control panels','pricing.gov.f2':'Regional & agency reports','pricing.gov.f3':'Integration with agency systems','pricing.cta':'Subscribe','pricing.contact':'Contact Us',
-        'sponsor.title':'Sponsorship Tiers','sponsor.cta':'Request Sponsorship','sponsor.bronze.t':'Bronze','sponsor.bronze.f1':'Logo placement','sponsor.bronze.f2':'Quarterly reports','sponsor.silver.t':'Silver','sponsor.silver.f1':'Logo + event presence','sponsor.silver.f2':'Monthly reports','sponsor.gold.t':'Gold','sponsor.gold.f1':'Platform strategic partner','sponsor.gold.f2':'Custom impact reports','sponsor.modalTitle':'Sponsorship Request','sponsor.objective':'Sponsorship Objective','sponsor.send':'Send Request',
-        'support.title':'Technical Support','support.type':'Request Type','support.t1':'Technical','support.t2':'Billing','support.t3':'Other','support.msg':'Request Description','support.submit':'Submit',
-        'policies.title':'Policies & Terms','policies.terms':'Terms of Use','policies.termsDesc':'By using the platform you agree to the terms and privacy policy and applicable KSA regulations.','policies.privacy':'Privacy','policies.privacyDesc':'No data is collected in this demo. The final version will comply with regulations.',
-        'contact.title':'Contact Us','contact.msg':'Your Message','contact.submit':'Send Message','contact.info':'Contact Info','contact.email':'Email:','contact.phone':'Phone:','contact.note':'Demo-only information.',
-        'tools.title':'Testing Panel','tools.dump':'Show stored data','tools.clear':'Clear all data',
-        'footer.rights':'All rights reserved — Hasif Platform','footer.terms':'Terms','footer.privacy':'Privacy',
-        'agreement.title':'Digital Agreement','agreement.desc':'Demo content for testing. The text varies by account type.','agreement.close':'Close',
-        'checkout.title':'Confirm Subscription','checkout.card':'Card Number','checkout.exp':'Expiry','checkout.name':'Cardholder Name','checkout.pay':'Test Payment'
-      }
-    };
+  <!-- فعاليات ومتحدثون -->
+  <section id="events" class="card">
+    <h2>الفعاليات والمتحدثون</h2>
+    <form id="evForm" class="row">
+      <input name="orgId" placeholder="Org ID" required>
+      <input name="title" placeholder="عنوان الفعالية" required>
+      <input name="date" type="date" required>
+      <input name="speakers" placeholder="متحدثون مفصولون بفواصل (أسماء)">
+      <button>إنشاء فعالية</button>
+    </form>
+    <table><thead><tr><th>المعرف</th><th>العنوان</th><th>التاريخ</th><th>الجهة</th><th>متحدثون</th></tr></thead>
+      <tbody id="evTbody"></tbody></table>
+  </section>
 
-    // Account services content (AR/EN) — minimal but representative
-    const accountServices = {
-      individual:{
-        ar:['مبادراتي (إدراج مبادرة)','فرص التدريب والتطوع','المحفظة والحوافز'],
-        en:['My Initiatives (list an initiative)','Training & Volunteering','Wallet & Incentives']
-      },
-      private:{
-        ar:['المسؤولية الاجتماعية','الفعاليات والمرافق','التقارير والامتثال'],
-        en:['CSR','Events & Facilities','Reports & Compliance']
-      },
-      nonprofit:{
-        ar:['الوظائف والتطوع','التمويل والرعايات','المنشآت والتقارير'],
-        en:['Jobs & Volunteering','Funding & Sponsorships','Facilities & Reports']
-      },
-      university:{
-        ar:['التعزيز العلمي للمشاريع','التدريب التعاوني','تسويق البحوث والبرامج'],
-        en:['Scientific validation of projects','Co-op Training','Marketing programs & research']
-      },
-      donor:{
-        ar:['فرص المنح','محفظة المانح','تقارير الأثر'],
-        en:['Grant Opportunities','Donor Wallet','Impact Reports']
-      },
-      government:{
-        ar:['حلول الجهات','إدارة المبادرات','تقارير المناطق والأثر'],
-        en:['Agency Solutions','Initiative Management','Regional & Impact Reports']
-      }
-    };
+  <!-- التطوع / التدريب / الاستشارات -->
+  <section id="engage" class="card">
+    <h2>Engagements: التطوع / التدريب / الاستشارات</h2>
+    <form id="enForm" class="row">
+      <select name="type">
+        <option value="volunteer">تطوع</option>
+        <option value="training">تدريب</option>
+        <option value="consulting">استشارة</option>
+      </select>
+      <input name="orgId" placeholder="Org ID" required>
+      <input name="hours" type="number" placeholder="الساعات (للتطوع/التدريب)">
+      <input name="fee" type="number" placeholder="الأتعاب (للاستشارة)">
+      <button>تسجيل</button>
+    </form>
+    <table><thead><tr><th>#</th><th>النوع</th><th>الجهة</th><th>ساعات</th><th>أتعاب</th></tr></thead>
+      <tbody id="enTbody"></tbody></table>
+  </section>
 
-    // Agreement bodies by account (AR/EN) — concise demo text
-    const agreements = {
-      individual:{
-        ar:`باختيارك حساب الأفراد فإنك تقر بصحة بياناتك وتوافق على استخدام المنصة لمعلوماتك لغرض التحقق وتقديم الخدمات.`,
-        en:`By choosing an Individual account, you confirm the accuracy of your data and consent to use for verification and service delivery.`
-      },
-      private:{
-        ar:`تلتزم المنشأة بمعايير المسؤولية الاجتماعية، وتوافق على الإفصاح عن المشاريع المدعومة وتقارير الأثر.`,
-        en:`The company commits to CSR standards and agrees to disclose supported projects and impact reporting.`
-      },
-      nonprofit:{
-        ar:`تلتزم الجهة غير الربحية بالشفافية المالية ونشر نتائج المشاريع ومؤشرات الأداء.`,
-        en:`The nonprofit commits to financial transparency and publishing project outcomes and KPIs.`
-      },
-      university:{
-        ar:`تلتزم الجامعة بالتعزيز العلمي المحايد وضمان جودة المراجعات وفق النماذج المعتمدة.`,
-        en:`The university ensures impartial scientific validation and quality of reviews per approved models.`
-      },
-      donor:{
-        ar:`يوافق المانح على شروط المحفظة الرقمية وآليات الصرف والقيود التنظيمية المعمول بها.`,
-        en:`The donor agrees to the digital wallet terms, disbursement mechanisms, and applicable regulations.`
-      },
-      government:{
-        ar:`تلتزم الجهة الحكومية بحوكمة الموافقات وربط المبادرات بأهداف الرؤية ونشر تقارير الأثر.`,
-        en:`The government entity commits to governed approvals, linking initiatives to Vision goals, and publishing impact reports.`
-      }
-    };
+  <!-- الاتفاقيات والشهادات -->
+  <section id="agreements" class="card">
+    <h2>الاتفاقيات الرقمية والشهادات</h2>
+    <div class="grid-2">
+      <div>
+        <h3>اتفاقية رقمية (قابلة للطباعة)</h3>
+        <form id="agForm" class="row">
+          <input name="partyA" placeholder="الطرف الأول" required>
+          <input name="partyB" placeholder="الطرف الثاني" required>
+          <input name="title"  placeholder="عنوان الاتفاقية" required>
+          <button>توليد اتفاقية</button>
+        </form>
+        <div id="agOut" class="muted">—</div>
+      </div>
+      <div>
+        <h3>شهادة مشاركة/تدريب (قابلة للطباعة)</h3>
+        <form id="certForm" class="row">
+          <input name="name" placeholder="الاسم" required>
+          <input name="org"  placeholder="الجهة" required>
+          <select name="kind"><option>تطوع</option><option>تدريب</option><option>استشارة</option></select>
+          <input name="hours" type="number" placeholder="الساعات/المدة">
+          <button>توليد شهادة</button>
+        </form>
+        <div id="certOut" class="muted">—</div>
+      </div>
+    </div>
+  </section>
 
-    // Language state
-    let currentLang = 'ar';
+  <!-- الإعلام والتوثيق -->
+  <section id="media" class="card">
+    <h2>الإعلام والتوثيق</h2>
+    <form id="mdForm" class="row">
+      <select name="targetType"><option>project</option><option>event</option></select>
+      <input name="targetId" placeholder="pr-*/ev-*">
+      <input name="headline" placeholder="عنوان خبر/تغطية">
+      <input name="url" placeholder="رابط (اختياري)">
+      <button>إضافة توثيق</button>
+    </form>
+    <table><thead><tr><th>#</th><th>الموضوع</th><th>العنوان</th><th>الرابط</th></tr></thead>
+      <tbody id="mdTbody"></tbody></table>
+  </section>
 
-    function t(key){
-      const el = document.querySelectorAll(`[data-i18n="${key}"]`);
-      el.forEach(n=> n.textContent = i18n[currentLang][key] || key);
-    }
+  <!-- الحاضنات والمسرعات -->
+  <section id="incubators" class="card">
+    <h2>الحاضنات والمسرّعات</h2>
+    <form id="ibForm" class="row">
+      <input name="name" placeholder="اسم الحاضنة/المسرّعة" required>
+      <select name="kind"><option>حاضنة</option><option>مسرّعة</option></select>
+      <input name="ownerOrgId" placeholder="Org ID" required>
+      <button>إنشاء</button>
+    </form>
+    <table><thead><tr><th>#</th><th>الاسم</th><th>النوع</th><th>الجهة</th></tr></thead>
+      <tbody id="ibTbody"></tbody></table>
+  </section>
 
-    function applyLang(){
-      document.documentElement.lang = currentLang;
-      const rtl = currentLang === 'ar';
-      document.documentElement.dir = rtl ? 'rtl' : 'ltr';
-      // Swap brand text order for aesthetics
-      document.getElementById('brand').querySelector('span').textContent = rtl ? 'منصة حصيف' : 'Hasif Platform';
-      // Update all i18n elements
-      document.querySelectorAll('[data-i18n]').forEach(el=>{
-        const key = el.getAttribute('data-i18n');
-        el.textContent = i18n[currentLang][key] || el.textContent;
-      });
-      // Update selects options (their text was set initially, refresh)
-      ['qAccount','rAccount'].forEach(id=>{
-        const sel = document.getElementById(id); if(!sel) return;
-        sel.querySelectorAll('option').forEach(opt=>{
-          const key = opt.getAttribute('data-i18n');
-          if(key && i18n[currentLang][key]) opt.textContent = i18n[currentLang][key];
-        });
-      });
-      // Rebuild account tabs content
-      buildAccountContent(activeAcc);
-      // Buttons labels (non-i18n attributes)
-      document.getElementById('langToggle').textContent = rtl ? 'EN' : 'عربي';
-    }
+  <!-- التدقيق والسجلات -->
+  <section id="audit" class="card">
+    <h2>سجل التدقيق (Audit)</h2>
+    <table><thead><tr><th>الوقت</th><th>الكيان</th><th>الحدث</th><th>التفاصيل</th></tr></thead>
+      <tbody id="auTbody"></tbody></table>
+  </section>
 
-    document.getElementById('langToggle').addEventListener('click',()=>{
-      currentLang = currentLang === 'ar' ? 'en' : 'ar';
-      applyLang();
-    });
+  <!-- نطاق النموذج -->
+  <section id="about" class="card">
+    <h2>حول هذا النموذج</h2>
+    <p class="muted">هذا ملف واحد للتجربة والتعليم. <strong>غير مناسب للإنتاج</strong>، ولا يشمل: نفاذ/SSO، RBAC خادمي، قاعدة بيانات/توقيع رقمي/تكاملات حكومية/بوابات دفع. جميعها موسومة داخل الكود كـ “قابلة للترقية”.</p>
+  </section>
+</main>
 
-    // Smooth scroll helper
-    function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}
+<script>
+/* ===========================
+   بنية بيانات محلية + بذور
+=========================== */
+const LS_KEY='hasif:data:v1';
+const seed = {
+  organizations:[
+    {id:'org-gov-001',name:'وزارة التنمية',type:'gov',region:'الرياض'},
+    {id:'org-priv-001',name:'شركة ألف',type:'private',region:'الرياض'},
+    {id:'org-np-001',name:'جمعية بناء',type:'nonprofit',region:'الشرقية'},
+    {id:'org-uni-001',name:'جامعة الملك المستقبل',type:'university',region:'مكة'},
+    {id:'org-donor-001',name:'صندوق الأثر الوطني',type:'donor',region:'الرياض'}
+  ],
+  challenges:[
+    {id:'ch-001',ownerOrgId:'org-gov-001',title:'خفض فجوة المهارات الرقمية',domain:'تقنية',status:'open',createdAt:ts()},
+    {id:'ch-002',ownerOrgId:'org-gov-001',title:'زيادة فرص التطوع الصحي',domain:'صحة',status:'open',createdAt:ts()},
+    {id:'ch-003',ownerOrgId:'org-gov-001',title:'تنشيط الفعاليات الثقافية',domain:'ثقافة',status:'open',createdAt:ts()}
+  ],
+  solutions:[
+    {id:'sol-001',challengeId:'ch-001',proposerOrgId:'org-uni-001',summary:'مسار تدريبي معتمد + تدريب تعاوني مع شركات تقنية',score:4.5},
+    {id:'sol-002',challengeId:'ch-002',proposerOrgId:'org-np-001',summary:'عيادات متنقلة يديرها متطوعون مع نظام حجز رقمي',score:4.2},
+    {id:'sol-003',challengeId:'ch-003',proposerOrgId:'org-priv-001',summary:'رعاية فعاليات ثقافية في الأحياء + مسار متحدثين',score:4.0}
+  ],
+  projects:[
+    {id:'pr-001',ownerOrgId:'org-gov-001',visionGoal:'تحسين جودة الحياة',status:'in_progress',budget:250000,sourceSolution:'sol-002',createdAt:ts()},
+    {id:'pr-002',ownerOrgId:'org-gov-001',visionGoal:'اقتصاد مزدهر',status:'funded',budget:400000,sourceSolution:'sol-001',createdAt:ts()}
+  ],
+  sponsorships:[{id:'sp-001',target:{type:'project',id:'pr-002'},donorOrgId:'org-donor-001',amount:200000,status:'approved'}],
+  wallets:[
+    {id:'w-1',orgId:'org-donor-001',balance:1000000},
+    {id:'w-2',orgId:'org-priv-001',balance:250000}
+  ],
+  transactions:[
+    {id:'tx-001',walletId:'w-1',type:'credit',amount:1000000,ref:'funding-topup',ts:ts()},
+    {id:'tx-002',walletId:'w-1',type:'debit',amount:200000,ref:'sp-001',ts:ts()}
+  ],
+  events:[{id:'ev-001',orgId:'org-priv-001',title:'منتدى المسؤولية الاجتماعية',date:datePlus(20),speakers:['د. نهى','م. سالم'],approvals:['org-gov-001']}],
+  engagements:[
+    {id:'en-001',type:'volunteer',orgId:'org-np-001',hours:120},
+    {id:'en-002',type:'training',orgId:'org-uni-001',hours:40},
+    {id:'en-003',type:'consulting',orgId:'org-priv-001',fee:15000}
+  ],
+  media:[],
+  incubators:[],
+  kpi:[{id:'kpi-001',entityType:'project',entityId:'pr-001',kpiKey:'beneficiaries',value:5000,period:'2025-Q4'}],
+  audit:[]
+};
+function ts(){ return new Date().toISOString(); }
+function datePlus(d){ const x=new Date(); x.setDate(x.getDate()+d); return x.toISOString().slice(0,10); }
 
-    // Quick form local save
-    const quickForm = document.getElementById('quickForm');
-    quickForm.addEventListener('submit',e=>{
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(quickForm));
-      localStorage.setItem('hasif:quick', JSON.stringify(data));
-      showMsg('quickMsg', currentLang==='ar'?'تم الحفظ محليًا':'Saved locally');
-    });
-    document.getElementById('resetQuick').addEventListener('click',()=>{
-      quickForm.reset(); localStorage.removeItem('hasif:quick'); showMsg('quickMsg', currentLang==='ar'?'تمت إعادة التعيين':'Reset done');
-    });
+function load(){ const raw=localStorage.getItem(LS_KEY); if(!raw){ save(seed); return {...seed}; } try{ return JSON.parse(raw);}catch{ save(seed); return {...seed}; } }
+function save(db){ localStorage.setItem(LS_KEY, JSON.stringify(db)); }
+function addAudit(entity, action, details){ const db=load(); db.audit.push({id:rand('au'), ts:ts(), entity, action, details}); save(db); }
+function rand(pref){ return pref+'-'+Math.random().toString(36).slice(2,8); }
 
-    // Build accounts/services grid
-    const accContent = document.getElementById('accContent');
-    let activeAcc = 'individual';
-    function buildAccountContent(acc){
-      activeAcc = acc;
-      accContent.innerHTML = '';
-      const list = accountServices[acc][currentLang];
-      list.forEach(item=>{
-        const card = document.createElement('div'); card.className='card';
-        card.innerHTML = `<div class="feature"><svg class="icon" viewBox="0 0 24 24"><path fill="var(--green-700)" d="M9 16.2l-3.5-3.5L4 14.2 9 19l11-11-1.5-1.5z"/></svg><div>${item}</div></div>`;
-        accContent.appendChild(card);
-      })
-    }
-    document.querySelectorAll('.tab').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected','false'));
-        btn.setAttribute('aria-selected','true');
-        buildAccountContent(btn.dataset.acc);
-      })
-    });
+/* ===========================
+   i18n (مفاتيح أساسية)
+=========================== */
+let currentLang='ar';
+function t(k){ const L=dict[currentLang]; return (k.split('.').reduce((o,i)=>o?o[i]:null, L))||k; }
+const dict={
+  ar:{ common:{save:'حفظ',delete:'حذف',status:'الحالة'} },
+  en:{ common:{save:'Save',delete:'Delete',status:'Status'} }
+};
+document.getElementById('langBtn').onclick=()=>{
+  const html=document.documentElement;
+  if(currentLang==='ar'){ currentLang='en'; html.lang='en'; html.dir='ltr'; document.getElementById('langBtn').textContent='العربية'; }
+  else{ currentLang='ar'; html.lang='ar'; html.dir='rtl'; document.getElementById('langBtn').textContent='English'; }
+  renderAll();
+};
 
-    // Register form
-    const regForm = document.getElementById('regForm');
-    regForm.addEventListener('submit', e=>{
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(regForm));
-      if(!document.getElementById('agreeChk').checked){
-        alert(currentLang==='ar'?'يجب الموافقة على الاتفاقية':'Agreement must be accepted');
-        return;
-      }
-      const users = JSON.parse(localStorage.getItem('hasif:users')||'[]');
-      users.push({...data, ts: Date.now()});
-      localStorage.setItem('hasif:users', JSON.stringify(users));
-      showMsg('regMsg', currentLang==='ar'?'تم إنشاء الحساب التجريبي':'Test account created');
-      regForm.reset();
-    });
+/* ===========================
+   تصدير/استيراد
+=========================== */
+document.getElementById('exportBtn').onclick=()=>{
+  const blob=new Blob([localStorage.getItem(LS_KEY)||'{}'],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hasif_data.json'; a.click(); URL.revokeObjectURL(a.href);
+};
+document.getElementById('importBtn').onclick=()=> document.getElementById('importFile').click();
+document.getElementById('importFile').onchange=(e)=>{
+  const f=e.target.files[0]; if(!f) return;
+  f.text().then(txt=>{ try{ const o=JSON.parse(txt); save(o); renderAll(); }catch(err){ alert('ملف غير صالح'); } });
+};
 
-    // Agreement modal
-    document.getElementById('openAgreement').addEventListener('click', e=>{
-      e.preventDefault();
-      const acc = document.getElementById('rAccount').value || 'individual';
-      openAgreement(acc);
-    });
-    function openAgreement(acc){
-      const body = document.getElementById('agreementBody');
-      const a = agreements[acc][currentLang];
-      body.innerHTML = `<p>${a}</p><div class="divider"></div><p class="muted">(${currentLang==='ar'?'نموذج للتجربة':'Demo-only text'})</p>`;
-      document.getElementById('agreementModal').classList.add('show');
-    }
-    function closeAgreement(){document.getElementById('agreementModal').classList.remove('show')}
+/* ===========================
+   لوحات المؤشرات
+=========================== */
+function renderKPIs(){
+  const db=load(); const role=document.getElementById('roleSel').value;
+  const projects = db.projects.filter(p=> role==='admin'? true : true); // (يمكن تخصيصها حسب الدور)
+  const funded = projects.filter(p=>['funded','completed'].includes(p.status)).length;
+  const totalBudget = projects.reduce((s,p)=>s+(+p.budget||0),0);
+  const challenges = db.challenges.length;
+  const solutions = db.solutions.length;
+  const engagements = db.engagements.length;
 
-    // Checkout modal
-    function openCheckout(e){
-      const plan = e.currentTarget.getAttribute('data-plan');
-      const name = {basic:{ar:'أساسية',en:'Basic'}, pro:{ar:'احترافية',en:'Pro'}, gov:{ar:'حكومية',en:'Government'}}[plan][currentLang];
-      document.getElementById('checkoutPlan').textContent = currentLang==='ar'?`الخطة المختارة: ${name}`:`Selected plan: ${name}`;
-      document.getElementById('checkoutModal').classList.add('show');
-    }
-    function closeCheckout(){document.getElementById('checkoutModal').classList.remove('show')}
-    document.getElementById('checkoutForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      showMsg('checkoutMsg', currentLang==='ar'?'تمت عملية الدفع التجريبية':'Test payment completed');
-      setTimeout(closeCheckout, 1200);
-    });
+  const items=[
+    {t:'إجمالي المشاريع / Projects',v:projects.length},
+    {t:'ممول/مكتمل Funded/Completed',v:funded},
+    {t:'الميزانية الكلية SAR',v:totalBudget.toLocaleString()},
+    {t:'التحديات',v:challenges},
+    {t:'الحلول',v:solutions},
+    {t:'Engagements',v:engagements}
+  ];
+  const k=document.getElementById('kpis'); k.innerHTML='';
+  items.forEach(it=>{
+    const c=document.createElement('div'); c.className='card';
+    c.innerHTML=`<div class="kv">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path fill="${'#0a4d2c'}" d="M9 16.2 5.5 12.7 4 14.2 9 19l11-11-1.5-1.5"/></svg>
+      <div><strong>${it.t}</strong><div style="font-size:24px;font-weight:800">${it.v}</div></div>
+    </div>`;
+    k.appendChild(c);
+  })
+}
 
-    // Sponsorship modal
-    function openSponsorship(e){
-      const tier = e.currentTarget.getAttribute('data-tier');
-      const name = {bronze:{ar:'برونزية',en:'Bronze'}, silver:{ar:'فضية',en:'Silver'}, gold:{ar:'ذهبية',en:'Gold'}}[tier][currentLang];
-      document.getElementById('sponsorTier').textContent = currentLang==='ar'?`الفئة المختارة: ${name}`:`Selected tier: ${name}`;
-      document.getElementById('sponsorModal').classList.add('show');
-    }
-    function closeSponsor(){document.getElementById('sponsorModal').classList.remove('show')}
-    document.getElementById('sponsorForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      // Store sponsorship requests locally
-      const data = Object.fromEntries(new FormData(e.target));
-      const list = JSON.parse(localStorage.getItem('hasif:sponsors')||'[]');
-      list.push({...data, ts: Date.now()});
-      localStorage.setItem('hasif:sponsors', JSON.stringify(list));
-      showMsg('sponsorMsg', currentLang==='ar'?'تم إرسال الطلب':'Request sent');
-      setTimeout(closeSponsor, 1200);
-    });
+/* ===========================
+   جداول وقوائم (CRUD مبسّط)
+=========================== */
+function renderChallenges(){
+  const db=load(); const tb=document.getElementById('chTbody'); tb.innerHTML='';
+  db.challenges.forEach(ch=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${ch.title}</td><td>${ch.domain}</td><td>${ch.ownerOrgId}</td><td>${ch.status}</td>
+    <td><button class="btn-ghost" data-id="${ch.id}">إغلاق</button></td>`;
+    tr.querySelector('button').onclick=()=>{ ch.status='closed'; save(db); addAudit('challenge','close',{id:ch.id}); renderChallenges(); renderKPIs(); };
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('chForm').onsubmit=(e)=>{
+  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
+  const ch={id:rand('ch'), status:'open', createdAt:ts(), ...f}; db.challenges.push(ch); save(db); addAudit('challenge','create',ch); e.target.reset(); renderChallenges(); renderKPIs();
+};
 
-    // Support form
-    document.getElementById('supportForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(e.target));
-      const list = JSON.parse(localStorage.getItem('hasif:support')||'[]');
-      list.push({...data, ts: Date.now()});
-      localStorage.setItem('hasif:support', JSON.stringify(list));
-      showMsg('supportMsg', currentLang==='ar'?'تم إرسال التذكرة':'Ticket submitted');
-      e.target.reset();
-    });
+function renderSolutions(){
+  const db=load(); const tb=document.getElementById('soTbody'); tb.innerHTML='';
+  db.solutions.forEach(so=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${so.summary}</td><td>${so.challengeId}</td><td>${so.proposerOrgId}</td>
+    <td><input type="number" style="width:80px" value="${so.score||0}" min="0" max="5"></td>`;
+    tr.querySelector('input').onchange=(ev)=>{ so.score=+ev.target.value; save(db); addAudit('solution','score',{id:so.id,score:so.score}); };
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('soForm').onsubmit=(e)=>{
+  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
+  const so={id:rand('sol'), ...f, score:0}; db.solutions.push(so); save(db); addAudit('solution','create',so); e.target.reset(); renderSolutions(); renderKPIs();
+};
 
-    // Contact form
-    document.getElementById('contactForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const data = Object.fromEntries(new FormData(e.target));
-      const list = JSON.parse(localStorage.getItem('hasif:contact')||'[]');
-      list.push({...data, ts: Date.now()});
-      localStorage.setItem('hasif:contact', JSON.stringify(list));
-      showMsg('contactMsg', currentLang==='ar'?'تم إرسال الرسالة':'Message sent');
-      e.target.reset();
-    });
+function renderProjects(){
+  const db=load(); const tb=document.getElementById('prTbody'); tb.innerHTML='';
+  db.projects.forEach(pr=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${pr.id}</td><td>${pr.ownerOrgId}</td><td>${pr.visionGoal}</td><td>${(+pr.budget||0).toLocaleString()}</td><td>${pr.status}</td>
+    <td>
+      <select data-id="${pr.id}">
+        <option value="pending" ${pr.status==='pending'?'selected':''}>قيد التقييم</option>
+        <option value="in_progress" ${pr.status==='in_progress'?'selected':''}>قيد التنفيذ</option>
+        <option value="funded" ${pr.status==='funded'?'selected':''}>ممول</option>
+        <option value="completed" ${pr.status==='completed'?'selected':''}>مكتمل</option>
+      </select>
+    </td>`;
+    tr.querySelector('select').onchange=(ev)=>{ pr.status=ev.target.value; save(db); addAudit('project','status',{id:pr.id,status:pr.status}); renderProjects(); renderKPIs(); };
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('prForm').onsubmit=(e)=>{
+  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
+  const pr={id:rand('pr'), status:'pending', createdAt:ts(), budget:+f.budget||0, ...f}; db.projects.push(pr); save(db); addAudit('project','create',pr); e.target.reset(); renderProjects(); renderKPIs();
+};
 
-    // Testing panel
-    document.getElementById('dumpStorage').addEventListener('click',()=>{
-      const out = {
-        quick: JSON.parse(localStorage.getItem('hasif:quick')||'null'),
-        users: JSON.parse(localStorage.getItem('hasif:users')||'[]'),
-        sponsors: JSON.parse(localStorage.getItem('hasif:sponsors')||'[]'),
-        support: JSON.parse(localStorage.getItem('hasif:support')||'[]'),
-        contact: JSON.parse(localStorage.getItem('hasif:contact')||'[]')
-      };
-      document.getElementById('storageOut').textContent = JSON.stringify(out,null,2);
-    });
-    document.getElementById('clearStorage').addEventListener('click',()=>{
-      ['hasif:quick','hasif:users','hasif:sponsors','hasif:support','hasif:contact'].forEach(k=>localStorage.removeItem(k));
-      document.getElementById('storageOut').textContent = '';
-      alert(currentLang==='ar'?'تم المسح':'Cleared');
-    });
+function renderWallet(){
+  const db=load(); const org=document.getElementById('walletOrg').value.trim(); const view=document.getElementById('walletView');
+  const w = db.wallets.find(x=>x.orgId===org) || {orgId:org, balance:0};
+  view.innerHTML = `<div class="card"><strong>Org:</strong> ${org||'—'} — <strong>Balance:</strong> ${(w.balance||0).toLocaleString()}</div>`;
+}
+document.getElementById('walletLoad').onclick=renderWallet;
+document.getElementById('txDo').onclick=()=>{
+  const db=load(); const org=document.getElementById('walletOrg').value.trim();
+  if(!org) return alert('أدخل Org ID');
+  let w=db.wallets.find(x=>x.orgId===org); if(!w){ w={id:rand('w'), orgId:org, balance:0}; db.wallets.push(w); }
+  const type=document.getElementById('txType').value; const amount=+document.getElementById('txAmount').value||0; const ref=document.getElementById('txRef').value||'-';
+  if(type==='credit') w.balance += amount; else w.balance -= amount;
+  const tx={id:rand('tx'), walletId:w.id, type, amount, ref, ts:ts()}; db.transactions.push(tx); save(db); addAudit('wallet','tx',tx); renderWallet(); renderKPIs();
+};
 
-    // Utility: show success messages
-    function showMsg(id, text){ const el=document.getElementById(id); el.textContent=text; el.style.display='block'; setTimeout(()=>el.style.display='none',2200); }
+function renderSponsorships(){
+  const db=load(); const tb=document.getElementById('spTbody'); tb.innerHTML='';
+  db.sponsorships.forEach((sp,i)=>{
+    const t = sp.target?.type + ':' + sp.target?.id;
+    const tr=document.createElement('tr'); tr.innerHTML=`<td>${i+1}</td><td>${t||'-'}</td><td>${sp.donorOrgId}</td><td>${(+sp.amount||0).toLocaleString()}</td><td>${sp.status||'approved'}</td>`;
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('spForm').onsubmit=(e)=>{
+  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
+  const sp={id:rand('sp'), target:{type:document.getElementById('spTarget').value, id:f.targetId}, donorOrgId:f.donorOrgId, amount:+f.amount||0, status:'approved'};
+  db.sponsorships.push(sp); save(db); addAudit('sponsorship','approve',sp); e.target.reset(); renderSponsorships(); renderKPIs();
+};
 
-    // Init
-    document.getElementById('year').textContent = new Date().getFullYear();
-    buildAccountContent(activeAcc);
-    applyLang();
-  </script>
+function renderEvents(){
+  const db=load(); const tb=document.getElementById('evTbody'); tb.innerHTML='';
+  db.events.forEach(ev=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${ev.id}</td><td>${ev.title}</td><td>${ev.date}</td><td>${ev.orgId}</td><td>${(ev.speakers||[]).join(', ')}</td>`;
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('evForm').onsubmit=(e)=>{
+  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
+  const ev={id:rand('ev'), orgId:f.orgId, title:f.title, date:f.date, speakers:(f.speakers||'').split(',').map(s=>s.trim()).filter(Boolean), approvals:[]};
+  db.events.push(ev); save(db); addAudit('event','create',ev); e.target.reset(); renderEvents(); renderKPIs();
+};
+
+function renderEngagements(){
+  const db=load(); const tb=document.getElementById('enTbody'); tb.innerHTML='';
+  db.engagements.forEach(en=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${en.id}</td><td>${en.type}</td><td>${en.orgId}</td><td>${en.hours||'-'}</td><td>${en.fee||'-'}</td>`;
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('enForm').onsubmit=(e)=>{
+  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
+  const en={id:rand('en'), ...f, hours:+(f.hours||0) || undefined, fee:+(f.fee||0) || undefined};
+  db.engagements.push(en); save(db); addAudit('engagement','create',en); e.target.reset(); renderEngagements(); renderKPIs();
+};
+
+/* ===========================
+   اتفاقيات وشهادات (طباعة)
+=========================== */
+function printableAgreement({partyA,partyB,title}){
+  const id=rand('agr'); const dt=new Date().toISOString().slice(0,10);
+  const html=`
+  <div style="font-family:system-ui; width:800px; margin:0 auto">
+    <div style="background:#0b5b34;color:#fff;padding:16px;border-bottom:4px solid #c9a227">
+      <h2 style="margin:0">اتفاقية رقمية | Digital Agreement</h2>
+      <div>HASIF Platform — Demo</div>
+    </div>
+    <div style="padding:16px;border:1px solid #eee;border-top:none">
+      <p><strong>العنوان:</strong> ${title}</p>
+      <p><strong>الأطراف:</strong> ${partyA} — ${partyB}</p>
+      <ol>
+        <li>الامتثال والحوكمة الوطنية.</li>
+        <li>حماية البيانات واستخدامها للأغراض التنموية فقط.</li>
+        <li>صلاحيات الوصول وفق الدور والالتزام بالمراجعة.</li>
+        <li>قياس الأثر والتقارير الدورية.</li>
+      </ol>
+      <p><strong>التاريخ:</strong> ${dt} — <strong>المعرّف:</strong> ${id}</p>
+      <div style="display:flex;gap:16px;align-items:center">
+        <div class="qrbox">QR</div>
+        <div class="muted">التحقق: https://hasif.example/verify/${id}</div>
+      </div>
+      <div style="margin-top:28px;display:flex;gap:40px">
+        <div>توقيع الطرف الأول: __________</div>
+        <div>توقيع الطرف الثاني: __________</div>
+      </div>
+    </div>
+  </div>`;
+  return {id, html};
+}
+document.getElementById('agForm').onsubmit=(e)=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  const {id,html}=printableAgreement(f); document.getElementById('agOut').innerHTML=`<div class="card">${html}<div class="row" style="margin-top:10px"><button onclick="printSection(this.closest('.card'))">طباعة</button></div></div>`;
+  addAudit('agreement','render',{id, parties:[f.partyA,f.partyB]});
+};
+function printableCertificate({name,org,kind,hours}){
+  const id=rand('cert'); const dt=new Date().toISOString().slice(0,10);
+  const html=`
+  <div style="font-family:system-ui; width:800px; margin:0 auto">
+    <div style="background:#0b5b34;color:#fff;padding:16px;border-bottom:4px solid #c9a227">
+      <h2 style="margin:0">شهادة مشاركة/Training/Consulting</h2><div>HASIF Platform — Demo</div>
+    </div>
+    <div style="padding:16px;border:1px solid #eee;border-top:none">
+      <p>تشهد منصة حصيف بأن <strong>${name}</strong> قد شارك عبر <strong>${kind}</strong> لدى <strong>${org}</strong>.</p>
+      <p>المدة/الساعات: <strong>${hours||'-'}</strong> — التاريخ: <strong>${dt}</strong> — المعرّف: <strong>${id}</strong></p>
+      <div style="display:flex;gap:16px;align-items:center">
+        <div class="qrbox">QR</div>
+        <div class="muted">التحقق: https://hasif.example/verify/${id}</div>
+      </div>
+    </div>
+  </div>`;
+  return {id, html};
+}
+document.getElementById('certForm').onsubmit=(e)=>{
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  const {id,html}=printableCertificate(f); document.getElementById('certOut').innerHTML=`<div class="card">${html}<div class="row" style="margin-top:10px"><button onclick="printSection(this.closest('.card'))">طباعة</button></div></div>`;
+  addAudit('certificate','render',{id, name:f.name, org:f.org, kind:f.kind});
+};
+function printSection(node){
+  const w=window.open('','_blank'); w.document.write(`<!doctype html><meta charset="utf-8"><title>Print</title>${node.innerHTML}`); w.document.close(); w.focus(); w.print();
+}
+
+/* ===========================
+   الإعلام، الحاضنات، التدقيق
+=========================== */
+function renderMedia(){
+  const db=load(); const tb=document.getElementById('mdTbody'); tb.innerHTML='';
+  db.media.forEach((m,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${m.targetType}:${m.targetId||'-'}</td><td>${m.headline||'-'}</td>
+    <td>${m.url?`<a href="${m.url}" target="_blank">رابط</a>`:'—'}</td>`;
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('mdForm').onsubmit=(e)=>{
+  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
+  const item={id:rand('md'), ...f}; db.media.push(item); save(db); addAudit('media','add',item); e.target.reset(); renderMedia();
+};
+
+function renderIncubators(){
+  const db=load(); const tb=document.getElementById('ibTbody'); tb.innerHTML='';
+  db.incubators.forEach((ib,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${ib.name}</td><td>${ib.kind}</td><td>${ib.ownerOrgId}</td>`;
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('ibForm').onsubmit=(e)=>{
+  e.preventDefault(); const db=load(); const f=Object.fromEntries(new FormData(e.target));
+  const ib={id:rand('ib'), ...f}; db.incubators.push(ib); save(db); addAudit('incubator','create',ib); e.target.reset(); renderIncubators();
+};
+
+function renderAudit(){
+  const db=load(); const tb=document.getElementById('auTbody'); tb.innerHTML='';
+  db.audit.slice(-200).reverse().forEach(a=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${a.ts}</td><td>${a.entity}</td><td>${a.action}</td><td class="muted"><pre style="white-space:pre-wrap">${safe(JSON.stringify(a.details,null,2))}</pre></td>`;
+    tb.appendChild(tr);
+  });
+}
+function safe(s){ return (s||'').replace(/[<>&]/g, m=>({ '<':'&lt;','>':'&gt;','&':'&amp;' }[m])); }
+
+/* ===========================
+   أزرار النظام
+=========================== */
+document.getElementById('seedBtn').onclick=()=>{ save(seed); addAudit('system','seed',{}); renderAll(); };
+document.getElementById('resetBtn').onclick=()=>{ if(confirm('مسح جميع البيانات؟')){ localStorage.removeItem(LS_KEY); save(seed); addAudit('system','reset',{}); renderAll(); } };
+document.getElementById('roleSel').onchange=()=>{ renderAll(); };
+
+/* ===========================
+   التجسيد
+=========================== */
+function renderAll(){
+  renderKPIs();
+  renderChallenges();
+  renderSolutions();
+  renderProjects();
+  renderSponsorships();
+  renderEvents();
+  renderEngagements();
+  renderMedia();
+  renderIncubators();
+  renderAudit();
+  // (إظهار/إخفاء حسب الدور يمكن توسيعه هنا)
+}
+if(!localStorage.getItem(LS_KEY)) save(seed);
+renderAll();
+</script>
 </body>
 </html>
